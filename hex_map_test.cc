@@ -5,7 +5,7 @@
 #include <ctime>
 
 int main() {
-    HexMap map( 10, 10 );
+    HexMap map( 20, 20 );
     HexMapGenerator gen( time( 0 ) );
 
     gen.generate( map );

@@ -1,14 +1,13 @@
 #include "hex_map_generator.hh"
 
 #include <cmath>
-#include <iostream>
 
 HexMapGenerator::HexMapGenerator( long seed ) {
     _p.setSeed( seed );
     _p.setAmplitude( 65536.f );
-    _p.setPersistence( 0.5f );
+    _p.setPersistence( 0.4f );
     _p.setOctaves( 8 );
-    _p.setFreq0( pow( .5f, 5.f ) );
+    _p.setFreq0( pow( .5f, 6.f ) );
 }
 
 HexMapGenerator::~HexMapGenerator() {}
@@ -20,8 +19,11 @@ HexMapGenerator::setPerlin( Perlin const & perlin ) {
 
 void
 HexMapGenerator::generate( HexMap & map ) const {
-    // TERRAIN GENERATION =============================== BEGIN
-    // generates height map with heights in [-255, 255] ints
+    generateTerrain( map );
+}
+
+void
+HexMapGenerator::generateTerrain( HexMap & map ) const {
     float min = 0.f, max = 0.f;
     float noise = 0.f;
 
@@ -33,14 +35,15 @@ HexMapGenerator::generate( HexMap & map ) const {
 
             map( x, y ).setHeight( noise );
         }
-    std::cout << "min = " << min << ", max = " << max << std::endl;
 
     for( int y = 0; y < map.height(); y++ )
         for( int x = 0; x < map.width(); x++ ) {
-            if( map( x,y ).height() > 0.f )
+            if( map( x, y ).height() > map.waterLevel() )
                 map( x, y ).setHeight( map( x, y ).height() * 256.f / max );
-            else 
+            else if( map( x, y ).height() < map.waterLevel() )
                 map( x, y ).setHeight( map( x, y ).height() * -256.f / min );
+            else
+                map( x, y ).setHeight( 0 );
         }
-    // TERRAIN GENERATION =============================== END 
 }
+

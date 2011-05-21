@@ -16,6 +16,9 @@ public:
 
 private:
     Perlin _p;
+
+private: // functions
+    void generateTerrain( HexMap & ) const;
 };
 
 #endif // HEX_MAP_GENERATOR_HH

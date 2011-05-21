@@ -3,14 +3,14 @@
 #include <iostream>
 
 HexMap::HexMap()
-    : _w( 0 ), _h( 0 ), _t( 0 ) {}
+    : _w( 0 ), _h( 0 ), _wl( 0 ), _t( 0 ) {}
 
 HexMap::HexMap( int width, int height ) {
     if( width > 0 && height > 0 )
-        _w = width, _h = height,
+        _w = width, _h = height, _wl = 0,
         _t = new Tile[ _w * _h ];
     else
-        _w = 0, _h = 0,
+        _w = 0, _h = 0, _wl = 0,
         _t = 0;
 }
 
@@ -49,6 +49,11 @@ HexMap::operator[]( int i ) {
 Tile&
 HexMap::operator()( int x, int y ) {
     return tile( x, y );
+}
+
+int
+HexMap::waterLevel() const {
+    return _wl;
 }
 
 

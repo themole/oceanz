@@ -32,6 +32,8 @@ public:
     Tile& operator[]( int i );
     Tile& operator()( int x, int y );
 
+    int waterLevel() const;
+
     // just for debugging
     friend
     std::ostream& operator<<( std::ostream &, HexMap & );
@@ -39,6 +41,9 @@ public:
 private:
     // size information ( both 0 for null object )
     int _w, _h;
+
+    // water level
+    int _wl;
 
     // tile array
     Tile *_t;
