@@ -10,7 +10,7 @@ int main() {
     Perlin p;
 
     srand( time( 0 ) );
-    p.seed( rand() );
+    p.setSeed( rand() );
 
     float min = 0.f;
     float max = 0.f;

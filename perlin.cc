@@ -4,6 +4,73 @@
 #include <climits>
 #include <cmath>
 
+Perlin::Perlin()
+    : _seed( 0 ),
+      _octaves( 4 ),
+      _amplitude( 1.f ),
+      _freq_0( 1.f ),
+      _persistence( 0.5f ) {}
+
+Perlin::~Perlin() {}
+
+// getter
+long
+Perlin::seed() const {
+    return _seed;
+}
+
+int
+Perlin::octaves() const {
+    return _octaves;
+}
+
+float
+Perlin::amplitude() const {
+    return _amplitude;
+}
+
+float
+Perlin::freq0() const {
+    return _freq_0;
+}
+
+float
+Perlin::persistence() const {
+    return _persistence;
+}
+
+// setter
+
+void
+Perlin::setSeed( long seed ) {
+    _seed = seed;
+}
+
+void
+Perlin::setOctaves( int octaves ) {
+    if( octaves > 0 )
+        _octaves = octaves;
+}
+
+void
+Perlin::setAmplitude( float amplitude ) {
+    if( amplitude > 0.f )
+        _amplitude = amplitude;
+}
+
+void
+Perlin::setFreq0( float freq0 ) {
+    if( freq0 > 0.f )
+        _freq_0 = freq0;
+}
+
+void
+Perlin::setPersistence( float persistence ) {
+    if( persistence > 0.f && persistence < 1.f )
+        _persistence = persistence;
+}
+
+
 float
 Perlin::noise( float x ) const {
 
@@ -145,70 +212,8 @@ Perlin::Noise( float x, float y, float z ) const {
 }
 
 float
-Perlin::tiling_noise( float x, float u ) const {
-    return( noise( x ) * ( u - x ) + noise( x - u ) * x ) / u;
-}
-
-float
-Perlin::tiling_noise( float x, float y, float u, float v ) const {
-    return ( noise( x, y ) * ( u - x ) * ( v - y ) +
-             noise( x - u, y ) * ( x ) * ( v - y ) +
-             noise( x, y - v ) * ( x - u ) * ( y ) +
-             noise( x - u, y - v ) * ( x ) * ( y ) ) /
-             ( u * v );
-}
-
-float
-Perlin::tiling_noise( float x, float y, float z, float u, float v, float w ) const {
-    // TODO: implement
-    return 0.f;
-}
-
-float
-Perlin::tiling_Noise( float x, float u ) const {
-    float f = _freq_0;
-    float a = _amplitude;
-    float sum = 0.f;
-    for( int i = 0; i < _octaves; i++ ) {
-        sum += a * ( noise( f * x ) * ( u - x ) + noise( f* x - u ) * x ) / u;
-        f = f * 2.f;
-        a = a * _persistence;
-    }
-    return sum;
-}
-
-float
-Perlin::tiling_Noise( float x, float y, float u, float v ) const {
-    float f = _freq_0;
-    float a = _amplitude;
-    float sum = 0.f;
-    for( int i = 0; i < _octaves; i++ ) {
-        sum += a * ( Noise( x, y ) * ( u - x ) * ( v - y ) +
-                     Noise( x - u, y ) * ( x ) * ( v - y ) +
-                     Noise( x, y - v ) * ( x - u ) * ( y ) +
-                     Noise( x - u, y - v ) * ( x ) * ( y ) ) /
-                     ( u * v );
-        f = f * 2.f;
-        a = a * _persistence;
-    }
-    return sum;
-}
-
-float
-Perlin::tiling_Noise( float x, float y, float z, float u, float v, float w ) const {
-    // TODO: implement
-    return 0.f;
-}
-
-float
 Perlin::ease_perlin( float a, float b, float x ) const {
     return a + ( b - a ) * x*x*( 3.f - 2.f * x );
-}
-
-float
-Perlin::ease_perlin_improved( float a, float b, float x ) const {
-    // TODO: implement
-    return 0.f;
 }
 
 int
