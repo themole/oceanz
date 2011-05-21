@@ -15,30 +15,14 @@ class Perlin {
         ~Perlin() {}
 
         // getter
-        long seed() const {
-            return _seed;
-        }
-
-        int octaves() const {
-            return _octaves;
-        }
-
-        float amplitude() const {
-            return _amplitude;
-        }
-
-        float freq_0() const {
-            return _freq_0;
-        }
-
-        float persistence() const {
-            return _persistence;
-        }
+        long  seed()        const { return _seed;        }
+        int   octaves()     const { return _octaves;     }
+        float amplitude()   const { return _amplitude;   }
+        float freq_0()      const { return _freq_0;      }
+        float persistence() const { return _persistence; }
 
         // setter
-        void seed( long s ) {
-            _seed = s;
-        }
+        void seed( long s ) { _seed = s; }
 
         void octaves( int o ) {
             if( o > 0 )
