@@ -1,0 +1,13 @@
+set data style lines
+set surface
+set xrange [-2:2]
+set yrange [-2:2]
+set zrange [-1:1]
+set view 45,20,1.0,1.0
+set dgrid3d 48,48,3
+set terminal postscript
+set output "noise.ps"
+set title 'simple noise'
+splot 'noise.data'
+set title 'sum of multiple noises with different frequencies and amplitudes'
+splot 'Noise.data'
