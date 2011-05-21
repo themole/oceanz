@@ -63,6 +63,7 @@ Perlin::noise( float x, float y ) const {
     return ease_perlin( st, uv, fracy );
 }
 
+// TODO: check correctness
 float
 Perlin::noise( float x, float y, float z ) const {
     int intx = static_cast< int >( x );
