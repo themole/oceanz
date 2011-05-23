@@ -12,15 +12,15 @@
 
 #include <ostream>
 
-class HexMap {
+class Map {
 
 public:
     // creates a "null" object
-    HexMap();
+    Map();
     // creates width*height sized map
-    HexMap( int width, int height );
+    Map( int width, int height );
     // deconstructor
-    ~HexMap();
+    ~Map();
 
     // access to size information
     int width() const;
@@ -36,7 +36,7 @@ public:
 
     // just for debugging
     friend
-    std::ostream& operator<<( std::ostream &, HexMap & );
+    std::ostream& operator<<( std::ostream &, Map & );
 
 private:
     // size information ( both 0 for null object )

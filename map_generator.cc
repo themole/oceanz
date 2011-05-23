@@ -1,29 +1,29 @@
-#include "hex_map_generator.hh"
+#include "map_generator.hh"
 
 #include <cmath>
 
-HexMapGenerator::HexMapGenerator( long seed ) {
+MapGenerator::MapGenerator( long seed ) {
     _p.setSeed( seed );
     _p.setAmplitude( 65536.f );
-    _p.setPersistence( 0.4f );
+    _p.setPersistence( 0.6f );
     _p.setOctaves( 8 );
     _p.setFreq0( pow( .5f, 6.f ) );
 }
 
-HexMapGenerator::~HexMapGenerator() {}
+MapGenerator::~MapGenerator() {}
 
 void
-HexMapGenerator::setPerlin( Perlin const & perlin ) {
+MapGenerator::setPerlin( Perlin const & perlin ) {
     _p = perlin;
 }
 
 void
-HexMapGenerator::generate( HexMap & map ) const {
+MapGenerator::generate( Map & map ) const {
     generateTerrain( map );
 }
 
 void
-HexMapGenerator::generateTerrain( HexMap & map ) const {
+MapGenerator::generateTerrain( Map & map ) const {
     float min = 0.f, max = 0.f;
     float noise = 0.f;
 
@@ -47,3 +47,8 @@ HexMapGenerator::generateTerrain( HexMap & map ) const {
         }
 }
 
+void
+MapGenerator::generateCities( Map & map ) const {
+    // TODO: find some way to do this
+    map = map;
+}

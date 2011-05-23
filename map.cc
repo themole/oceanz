@@ -1,11 +1,11 @@
-#include "hex_map.hh"
+#include "map.hh"
 
 #include <iostream>
 
-HexMap::HexMap()
+Map::Map()
     : _w( 0 ), _h( 0 ), _wl( 0 ), _t( 0 ) {}
 
-HexMap::HexMap( int width, int height ) {
+Map::Map( int width, int height ) {
     if( width > 0 && height > 0 )
         _w = width, _h = height, _wl = 0,
         _t = new Tile[ _w * _h ];
@@ -14,52 +14,52 @@ HexMap::HexMap( int width, int height ) {
         _t = 0;
 }
 
-HexMap::~HexMap() {
+Map::~Map() {
     if( _t )
         delete[] _t;
 }
 
 int
-HexMap::width() const {
+Map::width() const {
     return _w;
 }
 
 int
-HexMap::height() const {
+Map::height() const {
     return _h;
 }
 
 Tile&
-HexMap::tile( int i ) {
+Map::tile( int i ) {
     index_out_of_bounds_warning( i%_w, i/_w );
     return _t[i];
 }
 
 Tile&
-HexMap::tile( int x, int y ) {
+Map::tile( int x, int y ) {
     index_out_of_bounds_warning( x, y );
     return _t[ ( x%_w ) + _w*( y%_h ) ];
 }
 
 Tile&
-HexMap::operator[]( int i ) {
+Map::operator[]( int i ) {
     return tile( i );
 }
 
 Tile&
-HexMap::operator()( int x, int y ) {
+Map::operator()( int x, int y ) {
     return tile( x, y );
 }
 
 int
-HexMap::waterLevel() const {
+Map::waterLevel() const {
     return _wl;
 }
 
 
 // debugging stuff
 std::ostream&
-operator<<( std::ostream& os, HexMap& map ) {
+operator<<( std::ostream& os, Map& map ) {
     for( int y = 0; y < map.height(); y++ ) {
         os << std::endl;
         for( int x = 0; x < map.width(); x++ ) {
@@ -75,7 +75,7 @@ operator<<( std::ostream& os, HexMap& map ) {
 
 // private stuff
 void
-HexMap::index_out_of_bounds_warning( int x, int y ) const {
+Map::index_out_of_bounds_warning( int x, int y ) const {
     if( x < 0 || x >= _w || y < 0 || y >= _h )
         std::cout << "WARNING: index out of bounds while acessing HexMap" << std::endl;
 }
