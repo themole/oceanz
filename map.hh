@@ -10,7 +10,8 @@
 //   ..  ..  ..  ..  ..  ...
 //   / y-Axis
 
-#include <ostream>
+#include <iostream>
+#include <string>
 
 class Map {
 
@@ -33,6 +34,9 @@ public:
     Tile& operator()( int x, int y );
 
     int waterLevel() const;
+
+    void save( std::string const & filename );
+    void load( std::string const & filename );
 
     // just for debugging
     friend

@@ -1,6 +1,8 @@
 #include "map.hh"
 
 #include <iostream>
+#include <fstream>
+#include <string>
 
 Map::Map()
     : _w( 0 ), _h( 0 ), _wl( 0 ), _t( 0 ) {}
@@ -54,6 +56,32 @@ Map::operator()( int x, int y ) {
 int
 Map::waterLevel() const {
     return _wl;
+}
+
+void
+Map::save( std::string const & filename ) {
+    std::ofstream file( filename.c_str(), std::ios::binary | std::ios::out);
+    if( file.is_open() && _t ) {
+        file.write( reinterpret_cast< char* >( &_w ), sizeof( int ) );
+        file.write( reinterpret_cast< char* >( &_h ), sizeof( int ) );
+        file.write( reinterpret_cast< char* >( _t ), _w * _h * sizeof( Tile ) );
+    }
+    file.close();
+}
+
+void
+Map::load( std::string const & filename ) {
+    if( _t )
+        delete[] _t;
+
+    std::ifstream file( filename.c_str(), std::ios::binary | std::ios::in );
+    if( file.is_open() ) {
+        file.read( reinterpret_cast< char* >( &_w ), sizeof( int ) );
+        file.read( reinterpret_cast< char* >( &_h ), sizeof( int ) );
+        _t = new Tile[ _w * _h ];
+        file.read( reinterpret_cast< char* >( _t ), _w * _h * sizeof( Tile ) );
+    }
+    file.close();
 }
 
 
