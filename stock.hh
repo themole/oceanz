@@ -25,11 +25,8 @@ public:
     amnt_type max( Wares type ) const;
     bool has( Wares type ) const;
 
-    void set( Wares type, amnt_type amount ) {
-        _stock[ type ] = amount;
-    }
-
     void setMax( Wares type, amnt_type max );
+    void setGlobalMax( amnt_type max );
 
     // puts amount of type in and returns how much could not
     // be put in because of storage limitation
@@ -37,7 +34,7 @@ public:
 
     // puts everything from stuff into this and returns
     // what could not be put in because of storage limitation
-    Stock const & putIn( Stock & stuff );
+    Stock const putIn( Stock & stuff );
 
     // takes out amount of type and returns how much could not be taken out
     unsigned takeOut( Wares type, amnt_type amount );

@@ -11,10 +11,10 @@ clean:
 
 .PHONY: all clean
 
-noise: perlin.o noise.cc
+noise: $(OBJ) noise.cc
 	$(CC) -o noise $(OBJ) noise.cc $(FLAGS)
 
-Noise: perlin.o Noise.cc
+Noise: $(OBJ) Noise.cc
 	$(CC) -o Noise $(OBJ) Noise.cc $(FLAGS)
 
 hex_map_test: $(OBJ) hex_map_test.cc
@@ -35,8 +35,8 @@ perlin.o: perlin.hh perlin.cc
 tile.o: tile.hh tile.cc
 	$(CC) -o tile.o -c tile.cc $(FLAGS)
 
-map.o: map.hh map.cc city.o tile.o
-	$(CC) -o map.o -c city.o tile.o map.cc $(FLAGS)
+map.o: map.hh map.cc
+	$(CC) -o map.o -c map.cc $(FLAGS)
 
 city.o: city.hh city.cc
 	$(CC) -o city.o -c city.cc $(FLAGS)
