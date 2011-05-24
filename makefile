@@ -1,0 +1,48 @@
+
+CC = g++
+FLAGS = -Wall -Wextra -Werror -pedantic
+OBJ = perlin.o map.o tile.o city.o map_generator.o stock.o
+
+
+all: noise Noise hex_map_test map_plot_test map_save_load_test stock_test
+
+clean:
+	rm -rf $(OBJ) noise Noise hex_map_test map_plot_test map_save_load_test
+
+.PHONY: all clean
+
+noise: perlin.o noise.cc
+	$(CC) -o noise $(OBJ) noise.cc $(FLAGS)
+
+Noise: perlin.o Noise.cc
+	$(CC) -o Noise $(OBJ) Noise.cc $(FLAGS)
+
+hex_map_test: $(OBJ) hex_map_test.cc
+	$(CC) -o hex_map_test $(OBJ) hex_map_test.cc $(FLAGS)
+
+map_plot_test: $(OBJ) produce_map_plot_data.cc
+	$(CC) -o map_plot_test $(OBJ) produce_map_plot_data.cc $(FLAGS)
+
+map_save_load_test: $(OBJ) map_save_load_test.cc
+	$(CC) -o map_save_load_test $(OBJ) map_save_load_test.cc $(FLAGS)
+
+stock_test: $(OBJ) stock_test.cc
+	$(CC) -o stock_test $(OBJ) stock_test.cc $(FLAGS)
+
+perlin.o: perlin.hh perlin.cc
+	$(CC) -o perlin.o -c perlin.cc $(FLAGS)
+
+tile.o: tile.hh tile.cc
+	$(CC) -o tile.o -c tile.cc $(FLAGS)
+
+map.o: map.hh map.cc city.o tile.o
+	$(CC) -o map.o -c city.o tile.o map.cc $(FLAGS)
+
+city.o: city.hh city.cc
+	$(CC) -o city.o -c city.cc $(FLAGS)
+
+stock.o: stock.hh stock.cc
+	$(CC) -o stock.o -c stock.cc $(FLAGS)
+
+map_generator.o: map_generator.hh map_generator.cc
+	$(CC) -o map_generator.o -c map_generator.cc $(FLAGS)
