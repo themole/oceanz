@@ -4,9 +4,9 @@ City::City( std::string const & name ) {
     setName( name );
 }
 
-City~City() {}
+City::~City() {}
 
-std::string cosnt &
+std::string const &
 City::name() const {
     return _name;
 }

@@ -2,6 +2,7 @@
 #define HEX_MAP_HH
 
 #include "tile.hh"
+#include "city.hh"
 
 // represents a hex grid based map with following layout
 //          00  10  20  30  40 ...> x-Axis
@@ -12,6 +13,7 @@
 
 #include <iostream>
 #include <string>
+#include <list>
 
 class Map {
 
@@ -49,8 +51,11 @@ private:
     // water level
     int _wl;
 
-    // tile array
+    // terrain
     Tile *_t;
+
+    // cities
+    std::list< City > cities;
 
 private:
     void index_out_of_bounds_warning( int x, int y ) const;
