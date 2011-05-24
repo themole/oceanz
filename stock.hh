@@ -13,9 +13,10 @@ enum Wares {
 class Stock {
 
 public:
-    static const unsigned STD_MAX = 40;
-
     typedef unsigned short amnt_type;
+
+    static const amnt_type STD_MAX        =  40;
+    static const amnt_type STD_GLOBAL_MAX = 100;
 
 public:
     Stock();
@@ -23,31 +24,48 @@ public:
 
     amnt_type amount( Wares type ) const;
     amnt_type max( Wares type ) const;
-    bool has( Wares type ) const;
+    amnt_type globalAmount() const;
+    amnt_type globalMax() const;
 
-    void setMax( Wares type, amnt_type max );
+    bool has( Wares type ) const;
+    bool empty() const;
+    bool full( Wares type ) const;
+    bool full() const;
+
+    // empties the stock without changing set maxima
+    void clear();
+    // completely resets -> clearing and reseting maxima
+    void reset();
+
+    // sets max of good type to max if amount is less than max
+    // if not it does nothing
+    void setMax( amnt_type max, Wares type );
+    // only changes global_max if global_amnt is
+    // less than new max
     void setGlobalMax( amnt_type max );
 
     // puts amount of type in and returns how much could not
     // be put in because of storage limitation
-    amnt_type putIn( Wares type, amnt_type amount );
+    amnt_type putIn( amnt_type amount, Wares type);
 
     // puts everything from stuff into this and returns
     // what could not be put in because of storage limitation
-    Stock const putIn( Stock & stuff );
+    Stock const putIn( Stock const & stuff );
 
     // takes out amount of type and returns how much could not be taken out
-    unsigned takeOut( Wares type, amnt_type amount );
+    amnt_type takeOut( amnt_type amount, Wares type );
 
     // takes out everything listed in 'stuff' and returns a stock
     // containing a list of things not taken out because of not
     // being inside in the first place
-    Stock const & takeOut( Stock & stuff );
+    Stock const takeOut( Stock const & stuff );
 
+    // operators
+    Stock const operator+( Stock const & rhs ) const;
 
     // for debuggin
     friend std::ostream &
-    operator<<( std::ostream &, Stock & );
+    operator<<( std::ostream &, Stock const & );
 
 
 private:

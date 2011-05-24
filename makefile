@@ -1,7 +1,7 @@
 
 CC = g++
-FLAGS = -Wall -Wextra -Werror -pedantic
-OBJ = perlin.o map.o tile.o city.o map_generator.o stock.o
+FLAGS = -Wall -Wextra -Werror -pedantic -std=c++0x
+OBJ = perlin.o map.o tile.o city.o map_generator.o
 
 
 all: noise Noise hex_map_test map_plot_test map_save_load_test stock_test
@@ -26,8 +26,8 @@ map_plot_test: $(OBJ) produce_map_plot_data.cc
 map_save_load_test: $(OBJ) map_save_load_test.cc
 	$(CC) -o map_save_load_test $(OBJ) map_save_load_test.cc $(FLAGS)
 
-stock_test: $(OBJ) stock_test.cc
-	$(CC) -o stock_test $(OBJ) stock_test.cc $(FLAGS)
+stock_test: stock.o stock_test.cc
+	$(CC) -o stock_test stock.o stock_test.cc $(FLAGS)
 
 perlin.o: perlin.hh perlin.cc
 	$(CC) -o perlin.o -c perlin.cc $(FLAGS)
