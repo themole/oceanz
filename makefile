@@ -7,7 +7,8 @@ OBJ = perlin.o map.o tile.o city.o map_generator.o
 all: noise Noise hex_map_test map_plot_test map_save_load_test stock_test
 
 clean:
-	rm -rf $(OBJ) noise Noise hex_map_test map_plot_test map_save_load_test
+	rm -rf noise Noise hex_map_test map_plot_test map_save_load_test stock_test
+	rm -rf *.o *.data *.map *.ps
 
 .PHONY: all clean
 
