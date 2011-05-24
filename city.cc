@@ -2,6 +2,7 @@
 
 City::City( std::string const & name ) {
     setName( name );
+    _stock = Stock();
 }
 
 City::~City() {}
@@ -9,6 +10,11 @@ City::~City() {}
 std::string const &
 City::name() const {
     return _name;
+}
+
+Stock &
+City::stock() {
+    return _stock;
 }
 
 void
