@@ -6,14 +6,17 @@
 #include <cstdlib>
 
 int main() {
+    long seed;
     srand( time( 0 ) );
+    seed = rand();
+    seed = 1954201809;
     HeightMap<short> hmap( 128, 128 );
     Perlin p;
     p.setPersistence( .35 );
     p.setOctaves( 8 );
     p.setAmplitude( 65536 );
     p.setFreq0( 0.03125 );
-    p.setSeed( rand() );
+    p.setSeed( seed );
     MapGenerator mapgen;
     mapgen.setPerlin( p );
     mapgen.generate( hmap );
@@ -24,5 +27,6 @@ int main() {
               << " with "
               << gm.groupSize( gm.greatestGroup( GroupMap::COAST ))
               << " tiles." << std::endl;
+    std::cout << "seed = " << seed << std::endl;
     
 }

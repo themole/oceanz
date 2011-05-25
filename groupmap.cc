@@ -196,6 +196,7 @@ GroupMap::connected_component_analasys( HeightMap< short > const & hmap ) {
                 // no neighbors of same type
                 setGroup( x, y, n, txy );
                 group_equalities[ n ] = n++;
+                if( n == 11 ) n++;
             } else {
                 // some number of neighbors with same type
                 // ill take the smalles group number of equal neighbors
@@ -206,12 +207,13 @@ GroupMap::connected_component_analasys( HeightMap< short > const & hmap ) {
                         it++ ) {
                     // if a neighbors group is set to be equal to group with higher
                     // group number than mine -> set it to mine
-                    if( group_equalities[ *it ] > group( x, y ) )
+                    if( group_equalities[ *it ] >= group( x, y ) )
                         group_equalities[ *it ] = group( x, y );
                 }
             }
         }
     }
+    print();
 
     // print out group_equalities for debug
     for( auto it = group_equalities.begin(); it != group_equalities.end(); it++ ) {
