@@ -213,6 +213,11 @@ GroupMap::connected_component_analasys( HeightMap< short > const & hmap ) {
         }
     }
 
+    // print out group_equalities for debug
+    for( auto it = group_equalities.begin(); it != group_equalities.end(); it++ ) {
+        std::cout << "group " << it->first << " = group " << it->second << "\t";
+    } std::cout << std::endl;
+
   // second pass ... give all equivalent groups
   // the smallest number of that equivilance class
     for( int y = 0; y < _sy; y++ ) {

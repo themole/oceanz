@@ -43,7 +43,7 @@ MapGenerator::generate( HeightMap< short > & hmap ) const {
         }
     }
 
-    float w = min + .6f * ( max - min );
+    float w = min + .55f * ( max - min );
 
     for( int y = 0; y < hmap.sizeY(); y++ )
         for( int x = 0; x < hmap.sizeX(); x++ ) {
