@@ -33,7 +33,7 @@ stock_test: stock.o stock_test.cc
 heightmap_test: position.o heightmap_test.cc heightmap.cc heightmap.hh
 	$(CC) -o heightmap_test position.o heightmap_test.cc $(FLAGS)
 
-groupmap_test: position.o groupmap.o heightmap.cc heightmap.hh groupmap_test.cc perlin.o
+groupmap_test: position.o groupmap.o heightmap.cc heightmap.hh groupmap_test.cc perlin.o map_generator.o
 	$(CC) -o groupmap_test groupmap.o perlin.o heightmap.hh map_generator.o position.o groupmap_test.cc $(FLAGS)
 
 perlin.o: perlin.hh perlin.cc

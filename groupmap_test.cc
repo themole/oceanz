@@ -4,17 +4,17 @@
 #include <iostream>
 
 int main() {
-    HeightMap<short> hmap( 64, 64 );
+    HeightMap<short> hmap( 128, 128 );
     Perlin p;
-    p.setPersistence( .3 );
+    p.setPersistence( .4 );
     p.setOctaves( 8 );
     p.setAmplitude( 65536 );
-    p.setFreq0( 0.125 );
+    p.setFreq0( 0.06125 );
     p.setSeed( 0 );
     MapGenerator mapgen;
     mapgen.setPerlin( p );
     mapgen.generate( hmap );
-    std::cout << hmap;
 
     GroupMap gm( hmap );
+    std::cout << "greatestCost = " << gm.greatestGroup( GroupMap::COAST ) << std::endl;
 }
