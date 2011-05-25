@@ -22,3 +22,8 @@ City::setName( std::string const & name ) {
     if( name != "" )
         _name = name;
 }
+
+bool
+City::operator<( City const & rhs ) const {
+    return _name < rhs._name;
+}

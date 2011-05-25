@@ -13,7 +13,5 @@ int main() {
     hmap.save( "heightmap_test.hmap" );
     hmap2.load( "heightmap_test.hmap" );
 
-    for( int i = 0; i < 10; i++ )
-        for( int j = 0; j < 10; j++ )
-            std::cout << hmap2.height( i, j );
+    std::cout << hmap << hmap2 << std::endl;
 }

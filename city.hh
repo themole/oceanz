@@ -11,10 +11,14 @@ public:
     explicit City( std::string const & name );
     ~City();
 
+    // access to name
     std::string const & name() const;
+    void setName( std::string const & name );
+
+    // acces to storage .. the so called stock
     Stock &             stock();
 
-    void setName( std::string const & name );
+    bool operator<( City const & ) const;
 
 private:
     std::string _name;

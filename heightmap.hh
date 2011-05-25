@@ -44,16 +44,19 @@ public:
     friend
     std::ostream& operator<<( std::ostream &, HeightMap< height_type > const & );
 
-private:
+protected:
     // size information ( both 0 for null object )
     int _sx, _sy;
 
     // height information
     height_type *_h;
 
+private:
     // un/initialization function ... just is comfortable
     void init( int sx, int sy, height_type h );
     void uninit();
 };
+
+#include "heightmap.cc"
 
 #endif // HEIGHT_MAP_HH

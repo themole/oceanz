@@ -1,10 +1,10 @@
-set data style lines
+set style data lines
 set surface
 set xrange [0:128]
 set yrange [0:128]
 set zrange [-256:256]
 set view 45,25,1.0,1.0
-set dgrid3d 128, 128, 3
+set dgrid3d 80, 80, 4
 set pm3d
 set hidden3d
 set terminal postscript

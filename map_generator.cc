@@ -2,10 +2,14 @@
 
 #include <cmath>
 
+#ifndef PI
+#define PI 3.141592653589
+#endif
+
 MapGenerator::MapGenerator( long seed ) {
     _p.setSeed( seed );
     _p.setAmplitude( 65536.f );
-    _p.setPersistence( 0.6f );
+    _p.setPersistence( 0.26f );
     _p.setOctaves( 8 );
     _p.setFreq0( pow( .5f, 6.f ) );
 }
@@ -17,38 +21,36 @@ MapGenerator::setPerlin( Perlin const & perlin ) {
     _p = perlin;
 }
 
-void
-MapGenerator::generate( Map & map ) const {
-    generateTerrain( map );
-}
+#include <vector>
 
 void
-MapGenerator::generateTerrain( Map & map ) const {
+MapGenerator::generate( HeightMap< short > & hmap ) const {
     float min = 0.f, max = 0.f;
     float noise = 0.f;
 
-    for( int y = 0; y < map.height(); y++ )
-        for( int x = 0; x < map.width(); x++ ) {
-            noise = _p.Noise( x, y );
+    // this is (y,x) later
+    std::vector< std::vector< float > > tmp;
+
+    for( int y = 0; y < hmap.sizeY(); y++ ) {
+        tmp.push_back( std::vector< float >() );
+        for( int x = 0; x < hmap.sizeX(); x++ ) {
+            noise = _p.Noise( ( hmap.sizeY() - y + 2*x ) * cos( PI/6.f ),
+                                                 ( 2*y ) * sin( PI/6.f ) + 1.f ) ;
             if( noise < min ) min = noise;
             if( noise > max ) max = noise;
 
-            map( x, y ).setHeight( noise );
+            tmp[y].push_back( noise );
         }
+    }
 
-    for( int y = 0; y < map.height(); y++ )
-        for( int x = 0; x < map.width(); x++ ) {
-            if( map( x, y ).height() > map.waterLevel() )
-                map( x, y ).setHeight( map( x, y ).height() * 256.f / max );
-            else if( map( x, y ).height() < map.waterLevel() )
-                map( x, y ).setHeight( map( x, y ).height() * -256.f / min );
-            else
-                map( x, y ).setHeight( 0 );
+    float w = min + .625f * ( max - min );
+
+    for( int y = 0; y < hmap.sizeY(); y++ )
+        for( int x = 0; x < hmap.sizeX(); x++ ) {
+            if( tmp[y][x] > w )
+                hmap.setHeight( x, y, ( tmp[y][x] - w )/( max - w ) * 255 );
+            else 
+                hmap.setHeight( x, y, ( tmp[y][x] - w )/( w - min ) * 255 );
         }
 }
 
-void
-MapGenerator::generateCities( Map & map ) const {
-    // TODO: find some way to do this
-    map = map;
-}

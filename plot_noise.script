@@ -1,4 +1,4 @@
-set data style lines
+set style data lines
 set surface
 set xrange [-2:2]
 set yrange [-2:2]

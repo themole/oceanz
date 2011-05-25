@@ -25,3 +25,4 @@ void
 Position::setY( int y ) {
     _y = y;
 }
+

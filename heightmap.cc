@@ -1,6 +1,6 @@
-#include "heightmap.hh"
 
 #include <fstream>
+#include <iomanip>
 
 template< typename T >
 HeightMap<T>::HeightMap() {
@@ -134,5 +134,15 @@ HeightMap<T>::uninit() {
 template< typename T >
 std::ostream &
 operator<<( std::ostream & os, HeightMap< T > const & hmap ) {
+    for( int y = 0; y < hmap.sizeY(); y++ ) {
+        os << std::endl;
+        for( int x = 0; x < hmap.sizeX(); x++ ) {
+            if( x == 0 )
+                for( int k = y; k < hmap.sizeX(); k++ )
+                    os << "  ";
+            os << std::setfill(' ') <<  std::setw(4) <<  hmap.height( x, y ) << "  ";
+        }
+    }
+    os << std::endl;
     return os;
 }

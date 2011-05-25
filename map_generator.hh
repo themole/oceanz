@@ -2,7 +2,7 @@
 #define MAP_GENERATOR_HH
 
 #include "perlin.hh"
-#include "map.hh"
+#include "heightmap.hh"
 
 class MapGenerator {
 
@@ -12,14 +12,12 @@ public:
 
     void setPerlin( Perlin const & );
 
-    void generate( Map & ) const;
+    void generate( HeightMap< short > & ) const;
 
 private:
     Perlin _p;
 
 private: // functions
-    void generateTerrain( Map & ) const;
-    void generateCities( Map & ) const;
 };
 
 #endif // MAP_GENERATOR_HH

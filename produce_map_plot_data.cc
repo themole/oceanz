@@ -8,10 +8,10 @@ int main() {
     MapGenerator mapgen;
     mapgen.generate( map );
 
-    for( int y = 0; y < map.height(); y++ )
-        for( int x = 0; x < map.width(); x++ ) 
+    for( int y = 0; y < map.sizeY(); y++ )
+        for( int x = 0; x < map.sizeX(); x++ ) 
             std::cout << std::setfill(' ')
                       << std::setw(4) << x << "\t" 
                       << std::setw(4) << y << "\t"
-                      << std::setw(4) << map( x, y ).height() << std::endl;
+                      << std::setw(4) << map.height( x, y ) << std::endl;
 }
