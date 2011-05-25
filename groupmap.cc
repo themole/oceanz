@@ -254,49 +254,49 @@ GroupMap::connected_component_analasys( HeightMap< short > const & hmap ) {
     print();
     
 
-//  // third step ... calculate COAST groups ... coasts of the same water group
-//  // get the same number
-//    for( auto it = _t.begin(); it != _t.end(); it++ ) {
-//        // for all water groups
-//        if( it->second == WATER ) {
-//            // get next free group number
-//            n++;
-//            // find all neighbors that are LAND and assign it to one group
-//            for( int y = 0; y < _sy; y++ ) {
-//                for( int x = 0; x < _sx; x++ ) {
-//                    // if not in the current looked at group
-//                    if( group( x, y ) != it->first )
-//                        continue;
-//                    // indeces of all 6 neighbors
-//                    int nx[6]; int ny[6];
-//                     nx[0] = x-1, ny[0] = y;    // left
-//                     nx[1] = x-1, ny[1] = y-1;  // top left
-//                     nx[2] = x  , ny[2] = y-1;  // top right
-//                     nx[3] = x+1, ny[3] = y;    // right
-//                     nx[4] = x+1, ny[4] = y+1;  // bottom right
-//                     nx[5] = x  , ny[5] = y+1;  // bottom left
-//                    for( int i = 0; i < 6; i++ ) {
-//                        // invalid neighbors
-//                        if( nx[i] == -1 || ny[i] == -1 || nx[i] == _sx || ny[i] == _sy )
-//                            continue;
-//                        if( groupType( group( nx[i], ny[i] ) ) == LAND )
-//                            setGroup( nx[i], ny[i], n, COAST );
-//                    }
-//                }
-//            }
-//        }
-//        n++;
-//    }
-//
-//    print();
-//
-//  // step 4 ... clean up my maps
-//    // ===================================================== why in the world is once not enough
-//    for( auto it = _s.begin(); it != _s.end(); it++ )
-//        if( it->second == 0 ) {
-//            _s.erase( it );
-//            _t.erase( it->first );
-//        }
+  // third step ... calculate COAST groups ... coasts of the same water group
+  // get the same number
+    for( auto it = _t.begin(); it != _t.end(); it++ ) {
+        // for all water groups
+        if( it->second == WATER ) {
+            // get next free group number
+            n++;
+            // find all neighbors that are LAND and assign it to one group
+            for( int y = 0; y < _sy; y++ ) {
+                for( int x = 0; x < _sx; x++ ) {
+                    // if not in the current looked at group
+                    if( group( x, y ) != it->first )
+                        continue;
+                    // indeces of all 6 neighbors
+                    int nx[6]; int ny[6];
+                     nx[0] = x-1, ny[0] = y;    // left
+                     nx[1] = x-1, ny[1] = y-1;  // top left
+                     nx[2] = x  , ny[2] = y-1;  // top right
+                     nx[3] = x+1, ny[3] = y;    // right
+                     nx[4] = x+1, ny[4] = y+1;  // bottom right
+                     nx[5] = x  , ny[5] = y+1;  // bottom left
+                    for( int i = 0; i < 6; i++ ) {
+                        // invalid neighbors
+                        if( nx[i] == -1 || ny[i] == -1 || nx[i] == _sx || ny[i] == _sy )
+                            continue;
+                        if( groupType( group( nx[i], ny[i] ) ) == LAND )
+                            setGroup( nx[i], ny[i], n, COAST );
+                    }
+                }
+            }
+        }
+        n++;
+    }
+
+    print();
+
+  // step 4 ... clean up my maps
+    // ===================================================== why in the world is once not enough
+    for( auto it = _s.begin(); it != _s.end(); it++ )
+        if( it->second == 0 ) {
+            _s.erase( it );
+            _t.erase( it->first );
+        }
 }
 
 GroupMap::GroupType
