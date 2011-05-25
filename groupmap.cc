@@ -73,6 +73,29 @@ GroupMap::setGroup( int x, int y,
         sz->second = sz->second + 1;
 }
 
+void
+GroupMap::setGroup( int x, int y, unsigned  g ) {
+    // fix size of group that xy might already be in
+    auto sz = _s.find( group( x, y ) );
+    if( sz != _s.end() ) {
+        if( sz->second != 0 )
+            sz->second--;
+        else
+            _s.erase( sz );
+    }
+
+    // set new group number
+    _g[ ( x%_sx ) + _sx * ( y%_sy ) ] = g;
+
+    // fix size of group
+    sz = _s.find( group( x, y ) );
+    if( sz == _s.end() )
+        _s.insert( std::pair< unsigned, unsigned >( group( x, y ), 1 ) );
+    else
+        sz->second = sz->second + 1;
+}
+    
+
 unsigned
 GroupMap::groupSize( unsigned group ) const {
     auto sz = _s.find( group );
@@ -163,7 +186,7 @@ GroupMap::connected_component_analasys( HeightMap< short > const & hmap ) {
     // current group number
     unsigned n = 0;
     // for each group stores the smallest group number found that it is equal to
-    std::map< unsigned, unsigned > group_equalities;
+    std::map< unsigned, std::set< unsigned > > group_equalities;
 
     for( int y = 0; y < _sy; y++ ) {
         for( int x = 0; x < _sx; x++ ) {
@@ -175,109 +198,105 @@ GroupMap::connected_component_analasys( HeightMap< short > const & hmap ) {
             int nx[3]; int ny[3];
 
             // name sais it
-            std::set< unsigned > groups_of_neighbors_with_same_type;
+            std::set< unsigned > equal_neighbor_groups;
 
             nx[0] = x-1, ny[0] = y;
             nx[1] = x-1, ny[1] = y-1;
             nx[2] = x  , ny[2] = y-1;
-
-            // fill groups_of_neighbors_with_same_type
-            for( int i = 0; i < 3; i++ )
-                // invalid neighbor
+            
+            for( int i = 0; i < 3; i++ ) {
                 if( nx[i] == -1 || ny[i] == -1 )
                     continue;
-                // if type matches -> instert to groups_of_neighbors_with_same_type
-                else if( heightToType( hmap.height( nx[i], ny[i] ) ) == txy ) {
-                    groups_of_neighbors_with_same_type.insert( group( nx[i], ny[i] ) );
-                }
+                if( groupType( group( nx[i], ny[i] ) ) != txy )
+                    continue;
+                else 
+                    equal_neighbor_groups.insert( group( nx[i], ny[i] ) );
+            }
 
-            // decide wich group number i get
-            if( groups_of_neighbors_with_same_type.empty() ) {
-                // no neighbors of same type
-                setGroup( x, y, n, txy );
-                group_equalities[ n ] = n++;
-                if( n == 11 ) n++;
-            } else {
-                // some number of neighbors with same type
-                // ill take the smalles group number of equal neighbors
-                setGroup( x, y, *groups_of_neighbors_with_same_type.begin(), txy );
-                // update group_equalities
-                for( auto it = ++groups_of_neighbors_with_same_type.begin();
-                        it != groups_of_neighbors_with_same_type.end();
+            if( equal_neighbor_groups.empty() )
+                setGroup( x, y, n++, txy );
+            else {
+                setGroup( x, y, *equal_neighbor_groups.begin() );
+                for( auto it = equal_neighbor_groups.begin();
+                        it != equal_neighbor_groups.end();
                         it++ ) {
-                    // if a neighbors group is set to be equal to group with higher
-                    // group number than mine -> set it to mine
-                    if( group_equalities[ *it ] >= group( x, y ) )
-                        group_equalities[ *it ] = group( x, y );
+                    group_equalities[ *it ].insert( group( x, y ) );
+                    group_equalities[ *it ].insert( equal_neighbor_groups.begin(),
+                                                    equal_neighbor_groups.end() );
                 }
             }
+            group_equalities[ group( x, y ) ].insert( group( x, y ) );
         }
     }
-    print();
+
+    for( auto it = group_equalities.begin(); it != group_equalities.end(); it++ ) {
+        for( auto it2 = it->second.begin(); it2 != it->second.end(); it2++ )
+            group_equalities[ *it2 ].insert( it->second.begin(), it->second.end() );
+    }
+
+
 
     // print out group_equalities for debug
     for( auto it = group_equalities.begin(); it != group_equalities.end(); it++ ) {
-        std::cout << "group " << it->first << " = group " << it->second << "\t";
-    } std::cout << std::endl;
+        std::cout << "group " << it->first << " equals: ";
+        for( auto it2 = it->second.begin(); it2 != it->second.end(); it2++ )
+            std::cout << *it2 << ", ";
+        std::cout << std::endl;
+    }
 
   // second pass ... give all equivalent groups
   // the smallest number of that equivilance class
     for( int y = 0; y < _sy; y++ ) {
         for( int x = 0; x < _sx; x++ ) {
-            // current group
-            unsigned grp = group( x, y );
-            // as long as there is a smaller group number of the same class
-            while( grp > group_equalities[ grp ] )
-                // take on that number
-                grp = group_equalities[ grp ];
-            // update group number
-            setGroup( x, y, grp, groupType( grp ) );
+            setGroup( x, y, *group_equalities[ group( x, y ) ].begin() );
         }
     }
-
-  // third step ... calculate COAST groups ... coasts of the same water group
-  // get the same number
-    for( auto it = _t.begin(); it != _t.end(); it++ ) {
-        // for all water groups
-        if( it->second == WATER ) {
-            // get next free group number
-            n++;
-            // find all neighbors that are LAND and assign it to one group
-            for( int y = 0; y < _sy; y++ ) {
-                for( int x = 0; x < _sx; x++ ) {
-                    // if not in the current looked at group
-                    if( group( x, y ) != it->first )
-                        continue;
-                    // indeces of all 6 neighbors
-                    int nx[6]; int ny[6];
-                     nx[0] = x-1, ny[0] = y;    // left
-                     nx[1] = x-1, ny[1] = y-1;  // top left
-                     nx[2] = x  , ny[2] = y-1;  // top right
-                     nx[3] = x+1, ny[3] = y;    // right
-                     nx[4] = x+1, ny[4] = y+1;  // bottom right
-                     nx[5] = x  , ny[5] = y+1;  // bottom left
-                    for( int i = 0; i < 6; i++ ) {
-                        // invalid neighbors
-                        if( nx[i] == -1 || ny[i] == -1 || nx[i] == _sx || ny[i] == _sy )
-                            continue;
-                        if( groupType( group( nx[i], ny[i] ) ) == LAND )
-                            setGroup( nx[i], ny[i], n, COAST );
-                    }
-                }
-            }
-        }
-        n++;
-    }
-
     print();
+    
 
-  // step 4 ... clean up my maps
-    // ===================================================== why in the world is once not enough
-    for( auto it = _s.begin(); it != _s.end(); it++ )
-        if( it->second == 0 ) {
-            _s.erase( it );
-            _t.erase( it->first );
-        }
+//  // third step ... calculate COAST groups ... coasts of the same water group
+//  // get the same number
+//    for( auto it = _t.begin(); it != _t.end(); it++ ) {
+//        // for all water groups
+//        if( it->second == WATER ) {
+//            // get next free group number
+//            n++;
+//            // find all neighbors that are LAND and assign it to one group
+//            for( int y = 0; y < _sy; y++ ) {
+//                for( int x = 0; x < _sx; x++ ) {
+//                    // if not in the current looked at group
+//                    if( group( x, y ) != it->first )
+//                        continue;
+//                    // indeces of all 6 neighbors
+//                    int nx[6]; int ny[6];
+//                     nx[0] = x-1, ny[0] = y;    // left
+//                     nx[1] = x-1, ny[1] = y-1;  // top left
+//                     nx[2] = x  , ny[2] = y-1;  // top right
+//                     nx[3] = x+1, ny[3] = y;    // right
+//                     nx[4] = x+1, ny[4] = y+1;  // bottom right
+//                     nx[5] = x  , ny[5] = y+1;  // bottom left
+//                    for( int i = 0; i < 6; i++ ) {
+//                        // invalid neighbors
+//                        if( nx[i] == -1 || ny[i] == -1 || nx[i] == _sx || ny[i] == _sy )
+//                            continue;
+//                        if( groupType( group( nx[i], ny[i] ) ) == LAND )
+//                            setGroup( nx[i], ny[i], n, COAST );
+//                    }
+//                }
+//            }
+//        }
+//        n++;
+//    }
+//
+//    print();
+//
+//  // step 4 ... clean up my maps
+//    // ===================================================== why in the world is once not enough
+//    for( auto it = _s.begin(); it != _s.end(); it++ )
+//        if( it->second == 0 ) {
+//            _s.erase( it );
+//            _t.erase( it->first );
+//        }
 }
 
 GroupMap::GroupType

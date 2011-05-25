@@ -34,6 +34,7 @@ public:
     unsigned group( Position const & ) const;
 
     void setGroup( int x, int y, unsigned group, GroupType type );
+    void setGroup( int x, int y, unsigned group );
 
     // diverse functions: ======================================
     // returns 0 if group is not available
