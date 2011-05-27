@@ -17,7 +17,7 @@ int main() {
     s1.takeOut( 12, SLAVES );
     printStock( "Stock 1", s1 );
 
-    Stock::amnt_type not_taken;
+    Stock::amount_type not_taken;
 
     std::cout << " ... trying to take out 11 slaves" << std::endl;
     not_taken = s1.takeOut( 11, SLAVES );
@@ -34,17 +34,22 @@ int main() {
     Stock s2;
     printStock( "Stock 2", s2 );
 
-    std::cout << " ... putting in some stuff" << std::endl;
-    s2.putIn( 20, SLAVES );
-    s2.putIn( 10, WOOD );
-    s2.putIn( 11, FOOD );
-    printStock( "Stock 2", s2 );
+//    std::cout << " ... putting in some stuff" << std::endl;
+//    s2.putIn( 20, SLAVES );
+//    s2.putIn( 10, WOOD );
+//    s2.putIn( 11, FOOD );
+//    printStock( "Stock 2", s2 );
 
     std::cout << " ... putting as much as is in Stock 1 into Stock 2"
             << std::endl;
     s2.putIn( s1 );
     printStock( "Stock 1", s1 );
     printStock( "Stock 2 = Stock 2 + Stock 1", s2 );
+
+    std::cout << " ... Stock 1 and Stock 2 are";
+    if(!( s1 == s2 ) )
+        std::cout << " not";
+    std::cout << " equal." << std::endl;
 
     std::cout << " ... trying to take as much as is in Stock 2 out of Stock 1"
             << std::endl;

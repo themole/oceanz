@@ -13,19 +13,19 @@ enum Wares {
 class Stock {
 
 public:
-    typedef unsigned short amnt_type;
+    typedef unsigned short amount_type;
 
-    static const amnt_type STD_MAX        =  40;
-    static const amnt_type STD_GLOBAL_MAX = 100;
+    static const amount_type STD_MAX        =  40;
+    static const amount_type STD_GLOBAL_MAX = 100;
 
 public:
     Stock();
     ~Stock();
 
-    amnt_type amount( Wares type ) const;
-    amnt_type max( Wares type ) const;
-    amnt_type globalAmount() const;
-    amnt_type globalMax() const;
+    amount_type amount( Wares type ) const;
+    amount_type max( Wares type ) const;
+    amount_type globalAmount() const;
+    amount_type globalMax() const;
 
     bool has( Wares type ) const;
     bool empty() const;
@@ -39,21 +39,21 @@ public:
 
     // sets max of good type to max if amount is less than max
     // if not it does nothing
-    void setMax( amnt_type max, Wares type );
+    void setMax( amount_type max, Wares type );
     // only changes global_max if global_amnt is
     // less than new max
-    void setGlobalMax( amnt_type max );
+    void setGlobalMax( amount_type max );
 
     // puts amount of type in and returns how much could not
     // be put in because of storage limitation
-    amnt_type putIn( amnt_type amount, Wares type);
+    amount_type putIn( amount_type amount, Wares type);
 
     // puts everything from stuff into this and returns
     // what could not be put in because of storage limitation
     Stock const putIn( Stock const & stuff );
 
     // takes out amount of type and returns how much could not be taken out
-    amnt_type takeOut( amnt_type amount, Wares type );
+    amount_type takeOut( amount_type amount, Wares type );
 
     // takes out everything listed in 'stuff' and returns a stock
     // containing a list of things not taken out because of not
@@ -62,6 +62,8 @@ public:
 
     // operators
     Stock const operator+( Stock const & rhs ) const;
+    bool operator==( Stock const & rhs ) const;
+    bool operator!=( Stock const & rhs ) const;
 
     // for debuggin
     friend std::ostream &
@@ -69,9 +71,9 @@ public:
 
 
 private:
-    std::map< Wares, amnt_type > _stock;
+    std::map< Wares, amount_type > _stock;
     // list of maximum storage for each good
-    std::map< Wares, amnt_type > _maxs;
+    std::map< Wares, amount_type > _maxs;
 
     // sum of current stock
     unsigned global_amnt;

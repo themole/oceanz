@@ -305,12 +305,12 @@ void RegionMap::generateRegions( HeightMap const & hmap ) {
                     // indeces of all 6 neighbors
                     int nx[6];
                     int ny[6];
-                    nx[0] = x - 1, ny[0] = y; // left
-                    nx[1] = x - 1, ny[1] = y - 1; // top left
-                    nx[2] = x, ny[2] = y - 1; // top right
-                    nx[3] = x + 1, ny[3] = y; // right
-                    nx[4] = x + 1, ny[4] = y + 1; // bottom right
-                    nx[5] = x, ny[5] = y + 1; // bottom left
+                    nx[0] = x - 1, ny[0] = y;       // left
+                    nx[1] = x - 1, ny[1] = y - 1;   // top left
+                    nx[2] = x    , ny[2] = y - 1;   // top right
+                    nx[3] = x + 1, ny[3] = y;       // right
+                    nx[4] = x + 1, ny[4] = y + 1;   // bottom right
+                    nx[5] = x    , ny[5] = y + 1;   // bottom left
                     for( int i = 0; i < 6; i++ ) {
                         // invalid neighbors
                         if( nx[i] == -1 || ny[i] == -1 || nx[i] == _sx || ny[i]

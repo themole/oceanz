@@ -9,19 +9,19 @@ Stock::Stock() {
 Stock::~Stock() {
 }
 
-Stock::amnt_type Stock::amount( Wares type ) const {
+Stock::amount_type Stock::amount( Wares type ) const {
     return _stock.find( type )->second;
 }
 
-Stock::amnt_type Stock::max( Wares type ) const {
+Stock::amount_type Stock::max( Wares type ) const {
     return _maxs.find( type )->second;
 }
 
-Stock::amnt_type Stock::globalAmount() const {
+Stock::amount_type Stock::globalAmount() const {
     return global_amnt;
 }
 
-Stock::amnt_type Stock::globalMax() const {
+Stock::amount_type Stock::globalMax() const {
     return global_max;
 }
 
@@ -74,18 +74,21 @@ void Stock::reset() {
     setMax( STD_MAX, SLAVES );
 }
 
-void Stock::setMax( amnt_type max, Wares type ) {
-    if( _stock[type] <= max )
+void Stock::setMax( amount_type max, Wares type ) {
+    auto good = _stock.find( type );
+    if( good == _stock.end() )
+        _maxs[type] = max;
+    if( good->second <= max )
         _maxs[type] = max;
 }
 
-void Stock::setGlobalMax( amnt_type max ) {
+void Stock::setGlobalMax( amount_type max ) {
     if( global_amnt <= max )
         global_max = max;
 }
 
-Stock::amnt_type Stock::putIn( amnt_type amount, Wares type ) {
-    amnt_type not_put_in = 0;
+Stock::amount_type Stock::putIn( amount_type amount, Wares type ) {
+    amount_type not_put_in = 0;
     // respect global maximum
     if( global_amnt + amount > global_max ) {
         not_put_in = global_amnt + amount - global_max;
@@ -94,11 +97,11 @@ Stock::amnt_type Stock::putIn( amnt_type amount, Wares type ) {
     } else
         global_amnt += amount;
     // maximum amount allowed for this good
-    amnt_type max = _maxs[type];
+    amount_type max = _maxs[type];
 
     // ret is a pair of iterator and bool
     auto ret =
-            _stock.insert( std::pair< const Wares, amnt_type >( type, amount ) );
+            _stock.insert( std::pair< const Wares, amount_type >( type, amount ) );
     // my iterator
     auto good = ret.first;
     // if not newly inserted
@@ -125,15 +128,15 @@ Stock const Stock::putIn( Stock const & stuff ) {
     return not_put_in;
 }
 
-Stock::amnt_type Stock::takeOut( amnt_type amount, Wares type ) {
+Stock::amount_type Stock::takeOut( amount_type amount, Wares type ) {
     auto good = _stock.find( type );
     if( good == _stock.end() )
         return amount;
     else {
-        amnt_type not_taken = 0;
+        amount_type not_taken = 0;
         if( amount > good->second ) {
             not_taken = amount - good->second;
-            good->second = 0;
+            _stock.erase( good->first );
         } else
             good->second -= amount;
         global_amnt -= amount - not_taken;
@@ -149,6 +152,8 @@ Stock const Stock::takeOut( Stock const & stuff ) {
         not_taken.setMax( good->second, good->first );
         not_taken.putIn( this->takeOut( good->second, good->first ),
                          good->first );
+        if( this->amount( good->first ) == 0 )
+            this->_stock.erase( good->first );
     }
     return not_taken;
 }
@@ -162,6 +167,17 @@ Stock const Stock::operator+( Stock const & rhs ) const {
     ret.putIn( *this );
     ret.putIn( rhs );
     return ret;
+}
+
+bool Stock::operator==( Stock const & rhs ) const {
+    for( auto good = rhs._stock.begin(); good != rhs._stock.end(); good++ )
+        if( good->second != _stock.find( good->first )->second )
+            return false;
+    return true;
+}
+
+bool Stock::operator!=( Stock const & rhs ) const {
+    return !operator==( rhs );
 }
 
 std::ostream &

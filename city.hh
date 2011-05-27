@@ -16,7 +16,7 @@ public:
     void setName( std::string const & name );
 
     // acces to storage .. the so called stock
-    Stock &             stock();
+    Stock & stock();
 
     bool operator<( City const & ) const;
 

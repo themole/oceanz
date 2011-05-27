@@ -1,7 +1,7 @@
 
 CC = g++
 FLAGS = -Wall -Wextra -Werror -pedantic -std=c++0x
-OBJ = perlin.o map.o tile.o city.o map_generator.o stock.o position.o heightmap.o
+OBJ = perlin.o map.o tile.o city.o map_generator.o stock.o position.o heightmap.o worldmap.o regionmap.o
 
 
 all: noise Noise hex_map_test map_plot_test map_save_load_test stock_test heightmap_test regionmap_test
@@ -62,3 +62,6 @@ regionmap.o: regionmap.hh regionmap.cc
 
 heightmap.o: heightmap.hh heightmap.cc
 	$(CC) -o heightmap.o -c heightmap.cc $(FLAGS)
+	
+worldmap.o: worldmap.hh worldmap.cc heightmap.o regionmap.o
+	$(CC) -o worldmap.o -c worldmap.cc $(FLAGS)
