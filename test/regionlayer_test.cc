@@ -1,6 +1,6 @@
-#include "regionlayer.hh"
-#include "heightlayer.hh"
-#include "mapgenerator.hh"
+#include "../regionlayer.hh"
+#include "../heightlayer.hh"
+#include "../mapgenerator.hh"
 
 #include <iostream>
 #include <ctime>

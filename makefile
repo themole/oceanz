@@ -1,11 +1,12 @@
 CC = g++
-CFLAGS = -Wall -Wextra -Werror -pedantic -std=c++0x
+CFLAGS = -Wall -Wextra -Werror -pedantic -std=c++0x 
 
 HEADERS = $(wildcard *.hh)
 SOURCES = $(patsubst %.hh, %.cc, $(HEADERS) 
 OBJS = $(patsubst %.hh, %.o, $(HEADERS) )
 
-TARGETS = regionlayer_test stock_test
+TESTF = test
+TARGETS = $(patsubst %.cc, %, $(wildcard $(TESTF)/*.cc ) )
 
 .PHONY: all clean
 
@@ -18,8 +19,6 @@ clean:
 %.o : %.cc $(HEADER)
 	$(CC) -c $(CFLAGS) -o $@ $< 
 
-regionlayer_test : regionlayer_test.cc $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $< -o $@  
-
-stock_test : stock_test.cc $(OBJS)
+.SECONDEXPANSION:
+$(TARGETS) : $$(addsuffix .cc, $$@ ) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $< -o $@  

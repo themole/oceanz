@@ -1,4 +1,4 @@
-#include "stock.hh"
+#include "../stock.hh"
 #include <iostream>
 #include <string>
 
