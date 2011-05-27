@@ -1,6 +1,7 @@
 #ifndef CITY_HH
 #define CITY_HH
 
+#include "occupant.hh"
 #include "stock.hh"
 
 #include <string>
@@ -8,21 +9,23 @@
 class City {
 
 public:
-    explicit City( std::string const & name );
-    ~City();
+    enum tile_type {
+        HARBOR,
+        PRODUCTION,
+        HOUSES
+    }
 
-    // access to name
-    std::string const & name() const;
-    void setName( std::string const & name );
+public:
+    explicit City( std::string const & name );
+    virtual ~City();
 
     // acces to storage .. the so called stock
     Stock & stock();
 
-    bool operator<( City const & ) const;
-
-private:
+protected:
     std::string _name;
-    Stock       _stock;
+    Stock _stock;
+    std::map< Position, tile_type > _local;
 };
 
 #endif // CITY_HH

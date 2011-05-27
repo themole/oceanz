@@ -1,13 +1,13 @@
 
 CC = g++
 FLAGS = -Wall -Wextra -Werror -pedantic -std=c++0x
-OBJ = perlin.o map.o tile.o city.o map_generator.o stock.o position.o heightmap.o worldmap.o regionmap.o
+OBJ = perlin.o map.o tile.o map_generator.o stock.o position.o heightlayer.o worldmap.o regionlayer.o
 
 
-all: noise Noise hex_map_test map_plot_test map_save_load_test stock_test heightmap_test regionmap_test
+all: noise Noise stock_test heightlayer_test regionlayer_test
 
 clean:
-	rm -rf noise Noise hex_map_test map_plot_test map_save_load_test stock_test heightmap_test
+	rm -rf noise Noise hex_map_test map_plot_test map_save_load_test stock_test heightlayer_test regionlayer_test
 	rm -rf *.o *.data *.map *.ps
 
 .PHONY: all clean
@@ -18,23 +18,14 @@ noise: perlin.o noise.cc
 Noise: perlin.o Noise.cc
 	$(CC) -o Noise perlin.o Noise.cc $(FLAGS)
 
-hex_map_test: $(OBJ) hex_map_test.cc
-	$(CC) -o hex_map_test $(OBJ) hex_map_test.cc $(FLAGS)
-
-map_plot_test: $(OBJ) produce_map_plot_data.cc
-	$(CC) -o map_plot_test $(OBJ) produce_map_plot_data.cc $(FLAGS)
-
-map_save_load_test: $(OBJ) map_save_load_test.cc
-	$(CC) -o map_save_load_test $(OBJ) map_save_load_test.cc $(FLAGS)
-
 stock_test: stock.o stock_test.cc
 	$(CC) -o stock_test stock.o stock_test.cc $(FLAGS)
 
-heightmap_test: position.o heightmap_test.cc heightmap.o heightmap.hh
-	$(CC) -o heightmap_test heightmap.o position.o heightmap_test.cc $(FLAGS)
+heightlayer_test: position.o heightlayer_test.cc heightlayer.o heightlayer.hh
+	$(CC) -o heightlayer_test heightlayer.o position.o heightlayer_test.cc $(FLAGS)
 
-regionmap_test: position.o regionmap.o heightmap.o regionmap_test.cc perlin.o map_generator.o
-	$(CC) -o regionmap_test regionmap.o perlin.o heightmap.o map_generator.o position.o regionmap_test.cc $(FLAGS)
+regionlayer_test: position.o regionlayer.o heightlayer.o regionlayer_test.cc perlin.o map_generator.o
+	$(CC) -o regionlayer_test regionlayer.o perlin.o heightlayer.o map_generator.o position.o regionlayer_test.cc $(FLAGS)
 
 perlin.o: perlin.hh perlin.cc
 	$(CC) -o perlin.o -c perlin.cc $(FLAGS)
@@ -57,11 +48,11 @@ position.o: position.hh position.cc
 map_generator.o: map_generator.hh map_generator.cc
 	$(CC) -o map_generator.o -c map_generator.cc $(FLAGS)
 
-regionmap.o: regionmap.hh regionmap.cc
-	$(CC) -o regionmap.o -c regionmap.cc $(FLAGS) 
+regionlayer.o: regionlayer.hh regionlayer.cc
+	$(CC) -o regionlayer.o -c regionlayer.cc $(FLAGS) 
 
-heightmap.o: heightmap.hh heightmap.cc
-	$(CC) -o heightmap.o -c heightmap.cc $(FLAGS)
+heightlayer.o: heightlayer.hh heightlayer.cc
+	$(CC) -o heightlayer.o -c heightlayer.cc $(FLAGS)
 	
-worldmap.o: worldmap.hh worldmap.cc heightmap.o regionmap.o
+worldmap.o: worldmap.hh worldmap.cc heightlayer.o regionlayer.o
 	$(CC) -o worldmap.o -c worldmap.cc $(FLAGS)

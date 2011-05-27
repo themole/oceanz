@@ -1,15 +1,15 @@
 #ifndef REGION_MAP
 #define REGION_MAP
 
-#include "heightmap.hh"
+#include "heightlayer.hh"
 #include "position.hh"
 
 #include <map>
 
-// represents a complete decomposition of a HeightMap into groups
+// represents a complete decomposition of a HeightLayer into groups
 // with different types ... accomplished by connected component analasys
 
-class RegionMap {
+class RegionLayer {
 
 public:
     enum region_type {
@@ -27,9 +27,9 @@ public:
 
 public:
     // generates null object
-    RegionMap();
-    RegionMap( HeightMap const & hmap );
-    ~RegionMap();
+    RegionLayer();
+    RegionLayer( HeightLayer const & hmap );
+    ~RegionLayer();
 
     // access to size information
     int sizeX() const;
@@ -75,11 +75,11 @@ private:
     std::map< unsigned, unsigned > _s;
 
 private:
-    void init( HeightMap const & );
+    void init( HeightLayer const & );
     void uninit();
 
-    void generateRegions( HeightMap const & );
-    region_type heightToRegionType( HeightMap::height_type height ) const;
+    void generateRegions( HeightLayer const & );
+    region_type heightToRegionType( HeightLayer::height_type height ) const;
 
     void print() const;
 };

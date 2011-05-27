@@ -7,7 +7,7 @@
 
 #include <ostream>
 
-class HeightMap {
+class HeightLayer {
 
 public:
 
@@ -17,11 +17,11 @@ public:
 
 public:
     // creates a "null" object
-    HeightMap();
+    HeightLayer();
     // creates width*height sized map
-    HeightMap( int width, int height );
+    HeightLayer( int width, int height );
     // deconstructor
-    ~HeightMap();
+    ~HeightLayer();
 
     // test for being null object
     bool isNull() const;
@@ -42,7 +42,7 @@ public:
     void load( std::string const & filename );
 
     // just for debugging
-    friend std::ostream& operator<<( std::ostream &, HeightMap const & );
+    friend std::ostream& operator<<( std::ostream &, HeightLayer const & );
 
 protected:
     // size information ( both 0 for null object )

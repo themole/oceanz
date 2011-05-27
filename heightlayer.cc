@@ -1,57 +1,57 @@
-#include "heightmap.hh"
+#include "heightlayer.hh"
 
 #include <fstream>
 #include <iomanip>
 
-HeightMap::HeightMap() {
+HeightLayer::HeightLayer() {
     init( 0, 0, 0 );
 }
 
-HeightMap::HeightMap( int width, int height ) {
+HeightLayer::HeightLayer( int width, int height ) {
     if( width > 0 && height > 0 )
         init( width, height, 0 );
     else
         init( 0, 0, 0 );
 }
 
-HeightMap::~HeightMap() {
+HeightLayer::~HeightLayer() {
     uninit();
 }
 
-bool HeightMap::isNull() const {
+bool HeightLayer::isNull() const {
     return ( _sx == 0 || _sy == 0 || _h == 0 );
 }
 
-int HeightMap::sizeX() const {
+int HeightLayer::sizeX() const {
     return _sx;
 }
 
-int HeightMap::sizeY() const {
+int HeightLayer::sizeY() const {
     return _sy;
 }
 
-HeightMap::height_type HeightMap::height( int x, int y ) const {
+HeightLayer::height_type HeightLayer::height( int x, int y ) const {
     if( !isNull() )
         return _h[( x % _sx ) + _sx * ( y % _sy )];
     else
         return height_type( 0 );
 }
 
-HeightMap::height_type HeightMap::height( Position const & pos ) const {
+HeightLayer::height_type HeightLayer::height( Position const & pos ) const {
     return height( pos.x(), pos.y() );
 }
 
-void HeightMap::setHeight( int x, int y, height_type height ) {
+void HeightLayer::setHeight( int x, int y, height_type height ) {
     if( isNull() )
         return;
     _h[( x % _sx ) + _sx * ( y % _sy )] = height;
 }
 
-void HeightMap::setHeight( Position const & pos, height_type height ) {
+void HeightLayer::setHeight( Position const & pos, height_type height ) {
     setHeight( pos.x(), pos.y(), height );
 }
 
-void HeightMap::save( std::string const & filename ) {
+void HeightLayer::save( std::string const & filename ) {
     if( isNull() )
         return;
 
@@ -67,7 +67,7 @@ void HeightMap::save( std::string const & filename ) {
     }
 }
 
-void HeightMap::load( std::string const & filename ) {
+void HeightLayer::load( std::string const & filename ) {
     std::ifstream file( filename.c_str(), std::ios::binary | std::ios::in );
     if( file.is_open() ) {
         uninit();
@@ -87,7 +87,7 @@ void HeightMap::load( std::string const & filename ) {
     }
 }
 
-void HeightMap::init( int sx, int sy, height_type h ) {
+void HeightLayer::init( int sx, int sy, height_type h ) {
     if( sx > 0 && sy > 0 ) {
         _sx = sx, _sy = sy;
         _h = new height_type[sx * sy];
@@ -97,13 +97,13 @@ void HeightMap::init( int sx, int sy, height_type h ) {
         _sx = 0, _sy = 0, _h = 0;
 }
 
-void HeightMap::uninit() {
+void HeightLayer::uninit() {
     if( !isNull() )
         delete[] _h;
 }
 
 std::ostream &
-operator<<( std::ostream & os, HeightMap const & hmap ) {
+operator<<( std::ostream & os, HeightLayer const & hmap ) {
     for( int y = 0; y < hmap.sizeY(); y++ ) {
         os << std::endl;
         for( int x = 0; x < hmap.sizeX(); x++ ) {

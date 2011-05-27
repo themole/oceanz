@@ -23,3 +23,6 @@ void Position::setY( int y ) {
     _y = y;
 }
 
+bool Position::operator<( Position const & p ) const {
+    return _x/(_y+74131.f) < p._x/(p._y+74131.f);
+}

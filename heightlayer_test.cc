@@ -1,10 +1,10 @@
-#include "heightmap.hh"
+#include "heightlayer.hh"
 
 #include <iostream>
 
 int main() {
-    HeightMap hmap( 10, 10 );
-    HeightMap hmap2;
+    HeightLayer hmap( 10, 10 );
+    HeightLayer hmap2;
 
     for( int i = 0; i < 10; i++ )
         for( int j = 0; j < 10; j++ )

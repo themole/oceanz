@@ -12,6 +12,8 @@ public:
     void setX( int x );
     void setY( int y );
 
+    bool operator<( Position const & p ) const;
+
 private:
     int _x, _y;
 };

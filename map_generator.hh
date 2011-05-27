@@ -2,7 +2,7 @@
 #define MAP_GENERATOR_HH
 
 #include "perlin.hh"
-#include "heightmap.hh"
+#include "heightlayer.hh"
 
 class MapGenerator {
 
@@ -12,7 +12,7 @@ public:
 
     void setPerlin( Perlin const & );
 
-    void generate( HeightMap & ) const;
+    void generate( HeightLayer & ) const;
 
 private:
     Perlin _p;

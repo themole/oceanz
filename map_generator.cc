@@ -23,7 +23,7 @@ void MapGenerator::setPerlin( Perlin const & perlin ) {
 
 #include <vector>
 
-void MapGenerator::generate( HeightMap & hmap ) const {
+void MapGenerator::generate( HeightLayer & hmap ) const {
     float min = 0.f, max = 0.f;
     float noise = 0.f;
 
@@ -52,12 +52,12 @@ void MapGenerator::generate( HeightMap & hmap ) const {
                 hmap.setHeight( x,
                                 y,
                                 ( tmp[y][x] - w ) / ( max - w )
-                                        * HeightMap::HEIGHT_MAX );
+                                        * HeightLayer::HEIGHT_MAX );
             else
                 hmap.setHeight( x,
                                 y,
                                 ( tmp[y][x] - w ) / ( min - w )
-                                        * HeightMap::HEIGHT_MIN );
+                                        * HeightLayer::HEIGHT_MIN );
         }
 }
 

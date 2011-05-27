@@ -1,4 +1,4 @@
-#include "regionmap.hh"
+#include "regionlayer.hh"
 
 #include <iostream>
 #include <iomanip>
@@ -6,37 +6,37 @@
 #include <set>
 #include <climits>
 
-RegionMap::RegionMap() :
+RegionLayer::RegionLayer() :
     _sx( 0 ), _sy( 0 ), _r( 0 ) {
 }
 
-RegionMap::RegionMap( HeightMap const & hmap ) :
+RegionLayer::RegionLayer( HeightLayer const & hmap ) :
     _sx( 0 ), _sy( 0 ), _r( 0 ) {
 
     init( hmap );
 }
 
-RegionMap::~RegionMap() {
+RegionLayer::~RegionLayer() {
     uninit();
 }
 
-int RegionMap::sizeX() const {
+int RegionLayer::sizeX() const {
     return _sx;
 }
 
-int RegionMap::sizeY() const {
+int RegionLayer::sizeY() const {
     return _sy;
 }
 
-unsigned RegionMap::region( int x, int y ) const {
+unsigned RegionLayer::region( int x, int y ) const {
     return _r[( x % _sx ) + _sx * ( y % _sy )];
 }
 
-unsigned RegionMap::region( Position const & pos ) const {
+unsigned RegionLayer::region( Position const & pos ) const {
     return region( pos.x(), pos.y() );
 }
 
-void RegionMap::setRegion( int x, int y, unsigned g, region_type t ) {
+void RegionLayer::setRegion( int x, int y, unsigned g, region_type t ) {
 
     // fix size of region that xy might already be in
     auto sz = _s.find( region( x, y ) );
@@ -71,7 +71,7 @@ void RegionMap::setRegion( int x, int y, unsigned g, region_type t ) {
         sz->second = sz->second + 1;
 }
 
-void RegionMap::setRegion( int x, int y, unsigned g ) {
+void RegionLayer::setRegion( int x, int y, unsigned g ) {
     // fix size of region that xy might already be in
     auto sz = _s.find( region( x, y ) );
     if( sz != _s.end() ) {
@@ -92,7 +92,7 @@ void RegionMap::setRegion( int x, int y, unsigned g ) {
         sz->second = sz->second + 1;
 }
 
-unsigned RegionMap::regionSize( unsigned group ) const {
+unsigned RegionLayer::regionSize( unsigned group ) const {
     auto sz = _s.find( group );
     if( sz != _s.end() )
         return sz->second;
@@ -100,15 +100,15 @@ unsigned RegionMap::regionSize( unsigned group ) const {
         return 0;
 }
 
-unsigned RegionMap::regionSizeX( unsigned r ) const {
+unsigned RegionLayer::regionSizeX( unsigned r ) const {
     return regionMaxX( r ) - regionMinX( r );
 }
 
-unsigned RegionMap::regionSizeY( unsigned r ) const {
+unsigned RegionLayer::regionSizeY( unsigned r ) const {
     return regionMaxY( r ) - regionMinY( r );
 }
 
-int RegionMap::regionMinX( unsigned r ) const {
+int RegionLayer::regionMinX( unsigned r ) const {
     int min = INT_MAX;
     for( int x = 0; x < _sx; x++ )
         for( int y = 0; y < _sy; y++ ) {
@@ -118,7 +118,7 @@ int RegionMap::regionMinX( unsigned r ) const {
     return min;
 }
 
-int RegionMap::regionMaxX( unsigned r ) const {
+int RegionLayer::regionMaxX( unsigned r ) const {
     int max = INT_MIN;
     for( int x = 0; x < _sx; x++ )
         for( int y = 0; y < _sy; y++ ) {
@@ -128,7 +128,7 @@ int RegionMap::regionMaxX( unsigned r ) const {
     return max;
 }
 
-int RegionMap::regionMinY( unsigned r ) const {
+int RegionLayer::regionMinY( unsigned r ) const {
     int min = INT_MAX;
     for( int x = 0; x < _sx; x++ )
         for( int y = 0; y < _sy; y++ ) {
@@ -138,7 +138,7 @@ int RegionMap::regionMinY( unsigned r ) const {
     return min;
 }
 
-int RegionMap::regionMaxY( unsigned r ) const {
+int RegionLayer::regionMaxY( unsigned r ) const {
     int max = INT_MIN;
     for( int x = 0; x < _sx; x++ )
         for( int y = 0; y < _sy; y++ ) {
@@ -148,7 +148,7 @@ int RegionMap::regionMaxY( unsigned r ) const {
     return max;
 }
 
-RegionMap::region_type RegionMap::regionType( unsigned group ) const {
+RegionLayer::region_type RegionLayer::regionType( unsigned group ) const {
     auto tp = _t.find( group );
     if( tp != _t.end() )
         return tp->second;
@@ -156,7 +156,7 @@ RegionMap::region_type RegionMap::regionType( unsigned group ) const {
         return NONE;
 }
 
-unsigned RegionMap::greatestRegion( region_type type ) const {
+unsigned RegionLayer::greatestRegion( region_type type ) const {
     unsigned max = 0;
     unsigned max_g = 0;
     for( auto it = _s.begin(); it != _s.end(); it++ )
@@ -168,11 +168,11 @@ unsigned RegionMap::greatestRegion( region_type type ) const {
     return max_g;
 }
 
-unsigned RegionMap::regionCount() const {
+unsigned RegionLayer::regionCount() const {
     return _s.size();
 }
 
-unsigned RegionMap::regionCount( region_type type ) const {
+unsigned RegionLayer::regionCount( region_type type ) const {
     unsigned cnt = 0;
     for( auto it = _t.begin(); it != _t.end(); it++ )
         if( it->second == type )
@@ -180,13 +180,13 @@ unsigned RegionMap::regionCount( region_type type ) const {
     return cnt;
 }
 
-bool RegionMap::isNull() const {
+bool RegionLayer::isNull() const {
     if( _sx == 0 || _sy == 0 || _r == 0 )
         return true;
     return false;
 }
 
-void RegionMap::init( HeightMap const & hmap ) {
+void RegionLayer::init( HeightLayer const & hmap ) {
     if( hmap.isNull() )
         return;
     _sx = hmap.sizeX();
@@ -203,7 +203,7 @@ void RegionMap::init( HeightMap const & hmap ) {
     }
 }
 
-void RegionMap::uninit() {
+void RegionLayer::uninit() {
     if( _r != 0 )
         delete[] _r;
 }
@@ -218,7 +218,7 @@ void RegionMap::uninit() {
 // neighbors are numbered like this:
 //    01  02
 //  00  xy
-void RegionMap::generateRegions( HeightMap const & hmap ) {
+void RegionLayer::generateRegions( HeightLayer const & hmap ) {
     // pass 1 ... get some temporary groups going
     // current region number
     unsigned n = 0;
@@ -293,7 +293,7 @@ void RegionMap::generateRegions( HeightMap const & hmap ) {
     // get the same number
     for( auto it = _t.begin(); it != _t.end(); it++ ) {
         // for all water groups
-        if( it->second == WATER_SHALLOW ) {
+        if( it->second == WATER ) {
             // get next free region number
             n++;
             // find all neighbors that are LAND and assign it to one region
@@ -316,7 +316,7 @@ void RegionMap::generateRegions( HeightMap const & hmap ) {
                         if( nx[i] == -1 || ny[i] == -1 || nx[i] == _sx || ny[i]
                                 == _sy )
                             continue;
-                        if( regionType( region( nx[i], ny[i] ) ) == LAND_LOW )
+                        if( regionType( region( nx[i], ny[i] ) ) == LAND )
                             setRegion( nx[i], ny[i], n, COAST );
                     }
                 }
@@ -336,25 +336,15 @@ void RegionMap::generateRegions( HeightMap const & hmap ) {
         }
 }
 
-RegionMap::region_type RegionMap::heightToRegionType( HeightMap::height_type height ) const {
+RegionLayer::region_type RegionLayer::heightToRegionType( HeightLayer::height_type height ) const {
     if( height > 0 ) {
-        if( height >  200 )
-            return LAND_HIGH;
-        else if( height > 100 )
-            return LAND_MID;
-        else
-            return LAND_LOW;
+        return LAND;
     } else {
-        if( height < -200 )
-            return WATER_DEEP;
-        else if( height < -100 )
-            return WATER_MID;
-        else
-            return WATER_SHALLOW;
+        return WATER;
     }
 }
 
-void RegionMap::print() const {
+void RegionLayer::print() const {
     for( int y = 0; y < _sy; y++ ) {
         std::cout << std::endl;
         for( int x = 0; x < _sx; x++ ) {

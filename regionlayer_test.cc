@@ -1,5 +1,5 @@
-#include "regionmap.hh"
-#include "heightmap.hh"
+#include "regionlayer.hh"
+#include "heightlayer.hh"
 #include "map_generator.hh"
 
 #include <iostream>
@@ -9,18 +9,19 @@
 
 int main() {
     srand( time( 0 ) );
-    HeightMap hmap( 256, 128 );
+    long seed = rand();
+    HeightLayer hmap( 128, 128 );
     Perlin p;
-    p.setPersistence( .5 );
-    p.setOctaves( 12 );
+    p.setPersistence( .35 );
+    p.setOctaves( 8 );
     p.setAmplitude( 65536 );
-    p.setFreq0( pow( .5f, 6.5 ) );
-    p.setSeed( rand() );
+    p.setFreq0( pow( .5f, 4.6 ) );
+    p.setSeed( seed );
     MapGenerator mapgen;
     mapgen.setPerlin( p );
 
     mapgen.generate( hmap );
-    RegionMap gm( hmap );
+    RegionLayer gm( hmap );
     //    while( gm.regionSize( gm.greatestRegion( GroupMap::COAST ) ) < 900 ) {
     //        p.setSeed( rand() );
     //        mapgen.setPerlin( p );
@@ -28,9 +29,9 @@ int main() {
     //        gm = GroupMap( hmap );
     //    }
 
-    std::cout << "greatestCost = " << gm.greatestRegion( RegionMap::COAST )
+    std::cout << "greatestCost = " << gm.greatestRegion( RegionLayer::COAST )
             << " with "
-            << gm.regionSize( gm.greatestRegion( RegionMap::COAST ) )
-            << " tiles." << std::endl;
-
+            << gm.regionSize( gm.greatestRegion( RegionLayer::COAST ) )
+            << " tiles." << std::endl << std::endl;
+    std::cout << "seed = " << seed << std::endl << std::endl;
 }
