@@ -5,7 +5,8 @@ City::City( std::string const & name ) {
     _stock = Stock();
 }
 
-City::~City() {}
+City::~City() {
+}
 
 std::string const &
 City::name() const {
@@ -17,13 +18,11 @@ City::stock() {
     return _stock;
 }
 
-void
-City::setName( std::string const & name ) {
+void City::setName( std::string const & name ) {
     if( name != "" )
         _name = name;
 }
 
-bool
-City::operator<( City const & rhs ) const {
+bool City::operator<( City const & rhs ) const {
     return _name < rhs._name;
 }

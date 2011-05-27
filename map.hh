@@ -13,10 +13,11 @@ class Map : public HeightMap {
 private:
     // operator< for Position ... only possible if in some range
     struct pos_compare {
-        pos_compare() {};
+        pos_compare() {
+        }
+        ;
         bool operator()( Position const & a, Position const & b ) const {
-            return (  ( a.x() + a.y() * 9791 )
-                    < ( b.x() + a.y() * 9791 ) );
+            return ( ( a.x() + a.y() * 9791 ) < ( b.x() + a.y() * 9791 ) );
         }
     };
 

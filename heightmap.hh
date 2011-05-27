@@ -10,7 +10,10 @@
 class HeightMap {
 
 public:
+
     typedef short height_type;
+    static const height_type HEIGHT_MAX = -255;
+    static const height_type HEIGHT_MIN = 255;
 
 public:
     // creates a "null" object
@@ -39,8 +42,7 @@ public:
     void load( std::string const & filename );
 
     // just for debugging
-    friend
-    std::ostream& operator<<( std::ostream &, HeightMap const & );
+    friend std::ostream& operator<<( std::ostream &, HeightMap const & );
 
 protected:
     // size information ( both 0 for null object )

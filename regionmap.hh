@@ -14,7 +14,13 @@ class RegionMap {
 public:
     enum region_type {
         LAND,
+        LAND_LOW,
+        LAND_MID,
+        LAND_HIGH,
         WATER,
+        WATER_SHALLOW,
+        WATER_MID,
+        WATER_DEEP,
         COAST,
         NONE
     };
@@ -39,15 +45,21 @@ public:
     // diverse functions: ======================================
     // access to region properties
     // returns 0 if region is not available
-    unsigned regionSize( unsigned group ) const;
+    unsigned regionSize( unsigned region ) const;
+    unsigned regionSizeX( unsigned region ) const;
+    unsigned regionSizeY( unsigned region ) const;
+    int regionMinX( unsigned region ) const;
+    int regionMaxX( unsigned region ) const;
+    int regionMinY( unsigned region ) const;
+    int regionMaxY( unsigned region ) const;
 
     // return NONE if region not available
-    region_type regionType( unsigned group ) const;
+    region_type regionType( unsigned region ) const;
 
     unsigned greatestRegion( region_type type ) const;
 
     unsigned regionCount() const;
-    unsigned groupCount( region_type type ) const;
+    unsigned regionCount( region_type type ) const;
 
     // null check
     bool isNull() const;
@@ -66,8 +78,8 @@ private:
     void init( HeightMap const & );
     void uninit();
 
-    void connected_component_analasys( HeightMap const & );
-    region_type heightToRegionType( short height ) const;
+    void generateRegions( HeightMap const & );
+    region_type heightToRegionType( HeightMap::height_type height ) const;
 
     void print() const;
 };

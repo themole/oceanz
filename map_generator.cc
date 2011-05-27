@@ -14,17 +14,16 @@ MapGenerator::MapGenerator( long seed ) {
     _p.setFreq0( pow( .5f, 6.f ) );
 }
 
-MapGenerator::~MapGenerator() {}
+MapGenerator::~MapGenerator() {
+}
 
-void
-MapGenerator::setPerlin( Perlin const & perlin ) {
+void MapGenerator::setPerlin( Perlin const & perlin ) {
     _p = perlin;
 }
 
 #include <vector>
 
-void
-MapGenerator::generate( HeightMap & hmap ) const {
+void MapGenerator::generate( HeightMap & hmap ) const {
     float min = 0.f, max = 0.f;
     float noise = 0.f;
 
@@ -34,10 +33,12 @@ MapGenerator::generate( HeightMap & hmap ) const {
     for( int y = 0; y < hmap.sizeY(); y++ ) {
         tmp.push_back( std::vector< float >() );
         for( int x = 0; x < hmap.sizeX(); x++ ) {
-            noise = _p.Noise( ( hmap.sizeY() - y + 2*x ) * cos( PI/6.f ),
-                                                 ( 2*y ) * sin( PI/6.f ) + 1.f ) ;
-            if( noise < min ) min = noise;
-            if( noise > max ) max = noise;
+            noise = _p.Noise( ( hmap.sizeY() - y + 2 * x ) * cos( PI / 6.f ),
+                              ( 2 * y ) * sin( PI / 6.f ) + 1.f );
+            if( noise < min )
+                min = noise;
+            if( noise > max )
+                max = noise;
 
             tmp[y].push_back( noise );
         }
@@ -48,9 +49,15 @@ MapGenerator::generate( HeightMap & hmap ) const {
     for( int y = 0; y < hmap.sizeY(); y++ )
         for( int x = 0; x < hmap.sizeX(); x++ ) {
             if( tmp[y][x] > w )
-                hmap.setHeight( x, y, ( tmp[y][x] - w )/( max - w ) * 255 );
-            else 
-                hmap.setHeight( x, y, ( tmp[y][x] - w )/( w - min ) * 255 );
+                hmap.setHeight( x,
+                                y,
+                                ( tmp[y][x] - w ) / ( max - w )
+                                        * HeightMap::HEIGHT_MAX );
+            else
+                hmap.setHeight( x,
+                                y,
+                                ( tmp[y][x] - w ) / ( min - w )
+                                        * HeightMap::HEIGHT_MIN );
         }
 }
 

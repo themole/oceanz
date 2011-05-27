@@ -21,17 +21,16 @@ int main() {
 
     mapgen.generate( hmap );
     RegionMap gm( hmap );
-//    while( gm.regionSize( gm.greatestRegion( GroupMap::COAST ) ) < 900 ) {
-//        p.setSeed( rand() );
-//        mapgen.setPerlin( p );
-//        mapgen.generate( hmap );
-//        gm = GroupMap( hmap );
-//    }
+    //    while( gm.regionSize( gm.greatestRegion( GroupMap::COAST ) ) < 900 ) {
+    //        p.setSeed( rand() );
+    //        mapgen.setPerlin( p );
+    //        mapgen.generate( hmap );
+    //        gm = GroupMap( hmap );
+    //    }
 
-    std::cout << "greatestCost = "
-              << gm.greatestRegion( RegionMap::COAST )
-              << " with "
-              << gm.regionSize( gm.greatestRegion( RegionMap::COAST ))
-              << " tiles." << std::endl;
-    
+    std::cout << "greatestCost = " << gm.greatestRegion( RegionMap::COAST )
+            << " with "
+            << gm.regionSize( gm.greatestRegion( RegionMap::COAST ) )
+            << " tiles." << std::endl;
+
 }

@@ -17,7 +17,8 @@ public:
 private:
     Perlin _p;
 
-private: // functions
+private:
+    // functions
 };
 
 #endif // MAP_GENERATOR_HH
