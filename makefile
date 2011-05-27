@@ -1,10 +1,10 @@
 
 CC = g++
 FLAGS = -Wall -Wextra -Werror -pedantic -std=c++0x
-OBJ = perlin.o map.o tile.o city.o map_generator.o stock.o position.o
+OBJ = perlin.o map.o tile.o city.o map_generator.o stock.o position.o heightmap.o
 
 
-all: noise Noise hex_map_test map_plot_test map_save_load_test stock_test heightmap_test groupmap_test
+all: noise Noise hex_map_test map_plot_test map_save_load_test stock_test heightmap_test regionmap_test
 
 clean:
 	rm -rf noise Noise hex_map_test map_plot_test map_save_load_test stock_test heightmap_test
@@ -30,11 +30,11 @@ map_save_load_test: $(OBJ) map_save_load_test.cc
 stock_test: stock.o stock_test.cc
 	$(CC) -o stock_test stock.o stock_test.cc $(FLAGS)
 
-heightmap_test: position.o heightmap_test.cc heightmap.cc heightmap.hh
-	$(CC) -o heightmap_test position.o heightmap_test.cc $(FLAGS)
+heightmap_test: position.o heightmap_test.cc heightmap.o heightmap.hh
+	$(CC) -o heightmap_test heightmap.o position.o heightmap_test.cc $(FLAGS)
 
-groupmap_test: position.o groupmap.o heightmap.cc heightmap.hh groupmap_test.cc perlin.o map_generator.o
-	$(CC) -o groupmap_test groupmap.o perlin.o heightmap.hh map_generator.o position.o groupmap_test.cc $(FLAGS)
+regionmap_test: position.o regionmap.o heightmap.o regionmap_test.cc perlin.o map_generator.o
+	$(CC) -o regionmap_test regionmap.o perlin.o heightmap.o map_generator.o position.o regionmap_test.cc $(FLAGS)
 
 perlin.o: perlin.hh perlin.cc
 	$(CC) -o perlin.o -c perlin.cc $(FLAGS)
@@ -57,5 +57,8 @@ position.o: position.hh position.cc
 map_generator.o: map_generator.hh map_generator.cc
 	$(CC) -o map_generator.o -c map_generator.cc $(FLAGS)
 
-groupmap.o: groupmap.hh groupmap.cc
-	$(CC) -o groupmap.o -c groupmap.cc $(FLAGS) 
+regionmap.o: regionmap.hh regionmap.cc
+	$(CC) -o regionmap.o -c regionmap.cc $(FLAGS) 
+
+heightmap.o: heightmap.hh heightmap.cc
+	$(CC) -o heightmap.o -c heightmap.cc $(FLAGS)

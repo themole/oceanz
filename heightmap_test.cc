@@ -3,8 +3,8 @@
 #include <iostream>
 
 int main() {
-    HeightMap< int > hmap( 10, 10 );
-    HeightMap< int > hmap2;
+    HeightMap hmap( 10, 10 );
+    HeightMap hmap2;
 
     for( int i = 0; i < 10; i++ )
         for( int j = 0; j < 10; j++ )

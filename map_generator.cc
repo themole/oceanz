@@ -24,7 +24,7 @@ MapGenerator::setPerlin( Perlin const & perlin ) {
 #include <vector>
 
 void
-MapGenerator::generate( HeightMap< short > & hmap ) const {
+MapGenerator::generate( HeightMap & hmap ) const {
     float min = 0.f, max = 0.f;
     float noise = 0.f;
 
@@ -43,7 +43,7 @@ MapGenerator::generate( HeightMap< short > & hmap ) const {
         }
     }
 
-    float w = min + .55f * ( max - min );
+    float w = min + .48f * ( max - min );
 
     for( int y = 0; y < hmap.sizeY(); y++ )
         for( int x = 0; x < hmap.sizeX(); x++ ) {

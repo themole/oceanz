@@ -12,7 +12,7 @@ public:
 
     void setPerlin( Perlin const & );
 
-    void generate( HeightMap< short > & ) const;
+    void generate( HeightMap & ) const;
 
 private:
     Perlin _p;

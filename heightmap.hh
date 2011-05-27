@@ -7,11 +7,10 @@
 
 #include <ostream>
 
-template< typename T = int >
 class HeightMap {
 
 public:
-    typedef T height_type;
+    typedef short height_type;
 
 public:
     // creates a "null" object
@@ -40,9 +39,8 @@ public:
     void load( std::string const & filename );
 
     // just for debugging
-    template< height_type >
     friend
-    std::ostream& operator<<( std::ostream &, HeightMap< height_type > const & );
+    std::ostream& operator<<( std::ostream &, HeightMap const & );
 
 protected:
     // size information ( both 0 for null object )
@@ -56,7 +54,5 @@ private:
     void init( int sx, int sy, height_type h );
     void uninit();
 };
-
-#include "heightmap.cc"
 
 #endif // HEIGHT_MAP_HH

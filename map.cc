@@ -2,19 +2,19 @@
 #include <utility>
 
 Map::Map()
-    : HeightMap< height_type >() {}
+    : HeightMap() {}
 
 Map::Map( int width, int height )
-    : HeightMap< height_type >( width, height ) {}
+    : HeightMap( width, height ) {}
 
 void
 Map::save( std::string const & filename ) {
-    HeightMap< height_type >::save( filename + ".hmap" );
+    HeightMap::save( filename + ".hmap" );
 }
 
 void
 Map::load( std::string const & filename ) {
-    HeightMap< short >::load( filename + ".hmap" );
+    HeightMap::load( filename + ".hmap" );
 }
 
 City*

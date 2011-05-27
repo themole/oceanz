@@ -8,7 +8,7 @@
 #include <string>
 #include <map>
 
-class Map : public HeightMap< short > {
+class Map : public HeightMap {
 
 private:
     // operator< for Position ... only possible if in some range

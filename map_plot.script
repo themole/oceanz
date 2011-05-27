@@ -7,8 +7,8 @@ set view 45,25,1.0,1.0
 set dgrid3d 80, 80, 4
 set pm3d
 set hidden3d
-set terminal postscript
-set output "map_plot.ps"
+#set terminal postscript
+#set output "map_plot.ps"
 set title 'map generated with perlin noise'
 splot 'map_plot.data'
 
