@@ -1,4 +1,4 @@
-#include "map_generator.hh"
+#include "mapgenerator.hh"
 
 #include <cmath>
 

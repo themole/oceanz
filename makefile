@@ -1,7 +1,7 @@
 
 CC = g++
 FLAGS = -Wall -Wextra -Werror -pedantic -std=c++0x
-OBJ = perlin.o map.o tile.o map_generator.o stock.o position.o heightlayer.o worldmap.o regionlayer.o
+OBJ = perlin.o map.o tile.o mapgenerator.o stock.o position.o heightlayer.o worldmap.o regionlayer.o
 
 
 all: noise Noise stock_test heightlayer_test regionlayer_test
@@ -24,8 +24,8 @@ stock_test: stock.o stock_test.cc
 heightlayer_test: position.o heightlayer_test.cc heightlayer.o heightlayer.hh
 	$(CC) -o heightlayer_test heightlayer.o position.o heightlayer_test.cc $(FLAGS)
 
-regionlayer_test: position.o regionlayer.o heightlayer.o regionlayer_test.cc perlin.o map_generator.o
-	$(CC) -o regionlayer_test regionlayer.o perlin.o heightlayer.o map_generator.o position.o regionlayer_test.cc $(FLAGS)
+regionlayer_test: position.o regionlayer.o heightlayer.o regionlayer_test.cc perlin.o mapgenerator.o
+	$(CC) -o regionlayer_test regionlayer.o perlin.o heightlayer.o mapgenerator.o position.o regionlayer_test.cc $(FLAGS)
 
 perlin.o: perlin.hh perlin.cc
 	$(CC) -o perlin.o -c perlin.cc $(FLAGS)
@@ -45,8 +45,8 @@ city.o: city.hh city.cc
 position.o: position.hh position.cc
 	$(CC) -o position.o -c position.cc $(FLAGS)
 
-map_generator.o: map_generator.hh map_generator.cc
-	$(CC) -o map_generator.o -c map_generator.cc $(FLAGS)
+mapgenerator.o: mapgenerator.hh mapgenerator.cc
+	$(CC) -o mapgenerator.o -c mapgenerator.cc $(FLAGS)
 
 regionlayer.o: regionlayer.hh regionlayer.cc
 	$(CC) -o regionlayer.o -c regionlayer.cc $(FLAGS) 
