@@ -7,7 +7,7 @@ class Occupant {
 
 public:
     explicit Occupant( std::string const & name );
-    virtual ~Occupant() {}
+    virtual ~Occupant();
 
     // access to name
     std::string name() const;

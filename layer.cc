@@ -1,12 +1,12 @@
 #include "layer.hh"
 
 Layer::Layer( unsigned width, unsigned height )
-    : _sx( width ), _sy( height ), _d( 0 ) {
+    : _sx( width ), _sy( height ) {
     if( _sx == 0 || _sy == 0 )
         _sx = 1, _sy = 1;
 }
 
-~Layer() {
+Layer::~Layer() {
 }
 
 unsigned

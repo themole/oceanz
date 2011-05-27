@@ -1,6 +1,12 @@
 #ifndef CITY_LAYER_HH
 #define CITY_LAYER_HH
 
+#include "city.hh"
+#include "layer.hh"
+#include "position.hh"
+
+#include <map>
+
 class CityLayer : public Layer {
 
 public:

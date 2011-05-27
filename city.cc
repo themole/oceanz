@@ -5,6 +5,8 @@ City::City( std::string const & name ) {
     _stock = Stock();
 }
 
+City::~City() {}
+
 Stock &
 City::stock() {
     return _stock;

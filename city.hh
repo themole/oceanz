@@ -1,7 +1,7 @@
 #ifndef CITY_HH
 #define CITY_HH
 
-#include "occupant.hh"
+#include "position.hh"
 #include "stock.hh"
 
 #include <string>
@@ -13,7 +13,7 @@ public:
         HARBOR,
         PRODUCTION,
         HOUSES
-    }
+    };
 
 public:
     explicit City( std::string const & name );
