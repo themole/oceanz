@@ -1,4 +1,7 @@
 #include "city.hh"
+#include <cmath>
+#include <ctime>
+#include <cstdlib>
 
 City::City( std::string const & name ) {
     _name = name;
@@ -6,6 +9,7 @@ City::City( std::string const & name ) {
     _stock = Stock();
 
     _loc.push_back( Position( 0, 0 ) );
+    srand( time( 0 ) );
 }
 
 City::~City() {
@@ -73,8 +77,32 @@ City::buildHarbor( Stock & s, Position const & pos ) {
 
 Stock const 
 City::upgrade( Stock & s, pos_list const & validp ) {
-    validp.empty();
-    return s;
+    Stock rest;
+
+    // city cannot grow
+    if( validp.empty() )
+        return rest;
+
+    rest = s.takeOut( upgradeCost( _level ) );
+
+    // if not enough resources
+    if( !rest.empty() ) {
+        s.putIn( upgradeCost( _level) );
+        s.takeOut( rest );
+        return rest;
+    }
+
+    // now check for tiles to use
+    unsigned maxgrowth = growth( _level );
+    for( auto it = validp.begin(); it != validp.end(); it++ ) {
+        if( rand() % 100 > 30 && maxgrowth > 0 ) {
+            maxgrowth--;
+            _loc.push_back( *it );
+            _loc.unique();
+        }
+    }
+    _level++;
+    return rest;
 }
 
 Stock const
@@ -91,9 +119,9 @@ City::stock() {
 }
 
 Stock const 
-City::upgradeCost() const {
+City::upgradeCost( unsigned level ) {
     Stock cost;
-    cost.putIn( _level * _level * 3, WOOD );
+    cost.putIn( level * level * 3, WOOD );
     return cost;
 }
 
@@ -102,6 +130,11 @@ City::harborCost() const {
     Stock cost;
     cost.putIn( 20, SLAVES );
     return cost;
+}
+
+unsigned
+City::growth( unsigned level ) {
+    return log( level+level*level )+1;
 }
 
 std::ostream &
@@ -126,6 +159,5 @@ operator<<( std::ostream & os, City const & c ) {
         os << std::endl;
     }
     os << std::endl;
-
     return os;
 }

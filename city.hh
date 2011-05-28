@@ -11,7 +11,9 @@
 class Harbor {
 public:
     Harbor() : hasProperty( false ) {}
+    unsigned level() const { return _level; }
 private:
+    unsigned _level
     bool hasProperty; // and so on
 };
 
@@ -79,11 +81,13 @@ protected:
 
     // returns a stock with the amount of resources upgrading
     // would cost given the current state
-    Stock const upgradeCost() const;
+    static Stock const upgradeCost( unsigned lvl );
     // returns how much a harbor costs
-    Stock const harborCost() const;
+    static Stock const harborCost( unsigned hlvl ) const;
     // what does it cost to upgrade Harbor h
     Stock const upgradeHarborCost( Harbor *h ) const;
+
+    static unsigned growth( unsigned level );
 };
 
 #endif // CITY_HH
