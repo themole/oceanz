@@ -3,19 +3,11 @@
 
 #include "position.hh"
 #include "stock.hh"
+#include "harbor.hh"
 
 #include <string>
 #include <list>
 #include <map>
-
-class Harbor {
-public:
-    Harbor() : hasProperty( false ) {}
-    unsigned level() const { return _level; }
-private:
-    unsigned _level
-    bool hasProperty; // and so on
-};
 
 class City {
 
@@ -66,6 +58,9 @@ public:
     std::ostream & 
     operator<<( std::ostream & os, City const & );
 
+    static Stock const upgradeCost( unsigned lvl );
+    static Stock const buildCost();
+
 protected:
     std::string _name;
     unsigned _level;
@@ -79,11 +74,6 @@ protected:
     std::map< Harbor*, pos_list > _h;
 
 
-    // returns a stock with the amount of resources upgrading
-    // would cost given the current state
-    static Stock const upgradeCost( unsigned lvl );
-    // returns how much a harbor costs
-    static Stock const harborCost( unsigned hlvl ) const;
     // what does it cost to upgrade Harbor h
     Stock const upgradeHarborCost( Harbor *h ) const;
 

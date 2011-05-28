@@ -42,11 +42,11 @@ City::local() const {
 Stock const
 City::buildHarbor( Stock & s, Position const & pos ) {
     // not possible if s does not contain enough stuff:
-    Stock rest = s.takeOut( harborCost() );
+    Stock rest = s.takeOut( Harbor::buildCost() );
 
     if( !rest.empty() ) { // -> not enough resources in s
         std::cout << rest;
-        s.putIn( harborCost() );
+        s.putIn( Harbor::buildCost() );
         s.takeOut( rest );
         return rest;
     }
@@ -55,7 +55,7 @@ City::buildHarbor( Stock & s, Position const & pos ) {
     for( auto it = _h.begin(); it != _h.end(); it++ ) {
         for( auto it2 = it->second.begin(); it2 != it->second.end(); it2++ ) {
             if( it2->distanceTo( pos ) <= 1 ) {
-                s.putIn( harborCost() );
+                s.putIn( Harbor::buildCost() );
                 s.takeOut( rest );
                 return rest;
             }
@@ -122,13 +122,6 @@ Stock const
 City::upgradeCost( unsigned level ) {
     Stock cost;
     cost.putIn( level * level * 3, WOOD );
-    return cost;
-}
-
-Stock const
-City::harborCost() const {
-    Stock cost;
-    cost.putIn( 20, SLAVES );
     return cost;
 }
 
