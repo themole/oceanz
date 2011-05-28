@@ -10,7 +10,11 @@ Stock::~Stock() {
 }
 
 Stock::amount_type Stock::amount( Wares type ) const {
-    return _stock.find( type )->second;
+    auto it = _stock.find( type );
+    if( it == _stock.end() )
+        return 0;
+    else
+        return it->second;
 }
 
 Stock::amount_type Stock::max( Wares type ) const {
@@ -33,6 +37,10 @@ bool Stock::has( Wares type ) const {
 
 bool Stock::empty() const {
     return _stock.empty();
+    for( auto good = _stock.begin(); good != _stock.end(); good++ )
+        if( good->second != 0 )
+            return false;
+    return true;
 }
 
 bool Stock::full( Wares type ) const {
@@ -88,6 +96,8 @@ void Stock::setGlobalMax( amount_type max ) {
 }
 
 Stock::amount_type Stock::putIn( amount_type amount, Wares type ) {
+    if( amount == 0 )
+        return amount_type(0);
     amount_type not_put_in = 0;
     // respect global maximum
     if( global_amnt + amount > global_max ) {
@@ -136,7 +146,7 @@ Stock::amount_type Stock::takeOut( amount_type amount, Wares type ) {
         amount_type not_taken = 0;
         if( amount > good->second ) {
             not_taken = amount - good->second;
-            _stock.erase( good->first );
+            _stock.erase( good );
         } else
             good->second -= amount;
         global_amnt -= amount - not_taken;
@@ -146,12 +156,21 @@ Stock::amount_type Stock::takeOut( amount_type amount, Wares type ) {
 
 Stock const Stock::takeOut( Stock const & stuff ) {
     Stock not_taken;
+//    for( auto good = stuff._stock.begin(); good != stuff._stock.end(); good++ ) {
+//        not_taken.putIn( this->takeOut( good->second, good->first ), good->first );
+//        not_taken.setMax( not_taken.amount( good->first ), good->first );
+//    }
+//    not_taken.setGlobalMax( not_taken.globalAmount() );
+//    return not_taken;
+    
     not_taken.setGlobalMax( 0 );
     for( auto good = stuff._stock.begin(); good != stuff._stock.end(); good++ ) {
         not_taken.setGlobalMax( not_taken.globalMax() + good->second );
         not_taken.setMax( good->second, good->first );
         not_taken.putIn( this->takeOut( good->second, good->first ),
                          good->first );
+    }
+    for( auto good = stuff._stock.begin(); good != stuff._stock.end(); good++ ) {
         if( this->amount( good->first ) == 0 )
             this->_stock.erase( good->first );
     }

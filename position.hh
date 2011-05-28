@@ -1,6 +1,8 @@
 #ifndef POSITION_HH
 #define POSITION_HH
 
+#include <iostream>
+
 class Position {
 
 public:
@@ -26,6 +28,9 @@ public:
     Position const neighbor( Direction d ) const;
 
     unsigned distanceTo( Position const & p ) const;
+
+    friend
+    std::ostream & operator<<( std::ostream &, Position const & p );
 
 private:
     int _x, _y;

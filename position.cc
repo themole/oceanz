@@ -1,4 +1,5 @@
 #include "position.hh"
+#include <iostream>
 
 Position::Position( int x, int y ) :
     _x( x ), _y( y ) {
@@ -63,4 +64,10 @@ Position::distanceTo( Position const & pos ) const {
 int
 Position::max( const int a, const int b ) {
     return ( a>b )? a : b;
+}
+
+std::ostream &
+operator<<( std::ostream & os, Position const & p ) {
+    os << "(" << p._x << ", " << p._y << ")";
+    return os;
 }

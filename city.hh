@@ -10,6 +10,7 @@
 
 class Harbor {
 public:
+    Harbor() : hasProperty( false ) {}
 private:
     bool hasProperty; // and so on
 };
