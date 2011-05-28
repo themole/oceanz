@@ -58,7 +58,8 @@ unsigned
 Position::distanceTo( Position const & pos ) const {
     int dx = pos._x - _x;
     int dy = pos._y - _y;
-    return Position::max( dx, Position::max( dy, dy - dx ) );
+    return max( max(dx,-dx),
+                max( max(dy,-dy), max( (dy - dx), (dx -dy) ) ) );
 }
 
 int

@@ -3,9 +3,10 @@
 #include <ctime>
 #include <cstdlib>
 
-City::City( std::string const & name ) {
+City::City( std::string const & name )
+    : Building() {
+
     _name = name;
-    _level = 1;
     _stock = Stock();
 
     _loc.push_back( Position( 0, 0 ) );
@@ -17,11 +18,6 @@ City::~City() {
 	for( auto it = _h.begin(); it != _h.end(); it++ )
 		if( it->first != 0 )
 			delete it->first;
-}
-
-unsigned
-City::level() const {
-    return _level;
 }
 
 std::string const &
@@ -75,6 +71,77 @@ City::buildHarbor( Stock & s, Position const & pos ) {
     return rest;
 }
 
+Stock const
+City::upgradeHarbor( Stock & s,
+                     Position const & p,
+                     pos_list const & validp ) {
+
+    Stock rest;
+
+    // nowhere to expand to
+    if( validp.empty() )
+        return rest;
+
+    // find harbor
+    auto h = _h.end();
+    for( auto it = _h.begin(); it != _h.end(); it++ ) 
+        for( auto it2 = it->second.begin(); it2 != it->second.end(); it2++ ) 
+            if( *it2 == p )
+                h = it;
+        
+    // no harbor at p
+    if( h == _h.end() )
+        return rest;
+
+    pos_list validp2;
+
+    // conditions ... next to existing harbor tile
+    //                not next to tile of other harbor
+    // check conditions for each tile
+    // if conditions are met ... add to validp2
+    for( auto posit = validp.begin(); posit != validp.end(); posit++ ) 
+        for( auto it = _h.begin(); it != _h.end(); it++ ) 
+            if( h->first != it->first )
+            for( auto it2 = it->second.begin(); it2 != it->second.end(); it2++ ) 
+                if( it2->distanceTo( *posit ) > 1 )
+                    validp2.push_back( *posit );
+
+    // make sure that its next to a tile
+    // of the harbor to upgrade
+    for( auto it = h->second.begin(); it != h->second.end(); it++ ) 
+        for( auto it2 = validp2.begin(); it2 != validp2.end(); it2++ )
+            if( *it == *it2 || it->distanceTo( *it2 ) > 1 ) {
+                validp2.erase( it2 );
+                it--;
+                break;
+            }
+
+    validp2.unique();
+
+    if( validp2.empty() )
+        return rest;
+
+    std::cout << std::endl;
+    std::cout << std::endl;
+    for( auto posit = validp2.begin(); posit != validp2.end(); posit++ ) {
+        std::cout << *posit << " ";
+    }
+    std::cout << std::endl;
+    std::cout << std::endl;
+
+    // now that i know that harbor can grow ... make it upgrade
+    rest = h->first->upgrade( s );
+
+    // if not enough
+    if( !rest.empty() )
+        return rest;
+
+    h->second.push_back( *validp2.begin() );
+    _loc.push_back( *validp2.begin() );
+    _loc.unique();
+    return rest;
+}
+
 Stock const 
 City::upgrade( Stock & s, pos_list const & validp ) {
     Stock rest;
@@ -105,14 +172,6 @@ City::upgrade( Stock & s, pos_list const & validp ) {
     return rest;
 }
 
-Stock const
-City::upgradeHarbor( Stock & s,
-                     Position const & p,
-                     pos_list const & validp ) {
-    p.x(); validp.empty();
-    return s;
-}
-
 Stock &
 City::stock() {
     return _stock;
@@ -130,6 +189,12 @@ City::growth( unsigned level ) {
     return log( level+level*level )+1;
 }
 
+Stock const
+City::upgrade( Stock & s ) {
+    std::cerr << "function not supported" << std::endl;
+    return s;
+}
+
 std::ostream &
 operator<<( std::ostream & os, City const & c ) {
     os << c._name << ": Level " << c.level() <<  std::endl;
@@ -143,9 +208,9 @@ operator<<( std::ostream & os, City const & c ) {
         os << *it << " ";
     }
     os << std::endl;
-    os << "harbor address and position occupation:\n";
+    os << "harbor lvl and position occupation:\n";
     for( auto it = c._h.begin(); it != c._h.end(); it++ ) {
-        os << "ard: " << it->first << "\t";
+        os << "lvl: " << it->first->level() << "\t";
         for( auto it2 = it->second.begin(); it2 != it->second.end(); it2++ ) {
             os << *it2 << " ";
         }
