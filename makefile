@@ -5,6 +5,8 @@ HEADERS = $(wildcard *.hh)
 SOURCES = $(patsubst %.hh, %.cc, $(HEADERS) 
 OBJS = $(patsubst %.hh, %.o, $(HEADERS) )
 
+THEADER = $(wildcard *.hpp)
+
 TESTF = test
 TARGETS = $(patsubst %.cc, %, $(wildcard $(TESTF)/*.cc ) )
 
@@ -16,8 +18,8 @@ clean:
 	rm -rf $(OBJS)
 	rm -rf $(TARGETS)
 
-%.o : %.cc $(HEADER)
-	$(CC) -c $(CFLAGS) -o $@ $< 
+%.o : %.cc $(HEADER) $(THEADER)
+	$(CC) $(CFLAGS) -o $@ -c $< 
 
 .SECONDEXPANSION:
 $(TARGETS) : $$(addsuffix .cc, $$@ ) $(OBJS)

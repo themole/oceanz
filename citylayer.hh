@@ -2,28 +2,30 @@
 #define CITY_LAYER_HH
 
 #include "city.hh"
-#include "layer.hh"
-#include "position.hh"
+#include "layer.hpp"
 
 #include <map>
 
-class CityLayer : public Layer {
+class CityLayer : public Layer< City* > {
 
 public:
-    CityLayer( int width, int height );
+    CityLayer( unsigned sx, unsigned sy );
     virtual ~CityLayer();
 
-    void addCity( int x, int y, City * );
-    void remCity( int x, int y );
-    void remCity( Position const & pos );
+    virtual value_type const & operator()( unsigned i );
+    virtual value_type const & operator()( unsigned x, unsigned y );
+    virtual value_type const & operator()( Position const & p );
 
-    bool isCity( int x, int y );
+    virtual void operator()( unsigned i, value_type const & );
+    virtual void operator()( unsigned x, unsigned y, value_type const & );
+    virtual void operator()( Position const & p, value_type const & );
 
+    virtual bool valid() const;
 
 protected:
-    // all cities
-    std::map< Position, City* > _c;
-    // position of cities
+
+    std::map< City*, Position > _c;
+    City* null;
 };
 
 #endif // CITY_LAYER_HH
