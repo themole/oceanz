@@ -219,7 +219,7 @@ void RegionLayer::uninit() {
 //    01  02
 //  00  xy
 void RegionLayer::generateRegions( HeightLayer const & hmap ) {
-    // pass 1 ... get some temporary groups going
+    // pass 1 ... get some temporary regions going
     // current region number
     unsigned n = 0;
     // for each region stores the smallest region number found that it is equal to

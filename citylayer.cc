@@ -2,9 +2,10 @@
 
 #include <iostream>
 
-CityLayer::CityLayer( unsigned sx, unsigned sy )
-    : Layer( sx, sy ) {
-        null = 0;
+CityLayer::CityLayer( int sx, int sy )
+    : _sx( sx ), _sy( sy ) {
+    if( _sx <= 0 || _sy <= 0 )
+        _sx = 1, _sy = 1;
 }
 
 CityLayer::~CityLayer() {
@@ -14,43 +15,16 @@ CityLayer::~CityLayer() {
             delete it->first;
 }
 
-CityLayer::value_type const &
-CityLayer::operator()( unsigned i ) {
-    return operator()( position( i ) );
-}
-
-CityLayer::value_type const &
-CityLayer::operator()( unsigned x, unsigned y ) {
-    return operator()( Position( x, y ) );
-}
-
-CityLayer::value_type const &
-CityLayer::operator()( Position const & p ) {
-
+City*
+CityLayer::city( int x, int y ) {
+    Position p = Position( x, y );
     for( auto it = _c.begin(); it != _c.end(); it++ )
         if( it->second == p )
             return it->first;
-    return null;
+    return 0;
 }
 
 void
-CityLayer::operator()( unsigned i, City* const & c ) {
-    operator()( position( i ), c );
-}
-
-void
-CityLayer::operator()( unsigned x, unsigned y, City* const & c ) {
-    operator()( Position( x, y ), c );
-}
-
-void
-CityLayer::operator()( Position const & p, City* const & c ) {
-    auto it = _c.find( c );
-    if( it == _c.end() )
-        _c.insert( std::pair< City*, Position >( c, p ) );
-}
-
-bool
-CityLayer::valid() const  {
-    return true;
+CityLayer::setCity( int x, int y, City* const c ) {
+    _c.insert( std::pair< City*, Position >( c, Position( x, y ) ) );
 }

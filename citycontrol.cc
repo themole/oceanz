@@ -9,7 +9,7 @@ CityControl::~CityControl() {
 
 void
 CityControl::buildCity( Position const & p, std::string const & name ) {
-        _cl( p, new City( name ) );
+    name == name; p == p;
 }
 
 void

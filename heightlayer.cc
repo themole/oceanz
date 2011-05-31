@@ -51,42 +51,6 @@ void HeightLayer::setHeight( Position const & pos, height_type height ) {
     setHeight( pos.x(), pos.y(), height );
 }
 
-void HeightLayer::save( std::string const & filename ) {
-    if( isNull() )
-        return;
-
-    std::ofstream file( filename.c_str(), std::ios::binary | std::ios::out );
-    if( file.is_open() ) {
-        file.write( "HeightMapFile", sizeof( "HeightMapFile" ) );
-        file.write( reinterpret_cast< char* > ( &_sx ), sizeof(int) );
-        file.write( reinterpret_cast< char* > ( &_sy ), sizeof(int) );
-        file.write( reinterpret_cast< char* > ( _h ),
-                    _sx * _sy * sizeof(height_type) );
-
-        file.close();
-    }
-}
-
-void HeightLayer::load( std::string const & filename ) {
-    std::ifstream file( filename.c_str(), std::ios::binary | std::ios::in );
-    if( file.is_open() ) {
-        uninit();
-        char buffer[sizeof( "HeightMapFile" )];
-        file.read( buffer, sizeof( buffer ) );
-        if( std::string( buffer ) == std::string( "HeightMapFile" ) ) {
-            file.read( reinterpret_cast< char* > ( &_sx ), sizeof(int) );
-            file.read( reinterpret_cast< char* > ( &_sy ), sizeof(int) );
-
-            init( _sx, _sy, 0 );
-
-            file.read( reinterpret_cast< char* > ( _h ),
-                       _sx * _sy * sizeof(height_type) );
-        }
-
-        file.close();
-    }
-}
-
 void HeightLayer::init( int sx, int sy, height_type h ) {
     if( sx > 0 && sy > 0 ) {
         _sx = sx, _sy = sy;

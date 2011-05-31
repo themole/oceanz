@@ -37,10 +37,6 @@ public:
     void setHeight( int x, int y, height_type height );
     void setHeight( Position const &, height_type height );
 
-    // access to tiles
-    void save( std::string const & filename );
-    void load( std::string const & filename );
-
     // just for debugging
     friend std::ostream& operator<<( std::ostream &, HeightLayer const & );
 
