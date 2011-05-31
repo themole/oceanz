@@ -148,7 +148,7 @@ int RegionLayer::regionMaxY( unsigned r ) const {
     return max;
 }
 
-RegionLayer::region_type RegionLayer::regionType( unsigned group ) const {
+region_type RegionLayer::regionType( unsigned group ) const {
     auto tp = _t.find( group );
     if( tp != _t.end() )
         return tp->second;
@@ -336,7 +336,7 @@ void RegionLayer::generateRegions( HeightLayer const & hmap ) {
         }
 }
 
-RegionLayer::region_type RegionLayer::heightToRegionType( HeightLayer::height_type height ) const {
+region_type RegionLayer::heightToRegionType( HeightLayer::height_type height ) const {
     if( height > 0 ) {
         return LAND;
     } else {

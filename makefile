@@ -1,9 +1,9 @@
 CC = g++
 CFLAGS = -Wall -Wextra -Werror -pedantic -std=c++0x 
 
-HEADERS = $(wildcard *.hh)
-SOURCES = $(patsubst %.hh, %.cc, $(HEADERS) 
-OBJS = $(patsubst %.hh, %.o, $(HEADERS) )
+HEADER = $(wildcard *.hh)
+SOURCES = $(patsubst %.hh, %.cc, $(HEADER) 
+OBJS = $(patsubst %.hh, %.o, $(HEADER) )
 
 THEADER = $(wildcard *.hpp)
 
@@ -18,7 +18,7 @@ clean:
 	rm -rf $(OBJS)
 	rm -rf $(TARGETS)
 
-%.o : %.cc $(HEADER) $(THEADER)
+%.o : %.cc %.hh $(THEADER)
 	$(CC) $(CFLAGS) -o $@ -c $< 
 
 .SECONDEXPANSION:

@@ -6,24 +6,25 @@
 
 #include <map>
 
-// represents a complete decomposition of a HeightLayer into groups
+// represents a complete decomposition of a HeightLayer into regions 
 // with different types ... accomplished by connected component analasys
+
+enum region_type {
+    LAND,
+    LAND_LOW,
+    LAND_MID,
+    LAND_HIGH,
+    WATER,
+    WATER_SHALLOW,
+    WATER_MID,
+    WATER_DEEP,
+    COAST,
+    NONE
+};
 
 class RegionLayer {
 
 public:
-    enum region_type {
-        LAND,
-        LAND_LOW,
-        LAND_MID,
-        LAND_HIGH,
-        WATER,
-        WATER_SHALLOW,
-        WATER_MID,
-        WATER_DEEP,
-        COAST,
-        NONE
-    };
 
 public:
     // generates null object
@@ -39,8 +40,8 @@ public:
     unsigned region( int x, int y ) const;
     unsigned region( Position const & ) const;
 
-    void setRegion( int x, int y, unsigned group, region_type type );
-    void setRegion( int x, int y, unsigned group );
+    void setRegion( int x, int y, unsigned region, region_type type );
+    void setRegion( int x, int y, unsigned region );
 
     // diverse functions: ======================================
     // access to region properties
@@ -70,7 +71,7 @@ private:
     // per tile region number
     unsigned *_r;
 
-    // set of all groups
+    // set of all regions 
     std::map< unsigned, region_type > _t;
     std::map< unsigned, unsigned > _s;
 

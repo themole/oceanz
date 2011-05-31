@@ -21,7 +21,7 @@ int main() {
     mapgen.setPerlin( p );
 
     mapgen.generate( hmap );
-    RegionLayer gm( hmap );
+    RegionLayer rl( hmap );
     //    while( gm.regionSize( gm.greatestRegion( GroupMap::COAST ) ) < 900 ) {
     //        p.setSeed( rand() );
     //        mapgen.setPerlin( p );
@@ -29,9 +29,9 @@ int main() {
     //        gm = GroupMap( hmap );
     //    }
 
-    std::cout << "greatestCost = " << gm.greatestRegion( RegionLayer::COAST )
+    std::cout << "greatestCost = " << rl.greatestRegion( COAST )
             << " with "
-            << gm.regionSize( gm.greatestRegion( RegionLayer::COAST ) )
+            << rl.regionSize( rl.greatestRegion( COAST ) )
             << " tiles." << std::endl << std::endl;
     std::cout << "seed = " << seed << std::endl << std::endl;
 }
