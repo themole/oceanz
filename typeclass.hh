@@ -12,6 +12,7 @@ public:
     TypeClass( std::string const & name );
     std::string const & name() const;
     bool operator<( TypeClass const & rhs ) const;
+    bool operator==( TypeClass const & rhs ) const;
 
 protected:
     std::string _name;

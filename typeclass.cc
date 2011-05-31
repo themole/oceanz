@@ -19,3 +19,7 @@ bool
 TypeClass::operator<( TypeClass const & rhs ) const {
     return _name < rhs._name;
 }
+
+bool TypeClass::operator ==(const TypeClass &rhs) const {
+    return _name == rhs._name;
+}

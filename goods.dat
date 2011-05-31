@@ -1,0 +1,14 @@
+name Wood
+weight 5
+std_price 20
+price_stability 90
+
+name Slave
+weight 5
+std_price 200
+price_stability 20
+
+name Food
+weight 1
+std_price 15
+price_stability 95

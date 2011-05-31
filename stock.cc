@@ -11,6 +11,39 @@ Stock::~Stock() {
 }
 
 Stock::amount_type
+Stock::capacity() const {
+    return _capacity;
+}
+
+void
+Stock::setCapacity( amount_type capacity ) {
+    _capacity = capacity;
+}
+
+Stock::amount_type
+Stock::amount( GoodType const & type ) const {
+    auto it = _stuff.begin();
+    for( ; it != _stuff.end(); it++ )
+        if( it->first == type )
+            break;
+
+    if( it == _stuff.end() )
+        return 0;
+    else
+        return it->second;
+}
+
+bool
+Stock::has( GoodType const & type ) const {
+    auto it = _stuff.begin();
+    for( ;it != _stuff.end(); it++ )
+        if( it->first == type )
+            break;
+    return it != _stuff.end();
+}
+
+
+Stock::amount_type
 Stock::putIn( amount_type amount, GoodType const & type ) {
     amount_type rest = 0;
 
@@ -20,10 +53,13 @@ Stock::putIn( amount_type amount, GoodType const & type ) {
     }
 
     _current += amount;
+    auto it = _stuff.begin();
+    for( ;it != _stuff.end(); it++ )
+        if( it->first == type )
+            break;
 
-    auto it = _stuff.find( type.name() );
     if( it == _stuff.end() )
-        _stuff.insert( std::pair< std::string, amount_type >( type.name(), amount ) );
+        _stuff.push_back( type_amount_pair( type, amount ) );
     else
         it->second += amount;
 
@@ -32,7 +68,11 @@ Stock::putIn( amount_type amount, GoodType const & type ) {
 
 Stock::amount_type
 Stock::takeOut( amount_type amount, GoodType const & type ) {
-    auto it = _stuff.find( type.name() );
+
+    auto it = _stuff.begin();
+    for( ; it != _stuff.end(); it++ )
+        if( it->first == type )
+            break;
 
     if( it == _stuff.end() )
         return amount;
@@ -42,9 +82,20 @@ Stock::takeOut( amount_type amount, GoodType const & type ) {
     if( it->second < amount ) {
         rest = amount - it->second;
         amount = amount - rest;
+        _stuff.erase( it );
+        return rest;
     }
 
     it->second -= amount;
     return rest;
 }
 
+bool
+Stock::empty() const {
+    return _current == 0;
+}
+
+bool
+Stock::full() const {
+    return _current == _capacity;
+}

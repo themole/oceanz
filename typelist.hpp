@@ -11,7 +11,7 @@ public:
     typedef T type_class;
 
 public:
-    type_class const & get( std::string const & name ) {
+    type_class const & get( std::string const & name ) const {
         auto it = _list.find( type_class( name ) );
         if( it == _list.end() )
             return type_class::null;
