@@ -20,8 +20,6 @@ public:
 
     void setName(std::string const & name );
 
-    Stock & stock();
-
 private:
     std::string _name;
     unsigned _level;

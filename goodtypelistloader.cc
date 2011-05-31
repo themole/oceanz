@@ -1,6 +1,5 @@
 #include "goodtypelistloader.hh"
 
-
 GoodTypeListLoader::GoodTypeListLoader( std::istream & source )
     : TypeListLoader( source ) {
 }

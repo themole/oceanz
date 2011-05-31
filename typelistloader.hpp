@@ -14,7 +14,7 @@ public:
         : _src( source ) {
     }
 
-    void load( type_class & ) const;
+    virtual void load( type_class & ) const = 0;
 
 protected:
     std::istream & _src;

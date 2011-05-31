@@ -1,13 +1,15 @@
 #ifndef SHIPTYPELISTLOADER_HH
 #define SHIPTYPELISTLOADER_HH
 
-#include "shiptype.hh"
 #include "shiptypelist.hh"
 #include "typelistloader.hpp"
 
-class ShipTypeListLoader : public TypeListLoader< ShipType > {
+#include <istream>
+
+class ShipTypeListLoader : public TypeListLoader< ShipTypeList > {
 
 public:
+    ShipTypeListLoader( std::istream & );
     void load( ShipTypeList & stl ) const;
 };
 
