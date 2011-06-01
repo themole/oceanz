@@ -14,7 +14,7 @@ public:
 
 public:
     explicit City( std::string const & name );
-    virtual ~City();
+    ~City();
 
     std::string const & name() const;
 
@@ -23,6 +23,7 @@ public:
 private:
     std::string _name;
     unsigned _level;
+
 };
 
 #endif // CITY_HH
