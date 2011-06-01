@@ -23,7 +23,6 @@ public:
 private:
     std::string _name;
     unsigned _level;
-
 };
 
 #endif // CITY_HH
