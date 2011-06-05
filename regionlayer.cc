@@ -61,6 +61,7 @@ void RegionLayer::setRegion( int x, int y, unsigned g, region_type t ) {
     }
 
     // set new region number
+    // somehow _r becomes 0 here
     _r[( x % _sx ) + _sx * ( y % _sy )] = g;
 
     // fix size of region
@@ -192,6 +193,10 @@ void RegionLayer::init( HeightLayer const & hmap ) {
     _sx = hmap.sizeX();
     _sy = hmap.sizeY();
 
+    if( _r != 0 ) {
+        delete[] _r;
+        _t.clear(), _s.clear();
+    }
     if( _r == 0 ) {
         _r = new unsigned[_sx * _sy];
         for( int i = 0; i < _sx * _sy; i++ )
@@ -274,12 +279,12 @@ void RegionLayer::generateRegions( HeightLayer const & hmap ) {
     }
 
     // print out group_equalities for debug
-    for( auto it = region_equalities.begin(); it != region_equalities.end(); it++ ) {
-        std::cout << "group " << it->first << " equals: ";
-        for( auto it2 = it->second.begin(); it2 != it->second.end(); it2++ )
-            std::cout << *it2 << ", ";
-        std::cout << std::endl;
-    }
+//    for( auto it = region_equalities.begin(); it != region_equalities.end(); it++ ) {
+//        std::cout << "group " << it->first << " equals: ";
+//        for( auto it2 = it->second.begin(); it2 != it->second.end(); it2++ )
+//            std::cout << *it2 << ", ";
+//        std::cout << std::endl;
+//    }
 
     // second pass ... give all equivalent groups
     // the smallest number of that equivilance class
@@ -325,7 +330,7 @@ void RegionLayer::generateRegions( HeightLayer const & hmap ) {
         n++;
     }
 
-    print();
+//   print();
 
     // step 4 ... clean up my maps
     // ===================================================== why in the world is once not enough
@@ -334,6 +339,10 @@ void RegionLayer::generateRegions( HeightLayer const & hmap ) {
             _s.erase( it );
             _t.erase( it->first );
         }
+
+    // for debugging
+//    for( auto it = _t.begin(); it != _t.end(); it++ )
+//        std::cout << "region " << it->first << " type: " << it->second << " size: " << _s[it->first] << std::endl;
 }
 
 region_type RegionLayer::heightToRegionType( HeightLayer::height_type height ) const {

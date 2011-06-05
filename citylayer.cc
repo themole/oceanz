@@ -15,6 +15,16 @@ CityLayer::~CityLayer() {
             delete it->first;
 }
 
+int
+CityLayer::sizeX() const {
+    return _sx;
+}
+
+int
+CityLayer::sizeY() const {
+    return _sy;
+}
+
 City*
 CityLayer::city( int x, int y ) {
     Position p = Position( x, y );
@@ -27,4 +37,9 @@ CityLayer::city( int x, int y ) {
 void
 CityLayer::setCity( int x, int y, City* const c ) {
     _c.insert( std::pair< City*, Position >( c, Position( x, y ) ) );
+}
+
+std::map< City*, Position >
+CityLayer::cities() {
+    return _c;
 }

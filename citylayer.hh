@@ -11,8 +11,13 @@ public:
     CityLayer( int sx, int sy );
     ~CityLayer();
 
+    int sizeX() const;
+    int sizeY() const;
+
     City* city( int x, int y );
     void setCity( int x, int y, City* c );
+
+    std::map< City*, Position > cities();
 
 protected:
     int _sx, _sy;

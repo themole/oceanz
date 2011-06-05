@@ -69,7 +69,7 @@ private:
     int _sx, _sy;
 
     // per tile region number
-    unsigned *_r;
+    unsigned * _r;
 
     // set of all regions 
     std::map< unsigned, region_type > _t;

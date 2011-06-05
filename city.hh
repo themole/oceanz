@@ -20,9 +20,13 @@ public:
 
     void setName(std::string const & name );
 
+    std::list< Position > positions() const;
+
 private:
     std::string _name;
     unsigned _level;
+
+    std::list< Position > _ps;
 };
 
 #endif // CITY_HH

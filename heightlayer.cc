@@ -15,7 +15,9 @@ HeightLayer::HeightLayer( int width, int height ) {
 }
 
 HeightLayer::~HeightLayer() {
-    uninit();
+    if( _h != 0 )
+        delete[] _h;
+//    uninit();
 }
 
 bool HeightLayer::isNull() const {
@@ -62,7 +64,7 @@ void HeightLayer::init( int sx, int sy, height_type h ) {
 }
 
 void HeightLayer::uninit() {
-    if( !isNull() )
+    if( _h != 0 )
         delete[] _h;
 }
 

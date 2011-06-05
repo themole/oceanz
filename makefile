@@ -1,5 +1,8 @@
 CC = g++
-CFLAGS = -Wall -Wextra -Werror -pedantic -std=c++0x 
+CFLAGS = -Wall -Wextra -Werror -pedantic -std=c++0x
+INCLUDES = -I /usr/include/qt4/*
+
+CFLAGS += $(INCLUDES)
 
 HEADER = $(wildcard *.hh)
 SOURCES = $(patsubst %.hh, %.cc, $(HEADER) 

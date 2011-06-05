@@ -2,6 +2,7 @@
 #define POSITION_HH
 
 #include <iostream>
+#include <list>
 
 class Position {
 
@@ -22,10 +23,16 @@ public:
 
     Position & operator=( Position const & rhs );
 
+    Position operator+( Position const & rhs ) const;
+    Position & operator+=( Position const & rhs );
+
     bool operator==( Position const & p ) const;
     bool operator!=( Position const & p ) const;
 
     Position const neighbor( Direction d ) const;
+
+    std::list< Position > allNeighbors() const;
+    std::list< Position > allInRange( int range ) const;
 
     unsigned distanceTo( Position const & p ) const;
 

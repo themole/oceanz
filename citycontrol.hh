@@ -1,23 +1,23 @@
 #ifndef CITY_CONTROL_HH
 #define CITY_CONTROL_HH
 
-#include "citylayer.hh"
-#include "regionlayer.hh"
+#include <worldmap.hh>
 
 #include <string>
 
 class CityControl {
 
 public:
-    CityControl( CityLayer &, RegionLayer const & );
+    CityControl( WorldMap * wm );
     ~CityControl();
 
+    void setWorldMap( WorldMap * wm );
+
     void buildCity( Position const & p, std::string const & name );
-    void upgradeCity( Position const & p );
+    void upgradeCity( City * c );
 
 private:
-    CityLayer & _cl;
-    RegionLayer const & _rl;
+    WorldMap *_wm;
 };
 
 #endif // CITY_CONTROL_HH

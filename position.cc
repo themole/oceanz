@@ -31,6 +31,18 @@ Position::operator=( Position const & rhs ) {
     return *this;
 }
 
+Position
+Position::operator+( Position const & rhs ) const {
+    return Position( _x + rhs._x, _y + rhs._y );
+}
+
+Position &
+Position::operator+=( Position const & rhs ) {
+    _x += rhs._x;
+    _y += rhs._y;
+    return *this;
+}
+
 bool
 Position::operator==( Position const & p ) const {
     return _x == p._x && _y == p._y;
@@ -52,6 +64,24 @@ Position::neighbor( Direction d ) const {
     case SE: return Position( _x+1, _y+1 );
     }
     return Position();
+}
+
+std::list< Position >
+Position::allNeighbors() const {
+    return allInRange( 1 );
+}
+
+std::list< Position >
+Position::allInRange( int range ) const {
+    std::list< Position > list;
+    for( int x = -range; x < range; x++ ) {
+        for( int y = -range; y < range; y++ ) {
+            Position p( _x + x, _y + y );
+            if( (int) p.distanceTo( *this ) <= range )
+                list.push_back( p );
+        }
+    }
+    return list;
 }
 
 unsigned
