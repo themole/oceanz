@@ -81,6 +81,8 @@ MapGenerator::generateRegionLayer( WorldMap & map ) const {
 
 void
 MapGenerator::generateCityLayer( WorldMap & map ) const {
+    if( map.cityLayer() == 0 )
+        map.setCityLayer( new CityLayer( map.sizeX(), map.sizeY() ) );
     // number of city ... for name .. no name generator for now
     int n = 1;
 
