@@ -1,7 +1,7 @@
 #ifndef CONTROLPROVIDER_HH
 #define CONTROLPROVIDER_HH
 
-#include <citycontrol.hh>
+#include "citycontrol.hh"
 
 class ControlProvider {
 public:

@@ -1,7 +1,7 @@
 #ifndef CITY_CONTROL_HH
 #define CITY_CONTROL_HH
 
-#include <worldmap.hh>
+#include "worldmap.hh"
 
 #include <string>
 
