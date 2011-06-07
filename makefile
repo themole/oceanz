@@ -1,6 +1,7 @@
 CC = g++
+
 CFLAGS = -Wall -Wextra -Werror -pedantic -std=c++0x
-INCLUDES = -I /usr/include/qt4/
+DEBUGFLAGS = -g3
 
 CFLAGS += $(INCLUDES)
 
@@ -13,9 +14,12 @@ THEADER = $(wildcard *.hpp)
 TESTF = test
 TARGETS = $(patsubst %.cc, %, $(wildcard $(TESTF)/*.cc ) )
 
-.PHONY: all clean
+.PHONY: all debug clean
 
 all: $(TARGETS)
+
+debug: CFLAGS+=$(DEBUGFLAGS)
+debug: all
 
 clean:
 	rm -rf $(OBJS)

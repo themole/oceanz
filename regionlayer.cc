@@ -6,12 +6,10 @@
 #include <set>
 #include <climits>
 
-RegionLayer::RegionLayer() :
-    _sx( 0 ), _sy( 0 ), _r( 0 ) {
-}
 
-RegionLayer::RegionLayer( HeightLayer const & hmap ) :
-    _sx( 0 ), _sy( 0 ), _r( 0 ) {
+RegionLayer::RegionLayer( HeightLayer const & hmap ) 
+    : Layer( hmap.sizeX(), hmap.sizeY() ),
+      _ra( 0 ) {
 
     init( hmap );
 }
@@ -20,197 +18,154 @@ RegionLayer::~RegionLayer() {
     uninit();
 }
 
-int RegionLayer::sizeX() const {
-    return _sx;
+Region *
+RegionLayer::region( int x, int y ) const {
+    return _ra[( x % _sx ) + _sx * ( y % _sy )];
 }
 
-int RegionLayer::sizeY() const {
-    return _sy;
-}
-
-unsigned RegionLayer::region( int x, int y ) const {
-    return _r[( x % _sx ) + _sx * ( y % _sy )];
-}
-
-unsigned RegionLayer::region( Position const & pos ) const {
+Region *
+RegionLayer::region( Position const & pos ) const {
     return region( pos.x(), pos.y() );
 }
 
-void RegionLayer::setRegion( int x, int y, unsigned g, region_type t ) {
-
-    // fix size of region that xy might already be in
-    auto sz = _s.find( region( x, y ) );
-    if( sz != _s.end() ) {
-        if( sz->second != 0 )
-            sz->second--;
-        else
-            _s.erase( sz );
+Region *
+RegionLayer::regionByID( unsigned id ) const {
+    for( auto it = _rs.begin(); it != _rs.end(); it++ ) {
+        if( (*it)->id() == id )
+            return *it;
     }
-
-    // set type of region number
-    // if already set ... do not set the region!!!!
-    auto tp = _t.find( g );
-    if( tp == _t.end() )
-        _t.insert( std::pair< unsigned, region_type >( g, t ) );
-    else if( tp->second != t ) {
-        std::cout
-                << "Warining: in GroupMap::setGroup()\
-            -> overwriting group type with different type"
-                << std::endl;
-        tp->second = t;
-    }
-
-    // set new region number
-    // somehow _r becomes 0 here
-    _r[( x % _sx ) + _sx * ( y % _sy )] = g;
-
-    // fix size of region
-    sz = _s.find( region( x, y ) );
-    if( sz == _s.end() )
-        _s.insert( std::pair< unsigned, unsigned >( region( x, y ), 1 ) );
-    else
-        sz->second = sz->second + 1;
+    return 0;
 }
 
-void RegionLayer::setRegion( int x, int y, unsigned g ) {
-    // fix size of region that xy might already be in
-    auto sz = _s.find( region( x, y ) );
-    if( sz != _s.end() ) {
-        if( sz->second != 0 )
-            sz->second--;
-        else
-            _s.erase( sz );
-    }
+// known issues:
+//  - if you put a new region on a hex that is the only one
+//    holding together thw parts of a region ... there is no
+//    way to tell that these region now are 2 distinct once
+//    they will continue to be exactly 1 region ... but not connected -> buggy
+void
+RegionLayer::setRegion( int x, int y, Region * r ) {
 
-    // set new region number
-    _r[( x % _sx ) + _sx * ( y % _sy )] = g;
+// list of all fields surrounding ( x, y )
+    std::list< Position > plist = Position( x, y ).allNeighbors();
+ 
+// FIX SIZE AND LINKS OF A REGION THAT MIGHT HAVE BEEN HERE
 
-    // fix size of region
-    sz = _s.find( region( x, y ) );
-    if( sz == _s.end() )
-        _s.insert( std::pair< unsigned, unsigned >( region( x, y ), 1 ) );
-    else
-        sz->second = sz->second + 1;
-}
+    if( region( x, y ) != 0 ) {
+        region( x, y )->decrementSize();
 
-unsigned RegionLayer::regionSize( unsigned group ) const {
-    auto sz = _s.find( group );
-    if( sz != _s.end() )
-        return sz->second;
-    else
-        return 0;
-}
+        // if this was last hex of a region take it out of the set
+        // fix all connections of surrounding regions
+        // and free heap space
+        if( region( x, y )->size() <= 0 ) {
+            // go through all regions that mean to be connected
+            // and unset
+            for( auto it  = region( x, y )->connected().begin();
+                      it != region( x, y )->connected().end();
+                      it++ ) {
+                (*it)->unsetConnected( region( x, y ) );
+            }
+            // erase region( x, y ) from _rs
+            // => do not track that region anymore
 
-unsigned RegionLayer::regionSizeX( unsigned r ) const {
-    return regionMaxX( r ) - regionMinX( r );
-}
+    // print _rs
+    for( auto it = _rs.begin(); it != _rs.end(); it++ ) 
+        std::cout << std::endl << *(*it);
+    std::cout << std::endl;
 
-unsigned RegionLayer::regionSizeY( unsigned r ) const {
-    return regionMaxY( r ) - regionMinY( r );
-}
+    print();
 
-int RegionLayer::regionMinX( unsigned r ) const {
-    int min = INT_MAX;
-    for( int x = 0; x < _sx; x++ )
-        for( int y = 0; y < _sy; y++ ) {
-            if( region( x, y ) == r && x < min )
-                min = x;
+            _rs.erase( region( x, y ) );
+            // delete region
+            delete region( x, y );
         }
-    return min;
+    }
+
+    // set Region link in hex array
+    _ra[( x % _sx ) + _sx * ( y % _sy )] = r;
+
+    // increase size of region ( since it now occupies one more hex )
+    // ... btw ... region( x, y ) returns the new region now
+    region( x, y )->incrementSize();
+
+    // insert to set of tracked regions
+    //  => will not be added if already in
+    _rs.insert( region( x, y ) );
+
+    // setup new connections between regions
+    for( auto it = plist.begin(); it != plist.end(); it++ ) {
+        if( it->x() < 0 || it->y() < 0 )
+            continue;
+        if( region( *it ) == 0 )
+            continue;
+        if( region( *it ) == region( x, y ) )
+            continue;
+
+        // set up connection in both directions
+        region( x, y )->setConnected( region( *it ) );
+        region( *it )->setConnected( region( x, y ) ); 
+    }
+    // done
 }
 
-int RegionLayer::regionMaxX( unsigned r ) const {
-    int max = INT_MIN;
-    for( int x = 0; x < _sx; x++ )
-        for( int y = 0; y < _sy; y++ ) {
-            if( region( x, y ) == r && x > max )
-                max = x;
-        }
+Region *
+RegionLayer::greatestRegion( region_type type ) const {
+    Region * max = *_rs.begin();
+    for( auto it = _rs.begin(); it != _rs.end(); it++ ) {
+        if( (*it)->size() > max->size() && (*it)->type() == type )
+            max = *it;
+    }
     return max;
 }
 
-int RegionLayer::regionMinY( unsigned r ) const {
-    int min = INT_MAX;
-    for( int x = 0; x < _sx; x++ )
-        for( int y = 0; y < _sy; y++ ) {
-            if( region( x, y ) == r && y < min )
-                min = y;
-        }
-    return min;
+unsigned
+RegionLayer::regionCount() const {
+    return _rs.size();
 }
 
-int RegionLayer::regionMaxY( unsigned r ) const {
-    int max = INT_MIN;
-    for( int x = 0; x < _sx; x++ )
-        for( int y = 0; y < _sy; y++ ) {
-            if( region( x, y ) == r && x > max )
-                max = x;
-        }
-    return max;
-}
-
-region_type RegionLayer::regionType( unsigned group ) const {
-    auto tp = _t.find( group );
-    if( tp != _t.end() )
-        return tp->second;
-    else
-        return NONE;
-}
-
-unsigned RegionLayer::greatestRegion( region_type type ) const {
-    unsigned max = 0;
-    unsigned max_g = 0;
-    for( auto it = _s.begin(); it != _s.end(); it++ )
-        if( max < it->second && regionType( it->first ) == type ) {
-            // i want the region number
-            max = it->second;
-            max_g = it->first;
-        }
-    return max_g;
-}
-
-unsigned RegionLayer::regionCount() const {
-    return _s.size();
-}
-
-unsigned RegionLayer::regionCount( region_type type ) const {
+unsigned
+RegionLayer::regionCount( region_type type ) const {
     unsigned cnt = 0;
-    for( auto it = _t.begin(); it != _t.end(); it++ )
-        if( it->second == type )
+    for( auto it = _rs.begin(); it != _rs.end(); it++ )
+        if( (*it)->type() == type )
             cnt++;
-    return cnt;
+    return cnt; 
 }
 
-bool RegionLayer::isNull() const {
-    if( _sx == 0 || _sy == 0 || _r == 0 )
-        return true;
-    return false;
-}
+void
+RegionLayer::init( HeightLayer const & hmap ) {
+    // if _ra initialized ... delete it
+    if( _ra != 0 ) 
+        delete[] _ra;
 
-void RegionLayer::init( HeightLayer const & hmap ) {
-    if( hmap.isNull() )
-        return;
-    _sx = hmap.sizeX();
-    _sy = hmap.sizeY();
+    // create new array
+    _ra = new Region*[ size() ];
 
-    if( _r != 0 ) {
-        delete[] _r;
-        _t.clear(), _s.clear();
-    }
-    if( _r == 0 ) {
-        _r = new unsigned[_sx * _sy];
-        for( int i = 0; i < _sx * _sy; i++ )
-            _r[i] = (unsigned)-1;
+    // if already regions in set of regions
+    // delete all region objects
+    if( !_rs.empty() )
+        for( auto it = _rs.begin(); it != _rs.end(); it++ ) 
+            if( *it != 0 )
+                delete *it;
 
-        _t.clear(), _s.clear();
+    // just in case always clear the set of region pointers
+    _rs.clear();
 
-        generateRegions( hmap );
-    }
+    // initialize the array to null pointers
+    for( int i = 0; i < size(); i++ )
+        _ra[ i ] = (Region*) 0;
+
+    // now extract region information off the given heightmap
+    generateRegions( hmap );
 }
 
 void RegionLayer::uninit() {
-    if( _r != 0 )
-        delete[] _r;
+    if( _ra != 0 )
+        delete[] _ra;
+
+    if( !_rs.empty() )
+        for( auto it = _rs.begin(); it != _rs.end(); it++ ) 
+            if( *it != 0 )
+                delete *it;
 }
 
 // consider a hex map layout like this
@@ -224,6 +179,85 @@ void RegionLayer::uninit() {
 //    01  02
 //  00  xy
 void RegionLayer::generateRegions( HeightLayer const & hmap ) {
+    // TODO: reimplement
+
+// new pass 1 =====================00
+    std::map< unsigned, std::set< unsigned > > region_eqs;
+
+    for( int y = 0; y < sizeY(); y++ ) {
+        for( int x = 0; x < sizeX(); x++ ) {
+            // get the region type of current hex
+            region_type xytype = heightToRegionType( hmap.height( x, y ) );
+            
+            // neighbor indeces
+            int nx[3], ny[3];
+
+            std::set< unsigned > equal_nbr_region_ids;
+            nx[0] = x - 1, ny[0] = y;
+            nx[1] = x - 1, ny[1] = y - 1;
+            nx[2] = x    , ny[2] = y - 1;
+
+            for( int i = 0; i < 3; i++ ) {
+                if( nx[i] < 0 || ny[i] < 0 )
+                    continue;
+                Region const * nbr_region = region( nx[i], ny[i] );
+                if( nbr_region == 0 )
+                    continue;
+                if( nbr_region->type() != xytype )
+                    continue;
+                else
+                    equal_nbr_region_ids.insert( nbr_region->id() );
+            }
+
+            // if there is no neighbor with equal region type
+            if( equal_nbr_region_ids.empty() )
+                setRegion( x, y, new Region( xytype ) );
+            else {
+                setRegion( x, y, regionByID( *equal_nbr_region_ids.begin() ) );
+                // set regionequalities
+                for( auto it = equal_nbr_region_ids.begin(); it != equal_nbr_region_ids.end();
+                        it++ ) {
+                    region_eqs[ *it ].insert( region( x, y )->id() );
+                    region_eqs[ *it ].insert( equal_nbr_region_ids.begin(),
+                                              equal_nbr_region_ids.end() );
+                }
+            }
+            // always equal to self
+            region_eqs[ region( x, y )->id() ].insert( region( x, y )->id() );
+        }
+    }
+
+    for( auto it = region_eqs.begin(); it != region_eqs.end(); it++ ) {
+        for( auto it2 = it->second.begin(); it2 != it->second.end(); it2++ )
+            region_eqs[*it2].insert( it->second.begin(),
+                                            it->second.end() );
+    }
+
+    // print out group_equalities for debug
+    for( auto it = region_eqs.begin(); it != region_eqs.end(); it++ ) {
+        std::cout << "group " << it->first << " equals: ";
+        for( auto it2 = it->second.begin(); it2 != it->second.end(); it2++ )
+            std::cout << *it2 << ", ";
+        std::cout << std::endl;
+    }
+
+    for( int y = 0; y < sizeY(); y++ ) {
+        for( int x = 0; x < sizeX(); x++ ) {
+            setRegion( x, y, regionByID( *region_eqs[ region( x, y )->id() ].begin() ) );
+        }
+    }
+
+    // print _rs
+    for( auto it = _rs.begin(); it != _rs.end(); it++ ) 
+        std::cout << std::endl << *(*it);
+    std::cout << std::endl;
+
+    print();
+
+
+// new pass 1 end =================00
+
+/* old cca ----------------------------------------------------------------------------
     // pass 1 ... get some temporary regions going
     // current region number
     unsigned n = 0;
@@ -343,6 +377,8 @@ void RegionLayer::generateRegions( HeightLayer const & hmap ) {
     // for debugging
 //    for( auto it = _t.begin(); it != _t.end(); it++ )
 //        std::cout << "region " << it->first << " type: " << it->second << " size: " << _s[it->first] << std::endl;
+
+    */ // old cca end ---------------------
 }
 
 region_type RegionLayer::heightToRegionType( HeightLayer::height_type height ) const {
@@ -360,19 +396,7 @@ void RegionLayer::print() const {
             if( x == 0 )
                 for( int k = y + 2; k <= _sy; k++ )
                     std::cout << "  ";
-            switch( regionType( region( x, y ) ) ) {
-            case WATER:         std::cout << "W"; break;
-            case WATER_SHALLOW: std::cout << "w"; break;
-            case WATER_MID:     std::cout << "W"; break;
-            case WATER_DEEP:    std::cout << "D"; break;
-            case LAND:          std::cout << "L"; break;
-            case LAND_LOW:      std::cout << "l"; break;
-            case LAND_MID:      std::cout << "L"; break;
-            case LAND_HIGH:     std::cout << "H"; break;
-            case COAST:         std::cout << "C"; break;
-            case NONE:          std::cout << "N"; break;
-            }
-            std::cout << std::setw( 3 ) << region( x, y ) << "  ";
+            std::cout << std::setw( 3 ) << *region( x, y ) << "  ";
         }
     }
     std::cout << std::endl;

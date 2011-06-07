@@ -78,9 +78,9 @@ WorldMap::height( int x, int y ) const {
 region_type
 WorldMap::region( int x, int y ) const {
     if( _rl != 0 )
-        return _rl->regionType( _rl->region( x, y ) );
+        return _rl->region( x, y )->type();
     else
-        return WATER_SHALLOW;
+        return WATER;
 }
 
 City*

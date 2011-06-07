@@ -8,6 +8,14 @@ Region::Region( region_type type )
       _tp( type ) {
 }
 
+Region::Region( Region const & r ) 
+    : _id( r._id ),
+      _sz( r._sz ),
+      _tp( r._tp ) {
+
+    _c.insert( r._c.begin(), r._c.end() );
+}
+
 Region::~Region() {
     // not responible for anything
 }
@@ -27,7 +35,7 @@ Region::type() const {
     return _tp;
 }
 
-std::set< Region* >
+std::set< Region * >
 Region::connected() const {
     return _c;
 }
@@ -43,9 +51,14 @@ Region::setSize( unsigned size ) {
 }
 
 void
-Region::setConnected( Region* r ) {
-    if( r->id() != _id )
+Region::setConnected( Region * r ) {
+    if( _id != r->id() ) 
         _c.insert( r );
+}
+
+void
+Region::unsetConnected( Region * r ) {
+    _c.erase( r );
 }
 
 void
@@ -56,4 +69,19 @@ Region::incrementSize() {
 void
 Region::decrementSize() {
     _sz--;
+}
+
+bool
+Region::operator<( Region const & rhs ) const {
+    return _id < rhs._id;
+}
+
+std::ostream &
+operator<<( std::ostream & os, Region & r ) {
+    switch( r.type() ) {
+        case WATER: os << "W"; break;
+        case LAND:  os << "L"; break;
+        case COAST: os << "C"; break;
+    }
+    return os << r.id();
 }

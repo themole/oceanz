@@ -2,6 +2,7 @@
 #define REGION_HH
 
 #include <set>
+#include <ostream>
 
 enum region_type { 
     WATER,
@@ -13,6 +14,7 @@ class Region {
 
 public:
     Region( region_type type );
+    Region( Region const & r );
     ~Region();
 
     unsigned id() const;
@@ -25,15 +27,23 @@ public:
     void setSize( unsigned size );
     void setConnected( Region * r );
 
+    void unsetConnected( Region * r );
+
     void incrementSize();
     void decrementSize();
+
+    bool operator<( Region const & rhs ) const;
+
+    // for debugging
+    friend
+    std::ostream & operator<<( std::ostream &, Region & );
 
 private:
     unsigned _id;
     unsigned _sz;
     region_type _tp;
 
-    std::set< Region* > _c; // connected Regions
+    std::set< Region* > _c; // connected Region ids
 
     static unsigned current_id;
 };

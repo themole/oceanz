@@ -95,10 +95,10 @@ MapGenerator::generateCityLayer( WorldMap & map ) const {
                 continue;
 
             // coast must be larger than 200 tiles
-            if( map.regionLayer()->regionSize( map.regionLayer()->region( x, y ) ) < 200 )
+            if( map.regionLayer()->region( x, y )->size() > 200 )
                 continue;
 
-            if( map.regionLayer()->regionSize( map.regionLayer()->region( x, y ) ) < 8 )
+            if( map.regionLayer()->region( x, y )->size() < 8 )
                 continue;
 
             // what kind of neighbor does the field have?
@@ -135,7 +135,7 @@ MapGenerator::generateCityLayer( WorldMap & map ) const {
                 rlist = p.allInRange( 10 );
             // cities with more than one waterregion in sight get higher chance
                 int nwr = 0; // number of water regions
-                std::set< unsigned > regs; // region ids already counted
+                std::set< Region* > regs; // regions already counted
                 for( auto it = rlist.begin(); it != rlist.end(); it++ ) {
                     if( it->x() < 0 || it->y() < 0 ) continue;
                     if( map.region( it->x(), it->y() ) == WATER )

@@ -10,9 +10,8 @@ int main() {
     srand( time( 0 ) );
     long seed = rand();
 
-    WorldMap map( 128, 128 );
-    HeightLayer *hl = new HeightLayer( 128, 128 );
-    RegionLayer *rl = new RegionLayer( *hl );
+    WorldMap map( 20, 20 );
+    HeightLayer *hl = new HeightLayer( 20, 20 );
 
     map.setHeightLayer( hl );
 
@@ -32,10 +31,17 @@ int main() {
     //        mapgen.generate( hmap );
     //        gm = GroupMap( hmap );
     //    }
+    map.regionLayer()->print();
 
-    std::cout << "greatestCost = " << rl->greatestRegion( COAST )
+    RegionLayer *rl = map.regionLayer();
+
+    std::cout << "greates WATER = " << rl->greatestRegion( WATER )->id()
             << " with "
-            << rl->regionSize( rl->greatestRegion( COAST ) )
+            << rl->greatestRegion( WATER )->size()
+            << " tiles." << std::endl << std::endl;
+    std::cout << "greates  LAND = " << rl->greatestRegion( LAND )->id()
+            << " with "
+            << rl->greatestRegion( LAND )->size()
             << " tiles." << std::endl << std::endl;
     std::cout << "seed = " << seed << std::endl << std::endl;
 }
