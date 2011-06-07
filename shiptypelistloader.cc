@@ -1,7 +1,7 @@
 #include "shiptypelistloader.hh"
 
 ShipTypeListLoader::ShipTypeListLoader( std::istream & src )
-    : TypeListLoader( src ) {
+    : TypeListLoader< ShipTypeList >( src ) {
 }
 
 void

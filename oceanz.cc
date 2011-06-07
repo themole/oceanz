@@ -4,6 +4,8 @@
 #include "controlprovider.hh"
 
 #include <cmath>
+#include <ctime>
+#include <cstdlib>
 
 #include <QApplication>
 

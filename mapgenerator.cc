@@ -2,7 +2,8 @@
 
 #include <cmath>
 #include <set>
-#include <sstream>
+#include <ctime>
+#include <cstdlib>
 
 #ifndef PI
 #define PI 3.141592653589
