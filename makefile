@@ -1,7 +1,7 @@
 CC = g++
 
 CFLAGS = -Wall -Wextra -Werror -pedantic -std=c++0x
-DEBUGFLAGS = -g3
+DEBUGFLAGS = -ggdb
 
 CFLAGS += $(INCLUDES)
 
