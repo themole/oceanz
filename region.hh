@@ -26,6 +26,7 @@ public:
     void setConnected( Region * r );
 
     void incrementSize();
+    void decrementSize();
 
 private:
     unsigned _id;

@@ -52,3 +52,8 @@ void
 Region::incrementSize() {
     _sz++;
 }
+
+void
+Region::decrementSize() {
+    _sz--;
+}
