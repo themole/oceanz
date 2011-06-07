@@ -24,6 +24,7 @@ HEADERS += building.hh \
            mapgenerator.hh \
            perlin.hh \
            position.hh \
+           region.hh \
            regionlayer.hh \
            ship.hh \
            shiptype.hh \
@@ -49,6 +50,7 @@ SOURCES += building.cc \
            oceanz.cc \
            perlin.cc \
            position.cc \
+           region.cc \
            regionlayer.cc \
            ship.cc \
            shiptype.cc \
