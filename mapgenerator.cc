@@ -27,9 +27,12 @@ void MapGenerator::setPerlin( Perlin const & perlin ) {
 #include <vector>
 
 void MapGenerator::generateMap( WorldMap & map, float land_amount ) const {
+    std::cout << "generating height information" << std::endl;
     generateHeightLayer( map, land_amount );
+    std::cout << "generating region information" << std::endl;
     generateRegionLayer( map );
-    generateCityLayer( map );
+    std::cout << "WARNING: city generation deactivated." << std::endl;
+    //generateCityLayer( map );
 }
 
 void
