@@ -14,6 +14,8 @@
 class RegionLayer : public Layer {
 
 public:
+    typedef std::list< Region > region_list;
+    typedef std::list< Region >::iterator region_iterator;
 
 public:
     RegionLayer( HeightLayer const & hmap );
@@ -22,24 +24,23 @@ public:
     // access to size information
 
     // access to region information
-    Region * region( int x, int y ) const;
-    Region * region( Position const & ) const;
+    Region * region( int x, int y );
+    Region * region( Position const & );
 
-    Region * regionByID( unsigned id ) const;
+    void setRegion( int x, int y, unsigned id );
+    void setNewRegion( int x, int y, region_type type );
 
-    void setRegion( int x, int y, Region * r );
+    // acces to region list
+    region_iterator findRegion( unsigned id );
 
-    Region * greatestRegion( region_type type ) const;
-
-    unsigned regionCount() const;
-    unsigned regionCount( region_type type ) const;
-
-    void print() const;
+    void print();
 private:
 
     // storing all regions
-    std::set< Region* > _rs;
-    // array of region pointers to specify region for each hex
+    // is kept sorted --> hopefully
+    region_list _rs;
+    // array of region pointer to elements of _rs
+    // or 0
     Region **_ra;
 
 private:

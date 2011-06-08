@@ -25,14 +25,13 @@ void MapGenerator::setPerlin( Perlin const & perlin ) {
 
 #include <vector>
 
-void MapGenerator::generateMap( WorldMap & map, float land_amount ) const {
+void MapGenerator::generateMap( WorldMap & map, float land_amount ) {
     generateHeightLayer( map, land_amount );
     generateRegionLayer( map );
-    generateCityLayer( map );
 }
 
 void
-MapGenerator::generateHeightLayer( WorldMap & map, float land_amount ) const {
+MapGenerator::generateHeightLayer( WorldMap & map, float land_amount ) {
     if( map.heightLayer() == 0 )
         map.setHeightLayer( new HeightLayer( map.sizeX(), map.sizeY() ) );
 
@@ -75,12 +74,12 @@ MapGenerator::generateHeightLayer( WorldMap & map, float land_amount ) const {
 }
 
 void
-MapGenerator::generateRegionLayer( WorldMap & map ) const {
+MapGenerator::generateRegionLayer( WorldMap & map ) {
     map.setRegionLayer( new RegionLayer( *map.heightLayer() ) );
 }
 
 void
-MapGenerator::generateCityLayer( WorldMap & map ) const {
+MapGenerator::generateCityLayer( WorldMap & map ) {
     if( map.cityLayer() == 0 )
         map.setCityLayer( new CityLayer( map.sizeX(), map.sizeY() ) );
     // number of city ... for name .. no name generator for now

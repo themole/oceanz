@@ -13,6 +13,8 @@ public:
 
 protected:
     int _sx, _sy;
+
+    int index( int x, int y ) const;
 };
 
 #endif // LAYER_HH

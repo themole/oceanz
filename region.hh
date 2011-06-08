@@ -33,6 +33,7 @@ public:
     void decrementSize();
 
     bool operator<( Region const & rhs ) const;
+    bool operator==( Region const & rhs ) const;
 
     // for debugging
     friend
@@ -43,7 +44,7 @@ private:
     unsigned _sz;
     region_type _tp;
 
-    std::set< Region* > _c; // connected Region ids
+    std::set< Region* > _c; // connected Regions
 
     static unsigned current_id;
 };

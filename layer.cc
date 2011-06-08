@@ -24,3 +24,8 @@ int
 Layer::size() const {
     return _sx * _sy;
 }
+
+int
+Layer::index( int x, int y ) const {
+    return ( x % _sx ) + _sx * ( y % _sy );
+}

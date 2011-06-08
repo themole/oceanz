@@ -12,11 +12,11 @@ public:
 
     void setPerlin( Perlin const & );
 
-    void generateMap( WorldMap &, float land_amount ) const;
+    void generateMap( WorldMap &, float land_amount );
 
-    void generateHeightLayer( WorldMap &, float land_amount ) const;
-    void generateRegionLayer( WorldMap & ) const;
-    void generateCityLayer( WorldMap & ) const;
+    void generateHeightLayer( WorldMap &, float land_amount );
+    void generateRegionLayer( WorldMap & );
+    void generateCityLayer( WorldMap & );
 
 private:
     Perlin _p;

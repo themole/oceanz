@@ -52,6 +52,8 @@ Region::setSize( unsigned size ) {
 
 void
 Region::setConnected( Region * r ) {
+    if( r == 0 )
+        return;
     if( _id != r->id() ) 
         _c.insert( r );
 }
@@ -74,6 +76,11 @@ Region::decrementSize() {
 bool
 Region::operator<( Region const & rhs ) const {
     return _id < rhs._id;
+}
+
+bool
+Region::operator==( Region const & rhs ) const {
+    return _id == rhs._id;
 }
 
 std::ostream &
