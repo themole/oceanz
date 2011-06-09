@@ -68,20 +68,27 @@ Position::neighbor( Direction d ) const {
 
 std::list< Position >
 Position::allNeighbors() const {
-    return allInRange( 1 );
+    std::list< Position > plist;
+    plist.push_back( neighbor(  E ) );
+    plist.push_back( neighbor( NE ) );
+    plist.push_back( neighbor( NW ) );
+    plist.push_back( neighbor(  W ) );
+    plist.push_back( neighbor( SW ) );
+    plist.push_back( neighbor( SE ) );
+    return plist;
 }
 
 std::list< Position >
 Position::allInRange( int range ) const {
-    std::list< Position > list;
+    std::list< Position > plist;
     for( int x = -range; x <= range; x++ ) {
         for( int y = -range; y <= range; y++ ) {
             Position p( _x + x, _y + y );
             if( (int) p.distanceTo( *this ) <= range )
-                list.push_back( p );
+                plist.push_back( p );
         }
     }
-    return list;
+    return plist;
 }
 
 unsigned
