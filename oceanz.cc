@@ -1,6 +1,6 @@
 #include "./qt/mainwindow.hh"
-#include "mapgenerator.hh"
 
+#include "mapgenerator.hh"
 #include "controlprovider.hh"
 
 #include <cmath>
@@ -14,7 +14,7 @@ int main( int argc, char** argv ) {
     app.setQuitOnLastWindowClosed( true );
 
 // create empty map
-    int mapsize = 256;
+    int mapsize = 512;
     WorldMap *map = new WorldMap( mapsize, mapsize );
     HeightLayer * hl = new HeightLayer( mapsize, mapsize );
     RegionLayer * rl = new RegionLayer( *hl );
@@ -34,7 +34,7 @@ int main( int argc, char** argv ) {
     long seed = rand();
 
     Perlin p;
-    p.setPersistence( .45 );
+    p.setPersistence( .35 );
     p.setOctaves( 10 );
     p.setAmplitude( 65536 );
     p.setFreq0( pow( .5f, 5.6 ) );
@@ -42,7 +42,7 @@ int main( int argc, char** argv ) {
     MapGenerator mapgen;
     mapgen.setPerlin( p );
 
-    mapgen.generateMap( *map, .46f );
+    mapgen.generateMap( *map, .42f );
 
 
 // setting up the window
