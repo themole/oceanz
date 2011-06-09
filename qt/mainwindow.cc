@@ -85,7 +85,7 @@ MainWindow::drawWorldMap() {
                 glPopMatrix();
             }
         }
-        drawCities();
+//        drawCities();
     glPopMatrix();
 }
 
