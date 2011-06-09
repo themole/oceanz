@@ -2,3 +2,5 @@
 *.swp
 Makefile
 oceanz
+test/*
+!test/*.cc
