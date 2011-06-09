@@ -30,9 +30,14 @@ Region::size() const {
     return _sz;
 }
 
-region_type
+unsigned char
 Region::type() const {
     return _tp;
+}
+
+bool
+Region::is( region_type type ) const {
+    return (_tp & type) == type;
 }
 
 std::set< Region * >
@@ -42,7 +47,12 @@ Region::connected() const {
 
 void
 Region::setType( region_type type ) {
-    _tp = type;
+    _tp |= type;
+}
+
+void
+Region::unsetType( region_type type ) {
+    _tp &= !type;
 }
 
 void
@@ -85,11 +95,8 @@ Region::operator==( Region const & rhs ) const {
 
 std::ostream &
 operator<<( std::ostream & os, Region & r ) {
-    switch( r.type() ) {
-        case WATER: os << "W"; break;
-        case LAND:  os << "L"; break;
-        case WATER_COAST: os << "Cw"; break;
-        case LAND_COAST: os << "Cl"; break;
-    }
+    if( r.is( WATER ) ) os << "W";
+    if( r.is( LAND ) )  os << "L";
+    if( r.is( COAST ) ) os << "c";
     return os << r.id();
 }

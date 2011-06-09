@@ -225,13 +225,18 @@ void RegionLayer::generateRegions( HeightLayer const & hmap ) {
     // now detecting coasts of both land and water regions
     for( auto it = _rs.begin(); it != _rs.end(); it++ ) {
 
-        if( it->type() != WATER && it->type() != LAND )
-            continue;
+        if( it->is( COAST ) ) continue;
 
-        Region coast( WATER_COAST );
-        if( it->type() == LAND )
-            coast.setType( LAND_COAST );
+        Region coast( it->type() );
+        coast.setType( COAST );
         _rs.push_back( coast );
+
+        std::cout << coast << "\t" <<
+            "is( LAND ) = " << coast.is( LAND ) << "  " <<
+            "is( WATER ) = " << coast.is( WATER ) << "  " <<
+            "is( COAST ) = " << coast.is( COAST ) << "  " <<
+            "is( LAND | COAST ) = " << coast.is( LAND | COAST ) << "  " << std::endl;
+
 
         for( int y = 0; y < sizeY(); y++ ) {
             for( int x = 0; x < sizeX(); x++ ) {
@@ -243,20 +248,9 @@ void RegionLayer::generateRegions( HeightLayer const & hmap ) {
                 for( auto pit = plist.begin(); pit != plist.end(); pit++ ) {
                     if( region( *pit ) == 0 ) continue;
 
-                    switch( it->type() ) {
-                    case WATER:
-                        if( region( *pit )->type() == LAND ||
-                            region( *pit )->type() == LAND_COAST )
-                            setRegion( x, y, coast.id() );
-                        break;
-                    case LAND:
-                        if( region( *pit )->type() == WATER ||
-                            region( *pit )->type() == WATER_COAST )
-                            setRegion( x, y, coast.id() );
-                        break;
-                    default:
-                        break;
-                    }
+                    if( ( it->is( WATER ) && !region( *pit )->is( WATER ) ) ||
+                        ( it->is( LAND ) && !region( *pit )->is( LAND ) ) )
+                    setRegion( x, y, coast.id() );
                 }
             }
         }

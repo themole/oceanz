@@ -4,27 +4,29 @@
 #include <set>
 #include <ostream>
 
-enum region_type { 
-    WATER,
-    WATER_COAST,
-    LAND,
-    LAND_COAST
+enum region_type_bits { 
+    WATER = 0x1,
+    LAND  = 0x2,
+    COAST = 0x4
 };
+
+typedef unsigned char region_type;
 
 class Region {
 
 public:
-    Region( region_type type );
+    Region( region_type );
     Region( Region const & r );
     ~Region();
-
     unsigned id() const;
     unsigned size() const;
-    region_type type() const;
+    unsigned char type() const;
+    bool is( region_type type ) const;
 
     std::set< Region* > connected() const;
 
     void setType( region_type type );
+    void unsetType( region_type type );
     void setSize( unsigned size );
     void setConnected( Region * r );
 
