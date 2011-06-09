@@ -22,11 +22,5 @@ int main() {
     mapgen.setPerlin( p );
 
     mapgen.generateMap( map, 0.48f );
-    //    while( gm.regionSize( gm.greatestRegion( GroupMap::COAST ) ) < 900 ) {
-    //        p.setSeed( rand() );
-    //        mapgen.setPerlin( p );
-    //        mapgen.generate( hmap );
-    //        gm = GroupMap( hmap );
-    //    }
     map.regionLayer()->print();
 }
