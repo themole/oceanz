@@ -1,6 +1,8 @@
-#ifndef REGION_MAP
-#define REGION_MAP
+#ifndef REGION_LAYER_HH
+#define REGION_LAYER_HH
 
+#include "layer.hh"
+#include "region.hh"
 #include "heightlayer.hh"
 #include "position.hh"
 
@@ -9,80 +11,46 @@
 // represents a complete decomposition of a HeightLayer into regions 
 // with different types ... accomplished by connected component analasys
 
-enum region_type {
-    LAND,
-    LAND_LOW,
-    LAND_MID,
-    LAND_HIGH,
-    WATER,
-    WATER_SHALLOW,
-    WATER_MID,
-    WATER_DEEP,
-    COAST,
-    NONE
-};
-
-class RegionLayer {
+class RegionLayer : public Layer {
 
 public:
+    typedef std::list< Region > region_list;
+    typedef std::list< Region >::iterator region_iterator;
 
 public:
-    // generates null object
-    RegionLayer();
     RegionLayer( HeightLayer const & hmap );
     ~RegionLayer();
 
     // access to size information
-    int sizeX() const;
-    int sizeY() const;
 
     // access to region information
-    unsigned region( int x, int y ) const;
-    unsigned region( Position const & ) const;
+    Region * region( int x, int y );
+    Region * region( Position const & );
 
-    void setRegion( int x, int y, unsigned region, region_type type );
-    void setRegion( int x, int y, unsigned region );
+    void setRegion( int x, int y, unsigned id );
+    void setNewRegion( int x, int y, region_type type );
 
-    // diverse functions: ======================================
-    // access to region properties
-    // returns 0 if region is not available
-    unsigned regionSize( unsigned region ) const;
-    unsigned regionSizeX( unsigned region ) const;
-    unsigned regionSizeY( unsigned region ) const;
-    int regionMinX( unsigned region ) const;
-    int regionMaxX( unsigned region ) const;
-    int regionMinY( unsigned region ) const;
-    int regionMaxY( unsigned region ) const;
+    // acces to region list
+    region_iterator findRegion( unsigned id );
 
-    // return NONE if region not available
-    region_type regionType( unsigned region ) const;
+    void print();
+private:
 
-    unsigned greatestRegion( region_type type ) const;
-
-    unsigned regionCount() const;
-    unsigned regionCount( region_type type ) const;
-
-    // null check
-    bool isNull() const;
+    // storing all regions
+    // is kept sorted --> hopefully
+    region_list _rs;
+    // array of region pointer to elements of _rs
+    // or 0
+    Region **_ra;
 
 private:
-    int _sx, _sy;
 
-    // per tile region number
-    unsigned * _r;
-
-    // set of all regions 
-    std::map< unsigned, region_type > _t;
-    std::map< unsigned, unsigned > _s;
-
-private:
     void init( HeightLayer const & );
     void uninit();
 
     void generateRegions( HeightLayer const & );
     region_type heightToRegionType( HeightLayer::height_type height ) const;
 
-    void print() const;
 };
 
-#endif // REGION_MAP
+#endif // REGION_LAYER_HH

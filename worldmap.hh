@@ -22,8 +22,8 @@ public:
     void setRegionLayer( RegionLayer * rl );
     void setCityLayer( CityLayer * cl );
 
-    HeightLayer::height_type height( int x, int y ) const;
-    region_type region( int x, int y ) const;
+    HeightLayer::height_type height( int x, int y );
+    region_type region( int x, int y );
     City * city( int x, int y );
 
 private:

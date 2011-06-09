@@ -10,11 +10,7 @@ int main() {
     srand( time( 0 ) );
     long seed = rand();
 
-    WorldMap map( 128, 128 );
-    HeightLayer *hl = new HeightLayer( 128, 128 );
-    RegionLayer *rl = new RegionLayer( *hl );
-
-    map.setHeightLayer( hl );
+    WorldMap map( 22, 22 );
 
     Perlin p;
     p.setPersistence( .35 );
@@ -26,16 +22,5 @@ int main() {
     mapgen.setPerlin( p );
 
     mapgen.generateMap( map, 0.48f );
-    //    while( gm.regionSize( gm.greatestRegion( GroupMap::COAST ) ) < 900 ) {
-    //        p.setSeed( rand() );
-    //        mapgen.setPerlin( p );
-    //        mapgen.generate( hmap );
-    //        gm = GroupMap( hmap );
-    //    }
-
-    std::cout << "greatestCost = " << rl->greatestRegion( COAST )
-            << " with "
-            << rl->regionSize( rl->greatestRegion( COAST ) )
-            << " tiles." << std::endl << std::endl;
-    std::cout << "seed = " << seed << std::endl << std::endl;
+    map.regionLayer()->print();
 }

@@ -71,16 +71,16 @@ WorldMap::setCityLayer( CityLayer * cl ) {
 }
 
 HeightLayer::height_type
-WorldMap::height( int x, int y ) const {
+WorldMap::height( int x, int y ) {
     return _hl->height( x, y );
 }
 
 region_type
-WorldMap::region( int x, int y ) const {
+WorldMap::region( int x, int y ) {
     if( _rl != 0 )
-        return _rl->regionType( _rl->region( x, y ) );
+        return _rl->region( x, y )->type();
     else
-        return WATER_SHALLOW;
+        return WATER;
 }
 
 City*

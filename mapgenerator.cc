@@ -1,9 +1,10 @@
 #include "mapgenerator.hh"
 
-#include <cmath>
-#include <set>
 #include <ctime>
 #include <cstdlib>
+#include <cmath>
+#include <set>
+#include <sstream>
 
 #ifndef PI
 #define PI 3.141592653589
@@ -26,17 +27,13 @@ void MapGenerator::setPerlin( Perlin const & perlin ) {
 
 #include <vector>
 
-void MapGenerator::generateMap( WorldMap & map, float land_amount ) const {
-    std::cout << "generating height information" << std::endl;
+void MapGenerator::generateMap( WorldMap & map, float land_amount ) {
     generateHeightLayer( map, land_amount );
-    std::cout << "generating region information" << std::endl;
     generateRegionLayer( map );
-    std::cout << "WARNING: city generation deactivated." << std::endl;
-    //generateCityLayer( map );
 }
 
 void
-MapGenerator::generateHeightLayer( WorldMap & map, float land_amount ) const {
+MapGenerator::generateHeightLayer( WorldMap & map, float land_amount ) {
     if( map.heightLayer() == 0 )
         map.setHeightLayer( new HeightLayer( map.sizeX(), map.sizeY() ) );
 
@@ -79,12 +76,12 @@ MapGenerator::generateHeightLayer( WorldMap & map, float land_amount ) const {
 }
 
 void
-MapGenerator::generateRegionLayer( WorldMap & map ) const {
+MapGenerator::generateRegionLayer( WorldMap & map ) {
     map.setRegionLayer( new RegionLayer( *map.heightLayer() ) );
 }
 
 void
-MapGenerator::generateCityLayer( WorldMap & map ) const {
+MapGenerator::generateCityLayer( WorldMap & map ) {
     if( map.cityLayer() == 0 )
         map.setCityLayer( new CityLayer( map.sizeX(), map.sizeY() ) );
     // number of city ... for name .. no name generator for now
@@ -99,10 +96,10 @@ MapGenerator::generateCityLayer( WorldMap & map ) const {
                 continue;
 
             // coast must be larger than 200 tiles
-            if( map.regionLayer()->regionSize( map.regionLayer()->region( x, y ) ) < 200 )
+            if( map.regionLayer()->region( x, y )->size() > 200 )
                 continue;
 
-            if( map.regionLayer()->regionSize( map.regionLayer()->region( x, y ) ) < 8 )
+            if( map.regionLayer()->region( x, y )->size() < 8 )
                 continue;
 
             // what kind of neighbor does the field have?
@@ -139,11 +136,11 @@ MapGenerator::generateCityLayer( WorldMap & map ) const {
                 rlist = p.allInRange( 10 );
             // cities with more than one waterregion in sight get higher chance
                 int nwr = 0; // number of water regions
-                std::set< unsigned > regs; // region ids already counted
+                std::set< Region* > regs; // regions already counted
                 for( auto it = rlist.begin(); it != rlist.end(); it++ ) {
                     if( it->x() < 0 || it->y() < 0 ) continue;
                     if( map.region( it->x(), it->y() ) == WATER )
-                       if( regs.find( map.regionLayer()->region( it->x(), it->y() ) ) == regs.end() )  {
+                       if( regs.find( map.regionLayer()->region( it->x(), it->y() ) ) == regs.end() ) {
                            regs.insert( map.regionLayer()->region( it->x(), it->y() ) );
                            nwr++;
                        }
