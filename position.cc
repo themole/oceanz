@@ -74,8 +74,8 @@ Position::allNeighbors() const {
 std::list< Position >
 Position::allInRange( int range ) const {
     std::list< Position > list;
-    for( int x = -range; x < range; x++ ) {
-        for( int y = -range; y < range; y++ ) {
+    for( int x = -range; x <= range; x++ ) {
+        for( int y = -range; y <= range; y++ ) {
             Position p( _x + x, _y + y );
             if( (int) p.distanceTo( *this ) <= range )
                 list.push_back( p );
@@ -89,7 +89,8 @@ Position::distanceTo( Position const & pos ) const {
     int dx = pos._x - _x;
     int dy = pos._y - _y;
     return max( max(dx,-dx),
-                max( max(dy,-dy), max( (dy - dx), (dx -dy) ) ) );
+                max( max(dy,-dy),
+                max( (dy - dx), (dx -dy) ) ) );
 }
 
 int
