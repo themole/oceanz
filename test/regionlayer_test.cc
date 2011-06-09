@@ -10,7 +10,7 @@ int main() {
     srand( time( 0 ) );
     long seed = rand();
 
-    WorldMap map( 512, 512 );
+    WorldMap map( 22, 22 );
 
     Perlin p;
     p.setPersistence( .35 );

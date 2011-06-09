@@ -198,16 +198,16 @@ void RegionLayer::generateRegions( HeightLayer const & hmap ) {
     for( auto it = region_eqs.begin(); it != region_eqs.end(); it++ ) {
         for( auto it2 = it->second.begin(); it2 != it->second.end(); it2++ )
             region_eqs[*it2].insert( it->second.begin(),
-                                            it->second.end() );
+                                     it->second.end() );
     }
 
-    // print out group_equalities for debug
-    for( auto it = region_eqs.begin(); it != region_eqs.end(); it++ ) {
-        std::cout << "group " << it->first << " equals: ";
-        for( auto it2 = it->second.begin(); it2 != it->second.end(); it2++ )
-            std::cout << *it2 << ", ";
-        std::cout << std::endl;
-    }
+//    // print out group_equalities for debug
+//    for( auto it = region_eqs.begin(); it != region_eqs.end(); it++ ) {
+//        std::cout << "group " << it->first << " equals: ";
+//        for( auto it2 = it->second.begin(); it2 != it->second.end(); it2++ )
+//            std::cout << *it2 << ", ";
+//        std::cout << std::endl;
+//    }
 
     for( int y = 0; y < sizeY(); y++ ) {
         for( int x = 0; x < sizeX(); x++ ) {
@@ -215,138 +215,54 @@ void RegionLayer::generateRegions( HeightLayer const & hmap ) {
         }
     }
 
-    // print _rs
-    for( auto it = _rs.begin(); it != _rs.end(); it++ ) 
-        std::cout << std::endl << *it;
-    std::cout << std::endl;
+//    // print _rs
+//    for( auto it = _rs.begin(); it != _rs.end(); it++ ) 
+//        std::cout << std::endl << *it;
+//    std::cout << std::endl;
 
     print();
 
+    // now detecting coasts of both land and water regions
+    for( auto it = _rs.begin(); it != _rs.end(); it++ ) {
 
-// new pass 1 end =================00
+        if( it->type() != WATER && it->type() != LAND )
+            continue;
 
-/* old cca ----------------------------------------------------------------------------
-    // pass 1 ... get some temporary regions going
-    // current region number
-    unsigned n = 0;
-    // for each region stores the smallest region number found that it is equal to
-    std::map< unsigned, std::set< unsigned > > region_equalities;
+        Region coast( WATER_COAST );
+        if( it->type() == LAND )
+            coast.setType( LAND_COAST );
+        _rs.push_back( coast );
 
-    for( int y = 0; y < _sy; y++ ) {
-        for( int x = 0; x < _sx; x++ ) {
-
-            // current region type
-            region_type txy = heightToRegionType( hmap.height( x, y ) );
-
-            // neighbor indeces
-            int nx[3];
-            int ny[3];
-
-            // name sais it
-            std::set< unsigned > equal_neighbor_regions;
-
-            nx[0] = x - 1, ny[0] = y;
-            nx[1] = x - 1, ny[1] = y - 1;
-            nx[2] = x, ny[2] = y - 1;
-
-            for( int i = 0; i < 3; i++ ) {
-                if( nx[i] == -1 || ny[i] == -1 )
+        for( int y = 0; y < sizeY(); y++ ) {
+            for( int x = 0; x < sizeX(); x++ ) {
+                // if not in currently examined region
+                if( region( x, y ) != &(*it) )
                     continue;
-                if( regionType( region( nx[i], ny[i] ) ) != txy )
-                    continue;
-                else
-                    equal_neighbor_regions.insert( region( nx[i], ny[i] ) );
-            }
 
-            if( equal_neighbor_regions.empty() )
-                setRegion( x, y, n++, txy );
-            else {
-                setRegion( x, y, *equal_neighbor_regions.begin() );
-                for( auto it = equal_neighbor_regions.begin(); it
-                        != equal_neighbor_regions.end(); it++ ) {
-                    region_equalities[*it].insert( region( x, y ) );
-                    region_equalities[*it].insert(
-                                                   equal_neighbor_regions.begin(),
-                                                   equal_neighbor_regions.end() );
-                }
-            }
-            region_equalities[region( x, y )].insert( region( x, y ) );
-        }
-    }
+                auto plist = Position( x, y ).allNeighbors();
+                for( auto pit = plist.begin(); pit != plist.end(); pit++ ) {
+                    if( region( *pit ) == 0 ) continue;
 
-    for( auto it = region_equalities.begin(); it != region_equalities.end(); it++ ) {
-        for( auto it2 = it->second.begin(); it2 != it->second.end(); it2++ )
-            region_equalities[*it2].insert( it->second.begin(),
-                                            it->second.end() );
-    }
-
-    // print out group_equalities for debug
-//    for( auto it = region_equalities.begin(); it != region_equalities.end(); it++ ) {
-//        std::cout << "group " << it->first << " equals: ";
-//        for( auto it2 = it->second.begin(); it2 != it->second.end(); it2++ )
-//            std::cout << *it2 << ", ";
-//        std::cout << std::endl;
-//    }
-
-    // second pass ... give all equivalent groups
-    // the smallest number of that equivilance class
-    for( int y = 0; y < _sy; y++ ) {
-        for( int x = 0; x < _sx; x++ ) {
-            setRegion( x, y, *region_equalities[region( x, y )].begin() );
-        }
-    }
-
-    // third step ... calculate COAST groups ... coasts of the same water region
-    // get the same number
-    for( auto it = _t.begin(); it != _t.end(); it++ ) {
-        // for all water groups
-        if( it->second == WATER ) {
-            // get next free region number
-            n++;
-            // find all neighbors that are LAND and assign it to one region
-            for( int y = 0; y < _sy; y++ ) {
-                for( int x = 0; x < _sx; x++ ) {
-                    // if not in the current looked at region
-                    if( region( x, y ) != it->first )
-                        continue;
-                    // indeces of all 6 neighbors
-                    int nx[6];
-                    int ny[6];
-                    nx[0] = x - 1, ny[0] = y;       // left
-                    nx[1] = x - 1, ny[1] = y - 1;   // top left
-                    nx[2] = x    , ny[2] = y - 1;   // top right
-                    nx[3] = x + 1, ny[3] = y;       // right
-                    nx[4] = x + 1, ny[4] = y + 1;   // bottom right
-                    nx[5] = x    , ny[5] = y + 1;   // bottom left
-                    for( int i = 0; i < 6; i++ ) {
-                        // invalid neighbors
-                        if( nx[i] == -1 || ny[i] == -1 || nx[i] == _sx || ny[i]
-                                == _sy )
-                            continue;
-                        if( regionType( region( nx[i], ny[i] ) ) == LAND )
-                            setRegion( nx[i], ny[i], n, COAST );
+                    switch( it->type() ) {
+                    case WATER:
+                        if( region( *pit )->type() == LAND ||
+                            region( *pit )->type() == LAND_COAST )
+                            setRegion( x, y, coast.id() );
+                        break;
+                    case LAND:
+                        if( region( *pit )->type() == WATER ||
+                            region( *pit )->type() == WATER_COAST )
+                            setRegion( x, y, coast.id() );
+                        break;
+                    default:
+                        break;
                     }
                 }
             }
         }
-        n++;
     }
 
-//   print();
-
-    // step 4 ... clean up my maps
-    // ===================================================== why in the world is once not enough
-    for( auto it = _s.begin(); it != _s.end(); it++ )
-        if( it->second == 0 ) {
-            _s.erase( it );
-            _t.erase( it->first );
-        }
-
-    // for debugging
-//    for( auto it = _t.begin(); it != _t.end(); it++ )
-//        std::cout << "region " << it->first << " type: " << it->second << " size: " << _s[it->first] << std::endl;
-
-    */ // old cca end ---------------------
+    print();
 }
 
 region_type RegionLayer::heightToRegionType( HeightLayer::height_type height ) const {

@@ -6,8 +6,9 @@
 
 enum region_type { 
     WATER,
+    WATER_COAST,
     LAND,
-    COAST
+    LAND_COAST
 };
 
 class Region {

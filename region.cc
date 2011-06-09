@@ -88,7 +88,8 @@ operator<<( std::ostream & os, Region & r ) {
     switch( r.type() ) {
         case WATER: os << "W"; break;
         case LAND:  os << "L"; break;
-        case COAST: os << "C"; break;
+        case WATER_COAST: os << "Cw"; break;
+        case LAND_COAST: os << "Cl"; break;
     }
     return os << r.id();
 }
