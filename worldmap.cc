@@ -75,12 +75,12 @@ WorldMap::height( int x, int y ) {
     return _hl->height( x, y );
 }
 
-region_type
+TerrainRegion *
 WorldMap::region( int x, int y ) {
     if( _rl != 0 )
-        return _rl->region( x, y )->type();
+        return _rl->region( x, y );
     else
-        return WATER;
+        return 0;
 }
 
 City*

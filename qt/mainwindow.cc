@@ -75,10 +75,13 @@ MainWindow::drawWorldMap() {
                 glTranslatef( ( 2*x - y ) * rad * cos( PI/ 6 ),
                               y * ( rad + rad * sin( PI/6 ) ),
                               0.f);
-                if( _wm->region( x, y ) == WATER )
-                    drawTile( 0.f, 0.f, 1.f + _wm->height( x, y )/255.f );
+                float r = 0.125f;
+                if( _wm->region( x, y )->is( COAST ) )
+                    r = 1.f;
+                if( _wm->region( x, y )->is( WATER ) )
+                    drawTile( r/4, r/4, 1.f + _wm->height( x, y )/255.f );
                 else //if( _wm->region( x, y ) == LAND )
-                    drawTile( 0.f, 1.f - _wm->height( x, y )/255.f, 0.f );
+                    drawTile( r/2, 1.f - _wm->height( x, y )/255.f, r/2 );
 //                else {
 //                    drawTile( 1.f, 0.f, 0.f );
 //                }

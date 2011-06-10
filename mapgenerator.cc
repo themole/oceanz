@@ -92,7 +92,7 @@ MapGenerator::generateCityLayer( WorldMap & map ) {
 
             int city_chance = 50;
 
-            if( map.region( x, y ) != COAST )
+            if( map.region( x, y )->is( COAST ) )
                 continue;
 
             // coast must be larger than 200 tiles
@@ -113,7 +113,7 @@ MapGenerator::generateCityLayer( WorldMap & map ) {
                 for( auto it = nlist.begin(); it != nlist.end(); it++ ) {
                     if( it->x() < 0 || it->y() < 9 )
                         continue;
-                    if( map.region( it->x(), it->y() ) == LAND )
+                    if( map.region( it->x(), it->y() )->is( LAND ) )
                         ln++;
                 }
 
@@ -139,7 +139,7 @@ MapGenerator::generateCityLayer( WorldMap & map ) {
                 std::set< TerrainRegion* > regs; // regions already counted
                 for( auto it = rlist.begin(); it != rlist.end(); it++ ) {
                     if( it->x() < 0 || it->y() < 0 ) continue;
-                    if( map.region( it->x(), it->y() ) == WATER )
+                    if( map.region( it->x(), it->y() )->is( WATER ) )
                        if( regs.find( map.regionLayer()->region( it->x(), it->y() ) ) == regs.end() ) {
                            regs.insert( map.regionLayer()->region( it->x(), it->y() ) );
                            nwr++;

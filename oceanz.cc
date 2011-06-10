@@ -14,7 +14,7 @@ int main( int argc, char** argv ) {
     app.setQuitOnLastWindowClosed( true );
 
 // create empty map
-    int mapsize = 512;
+    int mapsize = 256;
     WorldMap *map = new WorldMap( mapsize, mapsize );
 
 // world map initialization / generation
