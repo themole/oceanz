@@ -21,16 +21,17 @@ HEADERS += building.hh \
            goodtypelist.hh \
            goodtypelistloader.hh \
            heightlayer.hh \
+           layer.hh \
            mapgenerator.hh \
            perlin.hh \
            position.hh \
-           region.hh \
            regionlayer.hh \
            ship.hh \
            shiptype.hh \
            shiptypelist.hh \
            shiptypelistloader.hh \
            stock.hh \
+           terrainregion.hh \
            typeclass.hh \
            typelist.hpp \
            typelistloader.hpp \
@@ -46,17 +47,18 @@ SOURCES += building.cc \
            goodtypelist.cc \
            goodtypelistloader.cc \
            heightlayer.cc \
+           layer.cc \
            mapgenerator.cc \
            oceanz.cc \
            perlin.cc \
            position.cc \
-           region.cc \
            regionlayer.cc \
            ship.cc \
            shiptype.cc \
            shiptypelist.cc \
            shiptypelistloader.cc \
            stock.cc \
+           terrainregion.cc \
            typeclass.cc \
            typeprovider.cc \
            worldmap.cc \

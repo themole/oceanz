@@ -16,17 +16,6 @@ int main( int argc, char** argv ) {
 // create empty map
     int mapsize = 512;
     WorldMap *map = new WorldMap( mapsize, mapsize );
-    HeightLayer * hl = new HeightLayer( mapsize, mapsize );
-    RegionLayer * rl = new RegionLayer( *hl );
-    CityLayer *cl = new CityLayer( mapsize, mapsize );
-
-    map->setHeightLayer( hl );
-    map->setRegionLayer( rl );
-    map->setCityLayer( cl );
-
-// control initialization
-    CityControl cc = CityControl( map );
-    ControlProvider::registerCityControl( cc );
 
 // world map initialization / generation
 

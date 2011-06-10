@@ -136,7 +136,7 @@ MapGenerator::generateCityLayer( WorldMap & map ) {
                 rlist = p.allInRange( 10 );
             // cities with more than one waterregion in sight get higher chance
                 int nwr = 0; // number of water regions
-                std::set< Region* > regs; // regions already counted
+                std::set< TerrainRegion* > regs; // regions already counted
                 for( auto it = rlist.begin(); it != rlist.end(); it++ ) {
                     if( it->x() < 0 || it->y() < 0 ) continue;
                     if( map.region( it->x(), it->y() ) == WATER )

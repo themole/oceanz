@@ -2,7 +2,7 @@
 #define REGION_LAYER_HH
 
 #include "layer.hh"
-#include "region.hh"
+#include "terrainregion.hh"
 #include "heightlayer.hh"
 #include "position.hh"
 
@@ -14,8 +14,8 @@
 class RegionLayer : public Layer {
 
 public:
-    typedef std::list< Region > region_list;
-    typedef std::list< Region >::iterator region_iterator;
+    typedef std::list< TerrainRegion > region_list;
+    typedef std::list< TerrainRegion >::iterator region_iterator;
 
 public:
     RegionLayer( HeightLayer const & hmap );
@@ -24,8 +24,8 @@ public:
     // access to size information
 
     // access to region information
-    Region * region( int x, int y );
-    Region * region( Position const & );
+    TerrainRegion * region( int x, int y );
+    TerrainRegion * region( Position const & );
 
     void setRegion( int x, int y, unsigned id );
     void setNewRegion( int x, int y, region_type type );
@@ -41,7 +41,7 @@ private:
     region_list _rs;
     // array of region pointer to elements of _rs
     // or 0
-    Region **_ra;
+    TerrainRegion **_ra;
 
 private:
 

@@ -18,14 +18,14 @@ RegionLayer::~RegionLayer() {
     uninit();
 }
 
-Region *
+TerrainRegion *
 RegionLayer::region( int x, int y ) {
     if( x < 0 || y < 0 || x >= sizeX() || y >= sizeY() )
         return 0;
     return _ra[ index( x, y ) ];
 }
 
-Region *
+TerrainRegion *
 RegionLayer::region( Position const & pos ) {
     return region( pos.x(), pos.y() );
 }
@@ -74,7 +74,7 @@ RegionLayer::setRegion( int x, int y, unsigned id ) {
     auto plist = Position( x, y ).allNeighbors();
     for( auto it = plist.begin(); it != plist.end(); it++ ) {
         // others are connected to me
-        Region* neighbor = region( *it );
+        TerrainRegion* neighbor = region( *it );
         if( neighbor != 0 )
             neighbor->setConnected( region( x, y ) );
         // im connected to all others
@@ -101,8 +101,8 @@ RegionLayer::setNewRegion( int x, int y, region_type type ) {
         }
     }
 
-    _rs.push_back( Region( type ) );
-    Region * rp = &_rs.back();
+    _rs.push_back( TerrainRegion( type ) );
+    TerrainRegion * rp = &_rs.back();
     _ra[ index( x, y ) ] = rp;
 
 
@@ -110,7 +110,7 @@ RegionLayer::setNewRegion( int x, int y, region_type type ) {
     auto plist = Position( x, y ).allNeighbors();
     for( auto it = plist.begin(); it != plist.end(); it++ ) {
         // others are connected to me
-        Region* neighbor = region( *it );
+        TerrainRegion* neighbor = region( *it );
         if( neighbor != 0 )
             neighbor->setConnected( region( x, y ) );
         // im connected to all others
@@ -121,7 +121,7 @@ RegionLayer::setNewRegion( int x, int y, region_type type ) {
 void
 RegionLayer::init( HeightLayer const & hmap ) {
     // assuming init is only called once
-    _ra = new Region*[ size() ];
+    _ra = new TerrainRegion*[ size() ];
     for( int i = 0; i < size(); i++ )
         _ra[ i ] = 0;
 
@@ -152,6 +152,7 @@ void RegionLayer::generateRegions( HeightLayer const & hmap ) {
 // new pass 1 =====================00
     std::map< unsigned, std::set< unsigned > > region_eqs;
 
+    std::cout << "generating RegionLayer: " << std::flush;
     for( int y = 0; y < sizeY(); y++ ) {
         for( int x = 0; x < sizeX(); x++ ) {
             // get the region type of current hex
@@ -168,7 +169,7 @@ void RegionLayer::generateRegions( HeightLayer const & hmap ) {
             for( int i = 0; i < 3; i++ ) {
                 if( nx[i] < 0 || ny[i] < 0 )
                     continue;
-                Region const * nbr_region = region( nx[i], ny[i] );
+                TerrainRegion const * nbr_region = region( nx[i], ny[i] );
                 if( nbr_region == 0 )
                     continue;
                 if( nbr_region->type() != xytype )
@@ -194,12 +195,14 @@ void RegionLayer::generateRegions( HeightLayer const & hmap ) {
             region_eqs[ region( x, y )->id() ].insert( region( x, y )->id() );
         }
     }
+    std::cout << " ... " << std::flush;
 
     for( auto it = region_eqs.begin(); it != region_eqs.end(); it++ ) {
         for( auto it2 = it->second.begin(); it2 != it->second.end(); it2++ )
             region_eqs[*it2].insert( it->second.begin(),
                                      it->second.end() );
     }
+    std::cout << " ... " << std::flush;
 
 //    // print out group_equalities for debug
 //    for( auto it = region_eqs.begin(); it != region_eqs.end(); it++ ) {
@@ -214,28 +217,29 @@ void RegionLayer::generateRegions( HeightLayer const & hmap ) {
             setRegion( x, y, *region_eqs[ region( x, y )->id() ].begin() );
         }
     }
+    std::cout << " ... " << std::flush;
 
 //    // print _rs
 //    for( auto it = _rs.begin(); it != _rs.end(); it++ ) 
 //        std::cout << std::endl << *it;
 //    std::cout << std::endl;
 
-    print();
+//    print();
 
     // now detecting coasts of both land and water regions
     for( auto it = _rs.begin(); it != _rs.end(); it++ ) {
 
         if( it->is( COAST ) ) continue;
 
-        Region coast( it->type() );
+        TerrainRegion coast( it->type() );
         coast.setType( COAST );
         _rs.push_back( coast );
 
-        std::cout << coast << "\t" <<
-            "is( LAND ) = " << coast.is( LAND ) << "  " <<
-            "is( WATER ) = " << coast.is( WATER ) << "  " <<
-            "is( COAST ) = " << coast.is( COAST ) << "  " <<
-            "is( LAND | COAST ) = " << coast.is( LAND | COAST ) << "  " << std::endl;
+//        std::cout << coast << "\t" <<
+//            "is( LAND ) = " << coast.is( LAND ) << "  " <<
+//            "is( WATER ) = " << coast.is( WATER ) << "  " <<
+//            "is( COAST ) = " << coast.is( COAST ) << "  " <<
+//            "is( LAND | COAST ) = " << coast.is( LAND | COAST ) << "  " << std::endl;
 
 
         for( int y = 0; y < sizeY(); y++ ) {
@@ -255,8 +259,9 @@ void RegionLayer::generateRegions( HeightLayer const & hmap ) {
             }
         }
     }
+    std::cout << " ... " << std::endl;
 
-    print();
+//    print();
 }
 
 region_type RegionLayer::heightToRegionType( HeightLayer::height_type height ) const {
