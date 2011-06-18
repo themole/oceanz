@@ -2,6 +2,7 @@
 #define MAIN_WINDOW_HH
 
 #include "../worldmap.hh"
+#include "../surface.hh"
 
 #include <QGLWidget>
 #include <QKeyEvent>
@@ -34,6 +35,10 @@ private:
     QTimer * _timer;
 
     float xpan, ypan;
+
+    GLuint screen_texture;
+    Surface* screen_surface;
+    Surface* sprite;
 };
 
 #endif // MAIN_WINDOW_HH
