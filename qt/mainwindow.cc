@@ -38,6 +38,8 @@ MainWindow::initializeGL() {
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP );
     glEnable( GL_TEXTURE_2D );
+    glEnable( GL_BLEND );
+    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
     // THIS SPRITE IS TEMPORARY:
     TGAFile tgafile( "test.tga" );
@@ -62,6 +64,7 @@ MainWindow::resizeGL( int w, int h ) {
 
 void
 MainWindow::updateGL() {
+    glClearColor( 1.f, 0.f, 0.f, 1.f );
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     glMatrixMode( GL_MODELVIEW );

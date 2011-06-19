@@ -17,6 +17,7 @@ HEADERS += building.hh \
            city.hh \
            citycontrol.hh \
            citylayer.hh \
+           controlprovider.hh \
            goodtype.hh \
            goodtypelist.hh \
            goodtypelistloader.hh \
@@ -31,18 +32,20 @@ HEADERS += building.hh \
            shiptypelist.hh \
            shiptypelistloader.hh \
            stock.hh \
+           surface.hh \
            terrainregion.hh \
+           tgafile.hh \
            typeclass.hh \
            typelist.hpp \
            typelistloader.hpp \
            typeprovider.hh \
            worldmap.hh \
-           qt/mainwindow.hh \
-    controlprovider.hh
+           qt/mainwindow.hh 
 SOURCES += building.cc \
            city.cc \
            citycontrol.cc \
            citylayer.cc \
+           controlprovider.cc \
            goodtype.cc \
            goodtypelist.cc \
            goodtypelistloader.cc \
@@ -62,5 +65,4 @@ SOURCES += building.cc \
            typeclass.cc \
            typeprovider.cc \
            worldmap.cc \
-           qt/mainwindow.cc \
-    controlprovider.cc
+           qt/mainwindow.cc 
