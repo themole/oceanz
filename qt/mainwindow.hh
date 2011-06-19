@@ -34,11 +34,12 @@ private:
     WorldMap * _wm;
     QTimer * _timer;
 
-    float xpan, ypan;
+    int xpan, ypan;
 
     GLuint screen_texture;
     Surface* screen_surface;
-    Surface* sprite;
+    Surface* land_sprite;
+    Surface* water_sprite;
 };
 
 #endif // MAIN_WINDOW_HH

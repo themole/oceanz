@@ -49,9 +49,12 @@ public:
     void
     paint( Surface const& s, int x, int y ) {
         // TODO: Calculate overlapping rectangle.
+        
 
         for( int u = 0; u < s._width; ++u ) {
             for( int v = 0; v < s._height; ++v ) {
+                if( u + x >= _width || u + x < 0 ) continue;
+                if( v + y >= _height || v + y < 0 ) continue;
 
                 // TODO: Check for boundaries and discard invalid pixels.
                 // Speeds things up.
@@ -59,6 +62,16 @@ public:
                 combine( s.get( u, v ),
                          get( u + x, v + y ) );
             }
+        }
+    }
+
+    void
+    clear( byte b, byte g, byte r, byte a ) {
+        for( int i = 0; i < _size; ) {
+            data[ i++ ] = b;
+            data[ i++ ] = g;
+            data[ i++ ] = r;
+            data[ i++ ] = a;
         }
     }
 
@@ -102,22 +115,22 @@ protected:
         byte dst_alpha = 0xFF - src_alpha;
 
         put( dst,
-             mul( red( src ), src_alpha ) + mul( red( dst ), dst_alpha ),
-             mul( green( src ), src_alpha ) + mul( green( dst ), dst_alpha ),
              mul( blue( src ), src_alpha ) + mul( blue( dst ), dst_alpha ),
-             alpha( dst ) );
+             mul( green( src ), src_alpha ) + mul( green( dst ), dst_alpha ),
+             mul( red( src ), src_alpha ) + mul( red( dst ), dst_alpha ),
+             src_alpha + dst_alpha );
     }
 
     // Sets the given fragment to the given color:
     void
-    put( fragment f, byte r, byte g, byte b, byte a ) {
+    put( fragment f, byte b, byte g, byte r, byte a ) {
         *( f++ ) = r; *( f++ ) = g; *( f++ ) = b;
         *f = a;
     }
 
     // Sets the fragment at (x, y) to the given color:
     void
-    put( int x, int y, byte r, byte g, byte b, byte a ) {
+    put( int x, int y, byte b, byte g, byte r, byte a ) {
         if( x >= _width || y >= _height ) return;
         fragment f = &data[ y*_rowstride + x*4 ];
         put( f, r, g, b, a );
@@ -139,13 +152,13 @@ protected:
     // Simplified fixed-point multiplication for unsigned bytes:
     byte
     mul( byte x, byte y ) {
-        return ( x*y )/0xFF;
+        return ( static_cast< unsigned short >( x )*static_cast< unsigned short >( y ) )/0xFF;
     }
 
     // Helper functions for color access:
-    byte red( fragment x ) { return *( x ); }
-    byte green( fragment x ) { return *( x + 1 ); }
     byte blue( fragment x ) { return *( x + 2 ); }
+    byte green( fragment x ) { return *( x + 1 ); }
+    byte red( fragment x ) { return *( x ); }
     byte alpha( fragment x ) { return *( x + 3 ); }
 };
 

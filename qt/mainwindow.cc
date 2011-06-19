@@ -38,12 +38,14 @@ MainWindow::initializeGL() {
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP );
     glEnable( GL_TEXTURE_2D );
-    glEnable( GL_BLEND );
-    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+    // glEnable( GL_BLEND );
+    // glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
     // THIS SPRITE IS TEMPORARY:
-    TGAFile tgafile( "test.tga" );
-    sprite = new Surface( tgafile );
+    TGAFile land_tga( "tileframes/land_00.tga" );
+    TGAFile water_tga( "tileframes/water_00.tga" );
+    land_sprite = new Surface( land_tga );
+    water_sprite = new Surface( water_tga );
 }
 
 #ifndef PI
@@ -64,27 +66,28 @@ MainWindow::resizeGL( int w, int h ) {
 
 void
 MainWindow::updateGL() {
-    glClearColor( 1.f, 0.f, 0.f, 1.f );
+    glClearColor( 0.f, 0.f, 0.f, 1.f );
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
 
     float rad = 10;
-    glTranslatef( -xpan * 2 * rad * cos( PI / 6 ) + ypan* rad * cos( PI/6 ),
-                  -ypan * ( rad + rad * sin( PI/6 ) ),
-                  0 );
+    // glTranslatef( -xpan * 2 * rad * cos( PI / 6 ) + ypan* rad * cos( PI/6 ),
+    //               -ypan * ( rad + rad * sin( PI/6 ) ),
+    //               0 );
+    screen_surface->clear( 0, 0, 0, 0xFF );
     drawWorldMap();
 
     // THIS is the FULLSCREEN QUAD:
     glBindTexture( GL_TEXTURE_2D, screen_texture );
-    screen_surface->paint( *sprite, 0, 0 );
+
     glTexImage2D( GL_TEXTURE_2D, 0,
                   GL_RGBA,
-                  sprite->width(), sprite->height(), 0,
+                  width(), height(), 0,
                   GL_BGRA,
                   GL_UNSIGNED_BYTE,
-                  *sprite );
+                  *screen_surface );
     glBegin( GL_QUADS );
     glTexCoord2i( 0, 0 ); glVertex2i( 0, 0 );
     glTexCoord2i( 0, 1 ); glVertex2i( 0, height() );
@@ -96,37 +99,31 @@ MainWindow::updateGL() {
 
 void
 MainWindow::drawWorldMap() {
-//     float rad = 10;
-//     glPushMatrix();
-//     glTranslatef( rad * std::cos( PI/6 ),
-//                       rad,
-//                       0.f );
-//         //int xp = xpan; // int yp = ypan;
-//         for( int y = ypan-1; y < ypan + 90; y++ ) {
-//             for( int x = xpan; x < xpan + 200; x++ ) {
-//                 if( x < 0 || x >= _wm->sizeX() ||
-//                     y < 0 || y >= _wm->sizeY() )
-//                     continue;
+    for( int x = xpan - 1 - width()/32 - height()/60;
+         x < xpan + 1 + width()/32 + height()/60; ++x ) {
+        for( int y = ypan - 1 - height()/30; y < ypan + 2 + height()/30; ++y ) {
 
-//                 glPushMatrix();
-//                 glTranslatef( ( 2*x - y ) * rad * std::cos( PI/6.f ),
-//                               y * ( rad + rad * std::sin( PI/6.f ) ),
-//                               0.f);
-//                 float r = 0.125f;
-//                 if( _wm->region( x, y )->is( COAST ) )
-//                     r = 1.f;
-//                 if( _wm->region( x, y )->is( WATER ) )
-//                     drawTile( r/4, r/4, 1.f + _wm->height( x, y )/255.f );
-//                 else //if( _wm->region( x, y ) == LAND )
-//                     drawTile( r/2, 1.f - _wm->height( x, y )/255.f, r/2 );
-// //                else {
-// //                    drawTile( 1.f, 0.f, 0.f );
-// //                }
-//                 glPopMatrix();
-//             }
-//         }
-// //        drawCities();
-//     glPopMatrix();
+            if( x < 0 || y < 0 || x >= _wm->sizeX() || y >= _wm->sizeY() )
+                continue;
+
+            int xa = 8*( 2*( x - xpan ) - ( y - ypan ) ) + width()/2 - 8;
+            int ya = 15*( y - ypan ) + height()/2 - 7;
+
+            if( _wm->region( x, y )->is( WATER ) )
+                screen_surface->paint( *water_sprite, xa, ya );
+            else
+                screen_surface->paint( *land_sprite, xa, ya );
+
+            // if( _wm->region( x, y )->is( WATER ) )
+            //     screen_surface->paint( *water_sprite,
+            //                            width()/2 - 8 + (x - xpan)*16 - 8*y,
+            //                            height()/2 - 7 + (y - ypan)*15 );
+            // else
+            //     screen_surface->paint( *land_sprite,
+            //                            width()/2 - 8 + (x - xpan)*16 - 8*y,
+            //                            height()/2 - 7 + (y - ypan)*15 );
+        }
+    }            
 }
 
 void

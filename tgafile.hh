@@ -18,6 +18,7 @@ public:
         std::ifstream in( filename.c_str() );
 
         if( !in.is_open() ) {
+            std::cout << "failed to open tga file" << std::endl;
             dummy();
             return;
         }
@@ -32,6 +33,7 @@ public:
         unsigned color_map_type;
         color_map_type = static_cast< unsigned >( header_data[ 1 ] );
         if( color_map_type ) {
+            std::cout << "wrong colormap type" << std::endl;
             dummy();
             return;
         }
@@ -40,6 +42,7 @@ public:
         image_type = static_cast< unsigned >( header_data[ 2 ] );
 
         if( image_type != 2 ) {
+            std::cout << "wrong image type" << std::endl;
             dummy();
             return;
         }
@@ -49,6 +52,7 @@ public:
         unsigned bits_per_pixel = static_cast< unsigned >( header_data[ 16 ] );
 
         if( bits_per_pixel != 32 ) {
+            std::cout << "wrong bpp" << std::endl;
             dummy();
             return;
         }
