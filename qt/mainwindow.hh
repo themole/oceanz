@@ -15,6 +15,8 @@ public:
     MainWindow( QWidget *parent );
     ~MainWindow();
 
+    QSize sizeHint();
+
     void setWorldMap( WorldMap * wm );
 
     void initializeGL();

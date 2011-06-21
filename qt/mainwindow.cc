@@ -12,11 +12,17 @@ MainWindow::MainWindow( QWidget *parent )
     this->setAttribute( Qt::WA_QuitOnClose, true );
     xpan = ypan = 0;
     screen_surface = 0;
+
+    this->setFixedSize( sizeHint() );
 }
 
 MainWindow::~MainWindow() {
     delete _wm;
     delete _timer;
+}
+
+QSize MainWindow::sizeHint() {
+    return QSize( 800, 600 );
 }
 
 void
@@ -68,8 +74,8 @@ MainWindow::resizeGL( int w, int h ) {
 
 void
 MainWindow::updateGL() {
-    glClearColor( 0.f, 0.f, 0.f, 1.f );
-    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+//    glClearColor( 0.f, 0.f, 0.f, 1.f );
+//    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
@@ -205,3 +211,4 @@ MainWindow::keyPressEvent( QKeyEvent *e ) {
             break;
     }
 }
+

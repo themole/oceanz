@@ -41,6 +41,6 @@ int main( int argc, char** argv ) {
 
     main.setWindowTitle( "Oceanz" );
 
-    main.showFullScreen();
+    main.show();
     return app.exec();
 }
