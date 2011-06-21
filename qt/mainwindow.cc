@@ -64,6 +64,8 @@ MainWindow::resizeGL( int w, int h ) {
     updateGL();
 }
 
+#define GL_BGRA 0x80E1
+
 void
 MainWindow::updateGL() {
     glClearColor( 0.f, 0.f, 0.f, 1.f );
@@ -72,7 +74,6 @@ MainWindow::updateGL() {
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
 
-    float rad = 10;
     // glTranslatef( -xpan * 2 * rad * cos( PI / 6 ) + ypan* rad * cos( PI/6 ),
     //               -ypan * ( rad + rad * sin( PI/6 ) ),
     //               0 );
