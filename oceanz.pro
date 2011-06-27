@@ -31,6 +31,7 @@ HEADERS += building.hh \
            shiptype.hh \
            shiptypelist.hh \
            shiptypelistloader.hh \
+           stb_image.hh \
            stock.hh \
            surface.hh \
            terrainregion.hh \
@@ -60,6 +61,7 @@ SOURCES += building.cc \
            shiptype.cc \
            shiptypelist.cc \
            shiptypelistloader.cc \
+           stb_image.cc \
            stock.cc \
            terrainregion.cc \
            typeclass.cc \

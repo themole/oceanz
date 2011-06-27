@@ -3,37 +3,55 @@
 
 #include <GL/gl.h>
 
+#include <string>
+
+#include "stb_image.hh"
+
 class
 Surface {
 public:
 
-    typedef GLubyte byte;
+    typedef unsigned char byte;
 
     explicit
     Surface( int width, int height ) : _width( validate( width ) ),
                               _height( validate( height ) ),
                               _rowstride( _width*4 ),
-                              _size( _width*_height*4 ) {
+                              _size( _width*_height*4 ),
+                              _loaded_via_stb( false ) {
 
         data = new byte[ _size ];
     }
 
+    Surface( std::string const & filename ) {
+        data = stbi_load( filename.c_str(), &_width, &_height, &_rowstride, 0 );
+        _rowstride *= _width;
+        _size = _rowstride * _height;
+        _loaded_via_stb = true;
+    }
+
+    /*
     template< typename Source >
     explicit
     Surface( Source const& s ) : _width( s.width() ),
                                  _height( s.height() ),
                                  _rowstride( _width*4 ),
-                                 _size( _rowstride*_height ) {
+                                 _size( _rowstride*_height ),
+                                 _loaded_via_stb( false ) {
 
         data = new byte[ _size ];
 
         for( int i = 0; i < _size; ++i )
             data[ i ] = s.raw()[ i ];
     }
+    */
 
     ~Surface() {
-        // Safe for primitive types:
-        delete [] data;
+        if( _loaded_via_stb )
+            stbi_image_free( data );
+        else
+            // Safe for primitive types:
+            delete [] data;
     }
 
     // Raw data access, convenience for OpenGL:
@@ -91,6 +109,8 @@ protected:
     int _height;
     int _rowstride;
     int _size;
+
+    bool _loaded_via_stb;
 
     byte* data;
 

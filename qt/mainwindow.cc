@@ -50,8 +50,13 @@ MainWindow::initializeGL() {
     // THIS SPRITE IS TEMPORARY:
     TGAFile land_tga( "tileframes/land_00.tga" );
     TGAFile water_tga( "tileframes/water_00.tga" );
-    land_sprite = new Surface( land_tga );
-    water_sprite = new Surface( water_tga );
+
+//    land_sprite = new Surface( land_tga );
+//    water_sprite = new Surface( water_tga );
+
+    // try stb_image lib
+    land_sprite = new Surface( "tileframes/land_00.tga" );
+    water_sprite = new Surface( "tileframes/water_00.tga" );
 }
 
 #ifndef PI
@@ -92,7 +97,7 @@ MainWindow::updateGL() {
     glTexImage2D( GL_TEXTURE_2D, 0,
                   GL_RGBA,
                   width(), height(), 0,
-                  GL_BGRA,
+                  GL_RGBA,
                   GL_UNSIGNED_BYTE,
                   *screen_surface );
     glBegin( GL_QUADS );
