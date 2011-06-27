@@ -4,3 +4,5 @@ Makefile
 oceanz
 test/*
 !test/*.cc
+test.tga
+moc_*.cpp
