@@ -1,8 +1,10 @@
 #include "mainwindow.hh"
 
 #include "tgafile.hh"
+#include <string>
 
 #include <cmath>
+
 
 MainWindow::MainWindow( QWidget *parent )
     : QGLWidget( parent ) {
@@ -13,12 +15,19 @@ MainWindow::MainWindow( QWidget *parent )
     xpan = ypan = 0;
     screen_surface = 0;
 
-    this->setFixedSize( sizeHint() );
+    loadLandSprites();
+
+    this->setMinimumSize( sizeHint() );
 }
 
 MainWindow::~MainWindow() {
     delete _wm;
     delete _timer;
+
+    delete land_sprite;
+    delete water_sprite;
+
+    deleteLandSprites();
 }
 
 QSize MainWindow::sizeHint() {
@@ -27,7 +36,7 @@ QSize MainWindow::sizeHint() {
 
 void
 MainWindow::setWorldMap( WorldMap * map ) {
-    delete _wm;
+    if( _wm ) delete _wm;
     _wm = map;
 }
 
@@ -48,8 +57,8 @@ MainWindow::initializeGL() {
     // glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
     // THIS SPRITE IS TEMPORARY:
-    TGAFile land_tga( "tileframes/land_00.tga" );
-    TGAFile water_tga( "tileframes/water_00.tga" );
+//    TGAFile land_tga( "tileframes/land_00.tga" );
+//    TGAFile water_tga( "tileframes/water_00.tga" );
 
 //    land_sprite = new Surface( land_tga );
 //    water_sprite = new Surface( water_tga );
@@ -121,10 +130,24 @@ MainWindow::drawWorldMap() {
             int xa = 8*( 2*( x - xpan ) - ( y - ypan ) ) + width()/2 - 8;
             int ya = 15*( y - ypan ) + height()/2 - 7;
 
-            if( _wm->region( x, y )->is( WATER ) )
-                screen_surface->paint( *water_sprite, xa, ya );
-            else
+            if( _wm->region( x, y )->is( LAND ) ) {
+                Position p = Position( x, y );
+                auto ps = p.allNeighbors();
+                unsigned int water_neighbors = 0;
+                for( auto it = ps.begin(); it != ps.end(); it++ ) {
+                    if( it->x() < 0 || it->y() < 0 || it->x() >= _wm->sizeX() || it->y() >= _wm->sizeY() )
+                        continue;
+                    if( _wm->region( it->x(), it->y() )->is( WATER ) ) 
+                        water_neighbors++;
+                }
+//                switch( water_neighbors ) {
+//                    case 0: screen_surface->paint( *land_sprites[ 0], xa, ya ); break;
+//                    case 6: screen_surface->paint( *land_sprites[31], xa, ya ); break;
+//                }
                 screen_surface->paint( *land_sprite, xa, ya );
+            }
+            else
+                screen_surface->paint( *water_sprite, xa, ya );
 
             // if( _wm->region( x, y )->is( WATER ) )
             //     screen_surface->paint( *water_sprite,
@@ -140,20 +163,20 @@ MainWindow::drawWorldMap() {
 
 void
 MainWindow::drawCities() {
-    float rad = 10;
-    for( auto it  = _wm->cityLayer()->cities().begin();
-              it != _wm->cityLayer()->cities().end();
-              it++ ) {
-
-        glPushMatrix();
-
-        glTranslatef( ( 2*it->second.x() - it->second.y() ) * rad * cos( PI/ 6 ),
-                      it->second.y() * ( rad + rad * sin( PI/6 ) ),
-                      0.f);
-        drawCity( it->first );
-
-        glPopMatrix();
-    }
+//    float rad = 10;
+//    for( auto it  = _wm->cityLayer()->cities().begin();
+//              it != _wm->cityLayer()->cities().end();
+//              it++ ) {
+//
+//        glPushMatrix();
+//
+//        glTranslatef( ( 2*it->second.x() - it->second.y() ) * rad * cos( PI/ 6 ),
+//                      it->second.y() * ( rad + rad * sin( PI/6 ) ),
+//                      0.f);
+//        drawCity( it->first );
+//
+//        glPopMatrix();
+//    }
 }
 
 void
@@ -196,19 +219,23 @@ MainWindow::keyPressEvent( QKeyEvent *e ) {
         case Qt::Key_U:
             this->updateGL();
             break;
+        case Qt::Key_L:
         case Qt::Key_Right:
             xpan += 4;
             updateGL();
             break;
+        case Qt::Key_H:
         case Qt::Key_Left:
             xpan -= 4;
             updateGL();
             break;
+        case Qt::Key_K:
         case Qt::Key_Up:
             ypan -= 4;
             xpan -= 2;
             updateGL();
             break;
+        case Qt::Key_J:
         case Qt::Key_Down:
             ypan += 4;
             xpan += 2;
@@ -217,3 +244,28 @@ MainWindow::keyPressEvent( QKeyEvent *e ) {
     }
 }
 
+void
+MainWindow::loadLandSprites() {
+//    std::string land_sprite_name;
+//    land_sprites = new Surface*[32];
+//    for( int i = 0; i < 32; i++ )
+//        land_sprites[ i ] = 0;
+//
+//    land_sprites[ 0 ] = new Surface( "tileframes/land_00.tga" );
+//    land_sprites[ 31] = new Surface( "tileframes/land_60.tga" );
+//
+//    for( int i = 1; i < 5; i++ )
+//        for( int j = 0; j < 6; j++ ) {
+//            land_sprite_name += "tileframes/land_" + i;
+//            land_sprite_name += j + ".tga";
+//            land_sprites[ (i-1)*6 + j + 1 ] = new Surface( land_sprite_name );
+//        }
+}
+
+void
+MainWindow::deleteLandSprites() {
+//    for( int i = 0; i < 32; i++ )
+//        if( land_sprites[ i ] )
+//            delete land_sprites[ i ];
+//    delete[] land_sprites;
+}

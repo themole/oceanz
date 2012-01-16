@@ -152,7 +152,7 @@ MapGenerator::generateCityLayer( WorldMap & map ) {
                 city_chance += rand()%30 - 10;
 
             if( city_chance >= 72 ) {
-                map.cityLayer()->setCity( x, y, new City( "city" ) );
+                map.cityLayer()->newCity( x, y, "city" );
                 n++;
             }
         }

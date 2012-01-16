@@ -49,6 +49,7 @@ private:
 
     std::set< TerrainRegion* > _c; // connected Regions
 
+private:
     static unsigned current_id;
 };
 

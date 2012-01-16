@@ -39,9 +39,16 @@ private:
     int xpan, ypan;
 
     GLuint screen_texture;
+
     Surface* screen_surface;
     Surface* land_sprite;
     Surface* water_sprite;
+
+    Surface** land_sprites;
+    Surface** water_sprites;
+
+    void loadLandSprites();
+    void deleteLandSprites();
 };
 
 #endif // MAIN_WINDOW_HH
