@@ -6,3 +6,4 @@ test/*
 !test/*.cc
 test.tga
 moc_*.cpp
+.*
