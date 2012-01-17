@@ -49,6 +49,9 @@ protected:
     std::map< City::city_id, City* > _cs;
 
 private:
+
+    void setCityInfo( int x, int y, City::city_id, association_type );
+
     void init( int sx, int sy );
     void uninit();
 };

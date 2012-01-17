@@ -66,6 +66,7 @@ MainWindow::initializeGL() {
     // try stb_image lib
     land_sprite = new Surface( "tileframes/land_00.tga" );
     water_sprite = new Surface( "tileframes/water_00.tga" );
+    city_sprite = new Surface( "tileframes/city_00.tga" );
 }
 
 #ifndef PI
@@ -131,6 +132,10 @@ MainWindow::drawWorldMap() {
             int ya = 15*( y - ypan ) + height()/2 - 7;
 
             if( _wm->region( x, y )->is( LAND ) ) {
+                if( _wm->cityLayer()->cityAt( x, y ) ) {
+                    screen_surface->paint( *city_sprite, xa, ya );
+                    continue;
+                }
                 Position p = Position( x, y );
                 auto ps = p.allNeighbors();
                 unsigned int water_neighbors = 0;

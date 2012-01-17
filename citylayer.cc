@@ -66,7 +66,17 @@ CityLayer::newCity( int x, int y, std::string const & name ) {
     if( !cityAt( x, y ) ) {
         City* to_insert = new City( x, y, name );
         _cs.insert( std::pair< City::city_id, City* >( to_insert->id(), to_insert ) );
+        setCityInfo( x, y, to_insert->id(), INSIDE );    
     }
+}
+
+void
+CityLayer::setCityInfo( int x, int y, City::city_id id, association_type at ) {
+    if( x <= 0 || y <= 0 )
+        return;
+    _ci[ ( x % _sx ) + _sx * ( y % _sy ) ].erase( id );
+    _ci[ ( x % _sx ) + _sx * ( y % _sy ) ].insert(
+            std::pair< City::city_id, association_type > ( id, at ) );
 }
 
 void

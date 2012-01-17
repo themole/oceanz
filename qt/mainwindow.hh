@@ -43,6 +43,7 @@ private:
     Surface* screen_surface;
     Surface* land_sprite;
     Surface* water_sprite;
+    Surface* city_sprite;
 
     Surface** land_sprites;
     Surface** water_sprites;
