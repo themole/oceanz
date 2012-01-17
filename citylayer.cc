@@ -64,7 +64,7 @@ CityLayer::city( City::city_id cid ) {
 void
 CityLayer::newCity( int x, int y, std::string const & name ) {
     if( !cityAt( x, y ) ) {
-        City* to_insert = new City( name );
+        City* to_insert = new City( x, y, name );
         _cs.insert( std::pair< City::city_id, City* >( to_insert->id(), to_insert ) );
     }
 }

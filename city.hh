@@ -5,32 +5,44 @@
 #include "stock.hh"
 
 #include <string>
-#include <list>
+#include <set>
 
 class City {
 
 public:
     typedef unsigned short city_id;
-    typedef std::list< Position > pos_list;
 
 public:
-    explicit City( std::string const & name );
+    explicit City( int x, int y, std::string const & name );
+    explicit City( Position const & pos, std::string const & name );
+
     ~City();
 
-    std::string const & name() const;
-    std::list< Position > positions() const;
     city_id id() const;
+
+    std::string const & name() const;
+    Position const & position() const;
+    unsigned level() const;
 
     void setName(std::string const & name );
 
+    std::set< Position > const & localTiles() const;
+
+    bool addLocalTile( Position const & pos );
+    bool removeLocalTile( Position const & pos );
+
 
 private:
-    
+
     city_id _id;
+
     std::string _name;
+    Position _pos;
+
     unsigned _level;
 
-    std::list< Position > _ps;
+    // set of local tiles to determin local spread for city view
+    std::set< Position > _local;
 
 private:
     static city_id current_id;

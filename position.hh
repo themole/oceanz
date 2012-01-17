@@ -29,12 +29,27 @@ public:
     bool operator==( Position const & p ) const;
     bool operator!=( Position const & p ) const;
 
+    // comparison by the "sum" of the distance to (0,0)
+    // and the position in the ring of same distance to (0,0)
+    // the first in order would alsways be (x,0)
+    // counting counter clockwise
+    bool operator<( Position const & p ) const;
+    bool operator<=( Position const & p ) const;
+    bool operator>( Position const & p ) const;
+    bool operator>=( Position const & p ) const;
+
     Position const neighbor( Direction d ) const;
 
     std::list< Position > allNeighbors() const;
     std::list< Position > allInRange( int range ) const;
 
+    unsigned distanceToNull() const;
     unsigned distanceTo( Position const & p ) const;
+
+    // is the "sum" of distance to (0,0) and the position
+    // in the ring of same distance to (0,0)
+    // - used for ordering
+    unsigned ord() const;
 
     friend
     std::ostream & operator<<( std::ostream &, Position const & p );

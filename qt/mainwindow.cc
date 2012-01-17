@@ -181,14 +181,15 @@ MainWindow::drawCities() {
 
 void
 MainWindow::drawCity( City* c ) {
-    float rad = 10.f;
-    std::list< Position > list = c->positions();
-    for( auto it  = list.begin(); it != list.end(); it++ ) {
-        glTranslatef( ( 2*it->x() - it->y() ) * rad * cos( PI/ 6 ),
-                      it->y() * ( rad + rad * sin( PI/6 ) ),
-                      0.f);
-        drawTile( 1.f, 1.f, 0.f );
-    }
+    c = c;
+//    float rad = 10.f;
+//    std::list< Position > list = c->positions();
+//    for( auto it  = list.begin(); it != list.end(); it++ ) {
+//        glTranslatef( ( 2*it->x() - it->y() ) * rad * cos( PI/ 6 ),
+//                      it->y() * ( rad + rad * sin( PI/6 ) ),
+//                      0.f);
+//        drawTile( 1.f, 1.f, 0.f );
+//    }
 }
 
 void
