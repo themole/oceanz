@@ -53,6 +53,11 @@ City::setName( std::string const & name ) {
     _name = name;
 }
 
+void
+City::levelUp() {
+    _level++;
+}
+
 std::set< Position > const &
 City::localTiles() const {
     return _local;

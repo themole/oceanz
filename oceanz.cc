@@ -2,6 +2,7 @@
 
 #include "mapgenerator.hh"
 #include "controlprovider.hh"
+#include "citycontrol.hh"
 
 #include <cmath>
 #include <ctime>
@@ -32,6 +33,12 @@ int main( int argc, char** argv ) {
     mapgen.setPerlin( p );
 
     mapgen.generateMap( *map, .42f );
+
+    CityControl cc = CityControl( map );
+    auto clist = map->cityLayer()->cities();
+    for( auto cit = clist.begin(); cit != clist.end(); cit++ )
+        if( rand() % 10 > 5 )
+            cc.upgradeCity( cit->first );
 
 
 // setting up the window

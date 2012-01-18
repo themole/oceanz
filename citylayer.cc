@@ -61,6 +61,11 @@ CityLayer::city( City::city_id cid ) {
     return _cs.find( cid )->second;
 }
 
+std::map< City::city_id, City* > const &
+CityLayer::cities() {
+    return _cs;
+}
+
 void
 CityLayer::newCity( int x, int y, std::string const & name ) {
     if( !cityAt( x, y ) ) {

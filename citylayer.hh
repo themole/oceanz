@@ -37,6 +37,8 @@ public:
     City* city( Position const & );
     City* city( City::city_id cid );
 
+    std::map< City::city_id, City* > const & cities();
+
     void newCity( int x, int y, std::string const & name );
 
 protected:

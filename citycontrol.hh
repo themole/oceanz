@@ -14,7 +14,7 @@ public:
     void setWorldMap( WorldMap * wm );
 
     void buildCity( Position const & p, std::string const & name );
-    void upgradeCity( City * c );
+    void upgradeCity( City::city_id id );
 
 private:
     WorldMap *_wm;

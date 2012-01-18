@@ -26,6 +26,8 @@ public:
 
     void setName(std::string const & name );
 
+    void levelUp();
+
     std::set< Position > const & localTiles() const;
 
     bool addLocalTile( Position const & pos );
