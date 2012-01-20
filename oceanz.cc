@@ -36,10 +36,12 @@ int main( int argc, char** argv ) {
 
     CityControl cc = CityControl( map );
     auto clist = map->cityLayer()->cities();
-    for( auto cit = clist.begin(); cit != clist.end(); cit++ )
-        if( rand() % 10 > 5 )
-            cc.upgradeCity( cit->first );
-
+    for( unsigned i = 1; i <= 9; i++ ) {
+        for( auto cit = clist.begin(); cit != clist.end(); cit++ ) {
+            if( cit->second->level() == i && rand()%11 >= i+2 )
+                cc.upgradeCity( cit->first );
+        }
+    }
 
 // setting up the window
     MainWindow main( 0 );

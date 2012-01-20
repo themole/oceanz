@@ -44,6 +44,8 @@ private:
     Surface* land_sprite;
     Surface* water_sprite;
     Surface* city_sprite;
+    Surface* around_city_sprite;
+    Surface* around_city_water_sprite;
 
     Surface** land_sprites;
     Surface** water_sprites;

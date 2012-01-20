@@ -96,7 +96,7 @@ MapGenerator::generateCityLayer( WorldMap & map ) {
 
             int city_chance = 0; // percent
 
-            if( !map.region( x, y )->is( COAST ) )
+            if( !map.region( x, y )->is( COAST | LAND ) )
                 continue;
 
             // coast must be larger than 200 tiles
@@ -128,7 +128,7 @@ MapGenerator::generateCityLayer( WorldMap & map ) {
 
             Position p( x, y );
             // if a city is right next to this one ... dont put one
-            auto neighs = p.allInRange(3);
+            auto neighs = p.allInRange(5);
             bool breakit = false;
             for( auto it = neighs.begin(); it != neighs.end(); it++ ) {
                 if( it->x() < 0 || it->y() < 0 ) continue;
@@ -140,9 +140,9 @@ MapGenerator::generateCityLayer( WorldMap & map ) {
             if( breakit ) continue;
 
             // look for other cities around
-            // -> one around ... lower chance
+            // -> some around ... lower chance
             // -> none around ... higher chance
-            std::list< Position > rlist = p.allInRange( 10 );
+            std::list< Position > rlist = p.allInRange( 15 );
             int ncc = 0; // number of cities in sight
             int nwat = 0; // number of water tiles around
             for( auto it = rlist.begin(); it != rlist.end(); it++ ) {
@@ -181,7 +181,8 @@ MapGenerator::generateCityLayer( WorldMap & map ) {
             if( city_chance <= 20 ) {
                 map.cityLayer()->newCity( x, y, "city" );
                 n++;
-                std::cout << " city built at: (" << x << ", " << y << " )" << std::endl;
+                std::cout << " city built at: (" << x << ", " << y << " )\tid = "
+                    << map.cityLayer()->city( x, y )->id() << std::endl;
             }
         }
     }

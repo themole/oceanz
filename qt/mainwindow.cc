@@ -67,6 +67,8 @@ MainWindow::initializeGL() {
     land_sprite = new Surface( "tileframes/land_00.tga" );
     water_sprite = new Surface( "tileframes/water_00.tga" );
     city_sprite = new Surface( "tileframes/city_00.tga" );
+    around_city_sprite = new Surface( "tileframes/around_city.tga" );
+    around_city_water_sprite = new Surface( "tileframes/around_city_water.tga" );
 }
 
 #ifndef PI
@@ -132,36 +134,17 @@ MainWindow::drawWorldMap() {
             int ya = 15*( y - ypan ) + height()/2 - 7;
 
             if( _wm->region( x, y )->is( LAND ) ) {
-                if( _wm->cityLayer()->cityAt( x, y ) ) {
+                if( _wm->cityLayer()->insideCity( x, y ) != 0 ) {
                     screen_surface->paint( *city_sprite, xa, ya );
-                    continue;
-                }
-                Position p = Position( x, y );
-                auto ps = p.allNeighbors();
-                unsigned int water_neighbors = 0;
-                for( auto it = ps.begin(); it != ps.end(); it++ ) {
-                    if( it->x() < 0 || it->y() < 0 || it->x() >= _wm->sizeX() || it->y() >= _wm->sizeY() )
-                        continue;
-                    if( _wm->region( it->x(), it->y() )->is( WATER ) ) 
-                        water_neighbors++;
-                }
-//                switch( water_neighbors ) {
-//                    case 0: screen_surface->paint( *land_sprites[ 0], xa, ya ); break;
-//                    case 6: screen_surface->paint( *land_sprites[31], xa, ya ); break;
-//                }
+                } else if ( _wm->cityLayer()->aroundCity( x, y ) ) { 
+                    screen_surface->paint( *around_city_sprite, xa, ya );
+                } else
                 screen_surface->paint( *land_sprite, xa, ya );
             }
+            else if( _wm->cityLayer()->aroundCity( x, y ) )
+                screen_surface->paint( *around_city_water_sprite, xa, ya );
             else
                 screen_surface->paint( *water_sprite, xa, ya );
-
-            // if( _wm->region( x, y )->is( WATER ) )
-            //     screen_surface->paint( *water_sprite,
-            //                            width()/2 - 8 + (x - xpan)*16 - 8*y,
-            //                            height()/2 - 7 + (y - ypan)*15 );
-            // else
-            //     screen_surface->paint( *land_sprite,
-            //                            width()/2 - 8 + (x - xpan)*16 - 8*y,
-            //                            height()/2 - 7 + (y - ypan)*15 );
         }
     }            
 }

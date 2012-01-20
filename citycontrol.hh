@@ -18,6 +18,8 @@ public:
 
 private:
     WorldMap *_wm;
+
+    void checkAroundCity( City *c, unsigned range );
 };
 
 #endif // CITY_CONTROL_HH

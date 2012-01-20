@@ -29,9 +29,15 @@ public:
     int sizeY() const;
 
     bool cityAt( int x, int y ) const;
+
+    City::city_id insideCity( int x, int y ) const;
+    bool aroundCity( int x, int y ) const;
     
     city_info cityInfo( int x, int y ) const;
     city_info cityInfo( Position const & ) const;
+
+    void setCityInfo( int x, int y, City::city_id, association_type );
+    void setCityInfo( Position const &, City::city_id id, association_type t );
 
     City* city( int x, int y );
     City* city( Position const & );
@@ -52,7 +58,6 @@ protected:
 
 private:
 
-    void setCityInfo( int x, int y, City::city_id, association_type );
 
     void init( int sx, int sy );
     void uninit();
