@@ -38,7 +38,7 @@ int main( int argc, char** argv ) {
     auto clist = map->cityLayer()->cities();
     for( unsigned i = 1; i <= 9; i++ ) {
         for( auto cit = clist.begin(); cit != clist.end(); cit++ ) {
-            if( cit->second->level() == i && rand()%11 >= i+2 )
+            if( cit->second->level() == i && (unsigned)rand()%11 >= i+2 )
                 cc.upgradeCity( cit->first );
         }
     }
