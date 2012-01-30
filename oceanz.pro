@@ -5,7 +5,7 @@
 QT += core
 QT += opengl
 
-QMAKE_CXXFLAGS += -std=gnu++0x
+QMAKE_CXXFLAGS += -DGL_GLEXT_PROTOTYPES -std=gnu++0x
 
 TEMPLATE = app
 TARGET = 
