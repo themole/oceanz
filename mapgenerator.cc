@@ -10,6 +10,7 @@
 #define PI 3.141592653589
 #endif
 
+
 MapGenerator::MapGenerator( long seed ) {
     _p.setSeed( seed );
     _p.setAmplitude( 65536.f );

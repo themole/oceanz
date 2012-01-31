@@ -1,6 +1,6 @@
 CC = g++
 
-CFLAGS = -Wall -Wextra -Werror -pedantic -std=c++0x
+CFLAGS = -Wall -Wextra -Werror -pedantic -std=c++0x 
 DEBUGFLAGS = -ggdb
 
 CFLAGS += $(INCLUDES)
@@ -8,6 +8,7 @@ CFLAGS += $(INCLUDES)
 HEADER = $(wildcard *.hh)
 SOURCES = $(patsubst %.hh, %.cc, $(HEADER) 
 OBJS = $(patsubst %.hh, %.o, $(HEADER) )
+LIBS = -lGL
 
 THEADER = $(wildcard *.hpp)
 
@@ -26,8 +27,8 @@ clean:
 	rm -rf $(TARGETS)
 
 %.o : %.cc %.hh $(THEADER)
-	$(CC) $(CFLAGS) -o $@ -c $< 
+	$(CC) $(CFLAGS) -o $@ -c $< $(LIBS)
 
 .SECONDEXPANSION:
 $(TARGETS) : $$(addsuffix .cc, $$@ ) $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $< -o $@  
+	$(CC) $(CFLAGS) $(OBJS) $< -o $@ $(LIBS) 

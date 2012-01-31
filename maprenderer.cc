@@ -5,19 +5,27 @@
 unsigned char const MapRenderer::VERTICES_PER_HEXAGON = 7;
 GLfloat const MapRenderer::SMALLEST_UNIT = 0.25f;
 
+std::ostream &
+operator<<( std::ostream & os, MapRenderer::vertex const & v ) {
+    os << "( " << v.x << ", " << v.y << ", " << v.z << " )";
+    return os;
+}
+
 MapRenderer::MapRenderer( WorldMap const & wm )
-    : _wm( wm ) {
+    : _wm( wm ), _vs( 0 ), _is( 0 ) {
 
     createVertices(); 
-    initBufferObjects();
+//    initBufferObjects();
 }
 
 MapRenderer::~MapRenderer() {
-    glDeleteBuffers( 1, &_vbo );
-    glDeleteBuffers( 1, &_ibo );
+//    glDeleteBuffers( 1, &_vbo );
+//    glDeleteBuffers( 1, &_ibo );
 
-    delete[] _vs;
-    delete[] _is;
+//    if( _vs != 0 )
+//        delete[] _vs;
+    if( _is != 0 )
+        delete[] _is;
 }
 
 void
@@ -55,10 +63,8 @@ MapRenderer::initBufferObjects() {
 // creates one vertex per hex
 void
 MapRenderer::createVertices() {
-    if( _vs )
-        delete[] _vs;
-    if( _is )
-        delete[] _is;
+    if( _vs || _is )
+        return;
 
     // exactly one vertex per hex
     GLuint vertex_cnt = _wm.sizeX() * _wm.sizeY();
@@ -147,4 +153,16 @@ MapRenderer::createVerticesComplex() {
             }
         }
     }
+}
+
+void
+MapRenderer::printVertices() const {
+    if( !_vs ) {
+        std::cout << "vertices not generated yet." << std::endl;
+        return;
+    }
+    std::cout << "vertices:" << std::endl;
+    for( int i = 0; i < _wm.sizeX() * _wm.sizeY(); i++ ) 
+        std::cout << _vs[i] << std::endl;
+
 }

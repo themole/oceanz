@@ -9,6 +9,8 @@
 #include <GL/gl.h>
 #include <GL/glext.h>
 
+#include <ostream>
+#include <string>
 
 // renders a WorldMap object to a given screen
 // creates a vertex buffer object representing the map
@@ -22,6 +24,8 @@ private:
     static unsigned char const VERTICES_PER_HEXAGON;
     static GLfloat const SMALLEST_UNIT;
 
+
+public:
     struct vertex {
         GLfloat x, y, z;
         GLfloat r, g, b;
@@ -36,6 +40,7 @@ private:
             : x( xx ), y( yy ), z( zz ),
               r( rr ), g( gg ), b( bb ) {
         }
+        friend std::ostream & operator<<( std::ostream &, vertex const & );
     };
 
 public: // functions
@@ -43,6 +48,7 @@ public: // functions
     ~MapRenderer();
 
     void render();
+    void printVertices() const;
 
 private: // functions
     void initBufferObjects();
