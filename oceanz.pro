@@ -24,6 +24,7 @@ HEADERS += building.hh \
            heightlayer.hh \
            layer.hh \
            mapgenerator.hh \
+           maprenderer.hh \
            perlin.hh \
            position.hh \
            regionlayer.hh \
@@ -53,6 +54,7 @@ SOURCES += building.cc \
            heightlayer.cc \
            layer.cc \
            mapgenerator.cc \
+           maprenderer.cc \
            oceanz.cc \
            perlin.cc \
            position.cc \

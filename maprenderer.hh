@@ -52,11 +52,14 @@ public: // functions
 
 private: // functions
     void initBufferObjects();
+    void uninitBufferObjects();
     void createVertices();
-    void createVerticesComplex();
 
 private:
     WorldMap const & _wm;
+
+    GLuint _vcnt;
+    GLuint _tcnt;
 
     vertex   *_vs;
     GLushort *_is;
