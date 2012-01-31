@@ -25,6 +25,7 @@ int main() {
 
     mapgen.generateMap( map, 0.48f );
 
-    MapRenderer *mr = new MapRenderer( map );
-    mr->printVertices();
+    MapRenderer mr( map );
+    mr.printVertices();
 }
+
