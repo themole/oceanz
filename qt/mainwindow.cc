@@ -9,7 +9,7 @@
 MainWindow::MainWindow( QWidget *parent )
     : QGLWidget( parent ) {
     _timer = new QTimer();
-    _wm = new WorldMap( 1024, 1024 );
+    _wm = 0;
 
     this->setAttribute( Qt::WA_QuitOnClose, true );
     xpan = ypan = 0;

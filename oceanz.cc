@@ -33,7 +33,7 @@ int main( int argc, char** argv ) {
     mapgen.setPerlin( p );
 
     mapgen.generateMap( *map, .42f );
-
+/*
     CityControl cc = CityControl( map );
     auto clist = map->cityLayer()->cities();
     for( unsigned i = 1; i <= 9; i++ ) {
@@ -42,6 +42,7 @@ int main( int argc, char** argv ) {
                 cc.upgradeCity( cit->first );
         }
     }
+    */
 
 // setting up the window
     MainWindow main( 0 );
