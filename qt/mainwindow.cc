@@ -15,7 +15,12 @@ MainWindow::MainWindow( QWidget *parent )
 
     _timer = new QTimer();
     QObject::connect( _timer, SIGNAL( timeout() ), this, SLOT( upgradeRandomCity() ) );
-    _timer->start( 100 );
+    _timer->start( 50 );
+
+    _mouse_pos_timer = new QTimer();
+    QObject::connect( _mouse_pos_timer, SIGNAL( timeout() ),
+                      this, SLOT( printMousePosition() ) );
+    _mouse_pos_timer->start( 100 );
 
     this->setAttribute( Qt::WA_QuitOnClose, true );
     xpan = ypan = 32;
@@ -276,6 +281,7 @@ MainWindow::deleteLandSprites() {
 //    delete[] land_sprites;
 }
 
+
 void
 MainWindow::upgradeRandomCity() {
     if( _cc )
@@ -292,3 +298,12 @@ MainWindow::upgradeRandomCity() {
         _timer->stop();
     updateGL();
 }
+
+void
+MainWindow::printMousePosition() {
+    if( this->isActiveWindow() ) {
+        QPoint p = this->mapFromGlobal(QCursor::pos());
+        std::cout << "mouse position " << p.x() << ", " << p.y() << std::endl;
+    }
+}
+

@@ -1,6 +1,7 @@
 #ifndef MAIN_WINDOW_HH
 #define MAIN_WINDOW_HH
 
+#include "../position.hh"
 #include "../worldmap.hh"
 #include "../surface.hh"
 #include "../citycontrol.hh"
@@ -33,12 +34,16 @@ public:
     void drawShip();
     void drawControlPanel();
 
+    Position const & mouseTile() const;
+
 public slots:
     void upgradeRandomCity();
+    void printMousePosition();
 
 private:
     WorldMap * _wm;
     QTimer * _timer;
+    QTimer * _mouse_pos_timer;
 
     CityControl * _cc;
 
