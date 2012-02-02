@@ -63,4 +63,6 @@ PathFinder::findPath( Position const & from,
 
 void
 PathFinder::expandNode( node const & n, WorldMap const & map ) {
+    // find valid successors
+
 }
