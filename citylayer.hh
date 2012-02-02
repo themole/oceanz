@@ -28,6 +28,8 @@ public:
     int sizeX() const;
     int sizeY() const;
 
+    unsigned cityCount() const;
+
     bool cityAt( int x, int y ) const;
 
     City::city_id insideCity( int x, int y ) const;

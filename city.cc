@@ -18,8 +18,9 @@ City::City( int x, int y, std::string const & name )
 City::City( Position const & pos, std::string const & name )
     : _id( City::current_id++ ),
       _name( name ),
-      _pos( pos ),
       _level( 1 ) {
+
+    _pos = pos;
     
     if( _name == "" ) _name = "City " + _id;
     _local.insert( Position( 0, 0 ) );

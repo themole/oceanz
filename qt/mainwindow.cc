@@ -1,6 +1,7 @@
 #include "mainwindow.hh"
 
 #include "tgafile.hh"
+#include "citycontrol.hh"
 #include <string>
 
 #include <cmath>
@@ -10,6 +11,7 @@ MainWindow::MainWindow( QWidget *parent )
     : QGLWidget( parent ) {
     _timer = new QTimer();
     _wm = 0;
+    _cc = 0;
 
     this->setAttribute( Qt::WA_QuitOnClose, true );
     xpan = ypan = 0;
@@ -21,7 +23,10 @@ MainWindow::MainWindow( QWidget *parent )
 }
 
 MainWindow::~MainWindow() {
-    delete _wm;
+    if( _wm )
+        delete _wm;
+    if( _cc )
+        delete _cc;
     delete _timer;
 
     delete land_sprite;
@@ -37,7 +42,9 @@ QSize MainWindow::sizeHint() {
 void
 MainWindow::setWorldMap( WorldMap * map ) {
     if( _wm ) delete _wm;
+    if( _cc ) delete _cc;
     _wm = map;
+    _cc = new CityControl( _wm );
 }
 
 void
@@ -206,7 +213,9 @@ MainWindow::keyPressEvent( QKeyEvent *e ) {
             this->close();
             break;
         case Qt::Key_U:
-            this->updateGL();
+            if( _cc )
+                _cc->upgradeCity( rand() % _wm->cityLayer()->cities().size() );
+            updateGL();
             break;
         case Qt::Key_L:
         case Qt::Key_Right:

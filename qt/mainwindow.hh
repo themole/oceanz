@@ -3,6 +3,7 @@
 
 #include "../worldmap.hh"
 #include "../surface.hh"
+#include "../citycontrol.hh"
 
 #include <QGLWidget>
 #include <QKeyEvent>
@@ -35,6 +36,8 @@ public:
 private:
     WorldMap * _wm;
     QTimer * _timer;
+
+    CityControl * _cc;
 
     int xpan, ypan;
 

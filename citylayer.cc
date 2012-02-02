@@ -16,7 +16,8 @@ CityLayer::~CityLayer() {
         delete[] _ci;
     // self responsible for city creation ... only saving pointers ... so need to destruct
     for( auto cit = _cs.begin(); cit != _cs.end(); cit++ ) 
-        if( cit->second != 0 ) delete cit->second;
+        if( cit->second != 0 )
+            delete cit->second;
 }
 
 int
@@ -27,6 +28,11 @@ CityLayer::sizeX() const {
 int
 CityLayer::sizeY() const {
     return _sy;
+}
+
+unsigned
+CityLayer::cityCount() const {
+    return _cs.size();
 }
 
 bool

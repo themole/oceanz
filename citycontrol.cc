@@ -24,6 +24,9 @@ CityControl::upgradeCity( City::city_id id ) {
     City *c = _wm->cityLayer()->city( id );
     if( !c ) return;
 
+#ifdef DEBUG
+    std::cout << "CityControl::upgradeCity( City::city_id id ): c->position() = " << c->position() << std::endl;
+#endif
     CityLayer::city_info ci = _wm->cityLayer()->cityInfo( c->position() );
 
 
