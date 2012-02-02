@@ -18,7 +18,7 @@ MainWindow::MainWindow( QWidget *parent )
     _timer->start( 100 );
 
     this->setAttribute( Qt::WA_QuitOnClose, true );
-    xpan = ypan = 0;
+    xpan = ypan = 32;
     screen_surface = 0;
 
     loadLandSprites();
