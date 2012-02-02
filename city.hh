@@ -23,8 +23,10 @@ public:
     std::string const & name() const;
     Position const & position() const;
     unsigned level() const;
+    bool maxLevel() const;
 
     void setName(std::string const & name );
+    void setMaxLevel( bool is_max_level );
 
     void levelUp();
 
@@ -42,6 +44,8 @@ private:
     Position _pos;
 
     unsigned _level;
+
+    bool _max_level;
 
     // set of local tiles to determin local spread for city view
     std::set< Position > _local;

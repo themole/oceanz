@@ -9,9 +9,13 @@
 
 MainWindow::MainWindow( QWidget *parent )
     : QGLWidget( parent ) {
-    _timer = new QTimer();
+
     _wm = 0;
     _cc = 0;
+
+    _timer = new QTimer();
+    QObject::connect( _timer, SIGNAL( timeout() ), this, SLOT( upgradeRandomCity() ) );
+    _timer->start( 100 );
 
     this->setAttribute( Qt::WA_QuitOnClose, true );
     xpan = ypan = 0;
@@ -27,6 +31,8 @@ MainWindow::~MainWindow() {
         delete _wm;
     if( _cc )
         delete _cc;
+
+    _timer->stop();
     delete _timer;
 
     delete land_sprite;
@@ -74,6 +80,7 @@ MainWindow::initializeGL() {
     land_sprite = new Surface( "tileframes/land_00.tga" );
     water_sprite = new Surface( "tileframes/water_00.tga" );
     city_sprite = new Surface( "tileframes/city_00.tga" );
+    city_sprite_max_level = new Surface( "tileframes/city_01.tga" );
     around_city_sprite = new Surface( "tileframes/around_city.tga" );
     around_city_water_sprite = new Surface( "tileframes/around_city_water.tga" );
 }
@@ -142,7 +149,10 @@ MainWindow::drawWorldMap() {
 
             if( _wm->region( x, y )->is( LAND ) ) {
                 if( _wm->cityLayer()->insideCity( x, y ) != 0 ) {
-                    screen_surface->paint( *city_sprite, xa, ya );
+                    if( _wm->cityLayer()->city( x, y )->maxLevel() ) 
+                        screen_surface->paint( *city_sprite_max_level, xa, ya );
+                    else
+                        screen_surface->paint( *city_sprite, xa, ya );
                 } else if ( _wm->cityLayer()->aroundCity( x, y ) ) { 
                     screen_surface->paint( *around_city_sprite, xa, ya );
                 } else
@@ -213,9 +223,7 @@ MainWindow::keyPressEvent( QKeyEvent *e ) {
             this->close();
             break;
         case Qt::Key_U:
-            if( _cc )
-                _cc->upgradeCity( rand() % _wm->cityLayer()->cities().size() );
-            updateGL();
+            upgradeRandomCity();
             break;
         case Qt::Key_L:
         case Qt::Key_Right:
@@ -266,4 +274,21 @@ MainWindow::deleteLandSprites() {
 //        if( land_sprites[ i ] )
 //            delete land_sprites[ i ];
 //    delete[] land_sprites;
+}
+
+void
+MainWindow::upgradeRandomCity() {
+    if( _cc )
+        _cc->upgradeCity( ( rand() % _wm->cityLayer()->cities().size() ) + 1 );
+
+    bool done = true;
+    for( auto cit = _wm->cityLayer()->cities().begin();
+              cit != _wm->cityLayer()->cities().end();
+              cit++ ) {
+        if( !cit->second->maxLevel() )
+            done = false;
+    }
+    if( done ) 
+        _timer->stop();
+    updateGL();
 }

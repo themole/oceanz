@@ -33,6 +33,9 @@ public:
     void drawShip();
     void drawControlPanel();
 
+public slots:
+    void upgradeRandomCity();
+
 private:
     WorldMap * _wm;
     QTimer * _timer;
@@ -47,6 +50,7 @@ private:
     Surface* land_sprite;
     Surface* water_sprite;
     Surface* city_sprite;
+    Surface* city_sprite_max_level;
     Surface* around_city_sprite;
     Surface* around_city_water_sprite;
 

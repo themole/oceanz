@@ -9,7 +9,8 @@ City::City( int x, int y, std::string const & name )
     : _id( City::current_id++ ),
       _name( name ),
       _pos( Position( x, y ) ),
-      _level( 1 ) {
+      _level( 1 ),
+      _max_level( false ) {
 
     if( _name == "" ) _name = "City " + _id;
     _local.insert( Position( 0, 0 ) );
@@ -18,7 +19,8 @@ City::City( int x, int y, std::string const & name )
 City::City( Position const & pos, std::string const & name )
     : _id( City::current_id++ ),
       _name( name ),
-      _level( 1 ) {
+      _level( 1 ),
+      _max_level( false ) {
 
     _pos = pos;
     
@@ -49,9 +51,19 @@ City::level() const {
     return _level;
 }
 
+bool
+City::maxLevel() const {
+    return _max_level;
+}
+
 void 
 City::setName( std::string const & name ) {
     _name = name;
+}
+
+void
+City::setMaxLevel( bool is_max_level ) {
+    _max_level = is_max_level;
 }
 
 void
