@@ -8,6 +8,7 @@
 
 #include <QGLWidget>
 #include <QKeyEvent>
+#include <QMouseEvent>
 #include <QTimer>
 
 class MainWindow : public QGLWidget {
@@ -26,6 +27,7 @@ public:
     void updateGL();
 
     void keyPressEvent( QKeyEvent *e );
+    void mouseMoveEvent( QMouseEvent *e );
 
     void drawWorldMap();
     void drawCities();
@@ -43,7 +45,6 @@ public slots:
 private:
     WorldMap * _wm;
     QTimer * _timer;
-    QTimer * _mouse_pos_timer;
 
     CityControl * _cc;
 

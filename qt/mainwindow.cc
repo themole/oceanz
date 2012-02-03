@@ -15,12 +15,6 @@ MainWindow::MainWindow( QWidget *parent )
 
     _timer = new QTimer();
     QObject::connect( _timer, SIGNAL( timeout() ), this, SLOT( upgradeRandomCity() ) );
-    _timer->start( 50 );
-
-    _mouse_pos_timer = new QTimer();
-    QObject::connect( _mouse_pos_timer, SIGNAL( timeout() ),
-                      this, SLOT( printMousePosition() ) );
-    _mouse_pos_timer->start( 100 );
 
     this->setAttribute( Qt::WA_QuitOnClose, true );
     xpan = ypan = 32;
@@ -29,6 +23,7 @@ MainWindow::MainWindow( QWidget *parent )
     loadLandSprites();
 
     this->setMinimumSize( sizeHint() );
+    this->setMouseTracking( true );
 }
 
 MainWindow::~MainWindow() {
@@ -252,7 +247,25 @@ MainWindow::keyPressEvent( QKeyEvent *e ) {
             xpan += 2;
             updateGL();
             break;
+        case Qt::Key_Space:
+            if( _timer->isActive() )
+                _timer->stop();
+            else
+                _timer->start(150);
+            break;
     }
+}
+
+void
+MainWindow::mouseMoveEvent( QMouseEvent *e ) {
+    std::cout << "Mouse: ( " << e->x() << ", " << e->y() << " ), ";
+    std::cout << "left_btn: ";
+    if( e->buttons() & Qt::LeftButton ) std::cout << "yes";
+    else    std::cout << "no";
+    std::cout << ", right_btn: ";
+    if( e->buttons() & Qt::RightButton ) std::cout << "yes";
+    else    std::cout << "no";
+    std::cout << std::endl;
 }
 
 void
