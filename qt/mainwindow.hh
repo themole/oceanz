@@ -36,7 +36,7 @@ public:
     void drawShip();
     void drawControlPanel();
 
-    Position const & mouseTile() const;
+    Position const & mouseTile( int mx, int my ) const;
 
 public slots:
     void upgradeRandomCity();
@@ -60,11 +60,6 @@ private:
     Surface* around_city_sprite;
     Surface* around_city_water_sprite;
 
-    Surface** land_sprites;
-    Surface** water_sprites;
-
-    void loadLandSprites();
-    void deleteLandSprites();
 };
 
 #endif // MAIN_WINDOW_HH

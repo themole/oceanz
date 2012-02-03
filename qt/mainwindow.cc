@@ -20,8 +20,6 @@ MainWindow::MainWindow( QWidget *parent )
     xpan = ypan = 32;
     screen_surface = 0;
 
-    loadLandSprites();
-
     this->setMinimumSize( sizeHint() );
     this->setMouseTracking( true );
 }
@@ -37,8 +35,6 @@ MainWindow::~MainWindow() {
 
     delete land_sprite;
     delete water_sprite;
-
-    deleteLandSprites();
 }
 
 QSize MainWindow::sizeHint() {
@@ -267,33 +263,6 @@ MainWindow::mouseMoveEvent( QMouseEvent *e ) {
     else    std::cout << "no";
     std::cout << std::endl;
 }
-
-void
-MainWindow::loadLandSprites() {
-//    std::string land_sprite_name;
-//    land_sprites = new Surface*[32];
-//    for( int i = 0; i < 32; i++ )
-//        land_sprites[ i ] = 0;
-//
-//    land_sprites[ 0 ] = new Surface( "tileframes/land_00.tga" );
-//    land_sprites[ 31] = new Surface( "tileframes/land_60.tga" );
-//
-//    for( int i = 1; i < 5; i++ )
-//        for( int j = 0; j < 6; j++ ) {
-//            land_sprite_name += "tileframes/land_" + i;
-//            land_sprite_name += j + ".tga";
-//            land_sprites[ (i-1)*6 + j + 1 ] = new Surface( land_sprite_name );
-//        }
-}
-
-void
-MainWindow::deleteLandSprites() {
-//    for( int i = 0; i < 32; i++ )
-//        if( land_sprites[ i ] )
-//            delete land_sprites[ i ];
-//    delete[] land_sprites;
-}
-
 
 void
 MainWindow::upgradeRandomCity() {
