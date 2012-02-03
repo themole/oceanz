@@ -51,6 +51,6 @@ int main( int argc, char** argv ) {
 
     main.setWindowTitle( "Oceanz" );
 
-    main.showMaximized();
+    main.show/*Maximized*/();
     return app.exec();
 }

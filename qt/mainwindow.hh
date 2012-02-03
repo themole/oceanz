@@ -29,6 +29,8 @@ public:
     void keyPressEvent( QKeyEvent *e );
     void mouseMoveEvent( QMouseEvent *e );
 
+    void updateHoveredTile( int mx, int my );
+
     void drawWorldMap();
     void drawCities();
     void drawCity( City *c );
@@ -36,7 +38,6 @@ public:
     void drawShip();
     void drawControlPanel();
 
-    Position const & mouseTile( int mx, int my ) const;
 
 public slots:
     void upgradeRandomCity();
@@ -49,6 +50,7 @@ private:
     CityControl * _cc;
 
     int xpan, ypan;
+    Position _hovered;
 
     GLuint screen_texture;
 
@@ -59,7 +61,9 @@ private:
     Surface* city_sprite_max_level;
     Surface* around_city_sprite;
     Surface* around_city_water_sprite;
+    Surface* hovered_sprite;
 
+    void setHoveredTile( int x, int y );
 };
 
 #endif // MAIN_WINDOW_HH

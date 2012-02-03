@@ -13,11 +13,13 @@ MainWindow::MainWindow( QWidget *parent )
     _wm = 0;
     _cc = 0;
 
+    _hovered = Position( 0, 0 );
+
     _timer = new QTimer();
     QObject::connect( _timer, SIGNAL( timeout() ), this, SLOT( upgradeRandomCity() ) );
 
     this->setAttribute( Qt::WA_QuitOnClose, true );
-    xpan = ypan = 32;
+    xpan = ypan = 0;
     screen_surface = 0;
 
     this->setMinimumSize( sizeHint() );
@@ -79,6 +81,7 @@ MainWindow::initializeGL() {
     city_sprite_max_level = new Surface( "tileframes/city_01.tga" );
     around_city_sprite = new Surface( "tileframes/around_city.tga" );
     around_city_water_sprite = new Surface( "tileframes/around_city_water.tga" );
+    hovered_sprite = new Surface( "tileframes/hovered_00.tga" );
 }
 
 #ifndef PI
@@ -142,6 +145,11 @@ MainWindow::drawWorldMap() {
 
             int xa = 8*( 2*( x - xpan ) - ( y - ypan ) ) + width()/2 - 8;
             int ya = 15*( y - ypan ) + height()/2 - 7;
+
+            if( _hovered.x() == x && _hovered.y() == y ) {
+                screen_surface->paint( *hovered_sprite, xa, ya );
+                continue;
+            }
 
             if( _wm->region( x, y )->is( LAND ) ) {
                 if( _wm->cityLayer()->insideCity( x, y ) != 0 ) {
@@ -214,6 +222,7 @@ MainWindow::drawControlPanel() {
 
 void
 MainWindow::keyPressEvent( QKeyEvent *e ) {
+    QPoint p;
     switch( e->key() ) {
         case Qt::Key_Escape:
             this->close();
@@ -224,23 +233,31 @@ MainWindow::keyPressEvent( QKeyEvent *e ) {
         case Qt::Key_L:
         case Qt::Key_Right:
             xpan += 4;
+            p = this->mapFromGlobal( QCursor::pos() );
+            updateHoveredTile( p.x(), p.y() );
             updateGL();
             break;
         case Qt::Key_H:
         case Qt::Key_Left:
             xpan -= 4;
+            p = this->mapFromGlobal( QCursor::pos() );
+            updateHoveredTile( p.x(), p.y() );
             updateGL();
             break;
         case Qt::Key_K:
         case Qt::Key_Up:
             ypan -= 4;
             xpan -= 2;
+            p = this->mapFromGlobal( QCursor::pos() );
+            updateHoveredTile( p.x(), p.y() );
             updateGL();
             break;
         case Qt::Key_J:
         case Qt::Key_Down:
             ypan += 4;
             xpan += 2;
+            p = this->mapFromGlobal( QCursor::pos() );
+            updateHoveredTile( p.x(), p.y() );
             updateGL();
             break;
         case Qt::Key_Space:
@@ -254,14 +271,27 @@ MainWindow::keyPressEvent( QKeyEvent *e ) {
 
 void
 MainWindow::mouseMoveEvent( QMouseEvent *e ) {
-    std::cout << "Mouse: ( " << e->x() << ", " << e->y() << " ), ";
-    std::cout << "left_btn: ";
-    if( e->buttons() & Qt::LeftButton ) std::cout << "yes";
-    else    std::cout << "no";
-    std::cout << ", right_btn: ";
-    if( e->buttons() & Qt::RightButton ) std::cout << "yes";
-    else    std::cout << "no";
-    std::cout << std::endl;
+    updateHoveredTile( e->x(), e->y() );
+}
+
+void
+MainWindow::updateHoveredTile( int mx, int my ) {
+    // convert window coords into tile coords
+    int tiley = my - (this->height()/2 - 4 );
+    if( tiley < 0 ) tiley -= 15;
+    tiley /= 15; tiley +=ypan;
+
+    int tilex = mx - ( this->width()/2 - 8 );
+    tilex += tiley * 8;
+    if( tilex < 0 ) tilex -= 16;
+    tilex /= 16; tilex += xpan - ypan/2;
+
+    if( _hovered != Position( tilex, tiley ) )
+        setHoveredTile( tilex, tiley );
+#ifdef DEBUG
+    std::cout << "tilex = " << tilex
+              << ", tiley = " << tiley << std::endl;
+#endif
 }
 
 void
@@ -287,5 +317,11 @@ MainWindow::printMousePosition() {
         QPoint p = this->mapFromGlobal(QCursor::pos());
         std::cout << "mouse position " << p.x() << ", " << p.y() << std::endl;
     }
+}
+
+void
+MainWindow::setHoveredTile( int x, int y ) {
+    _hovered.setX( x ), _hovered.setY( y );
+    updateGL();
 }
 
