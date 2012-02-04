@@ -38,6 +38,8 @@ public:
     bool operator>( Position const & p ) const;
     bool operator>=( Position const & p ) const;
 
+    bool isNeighbor( Position const & p ) const;
+
     Position const neighbor( Direction d ) const;
 
     std::list< Position > allNeighbors() const;

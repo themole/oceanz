@@ -76,6 +76,11 @@ Position::operator>=( Position const & p ) const {
     return this->operator<=( p );
 }
 
+bool
+Position::isNeighbor( Position const & p ) const {
+    return this->distanceTo( p ) == 1;
+}
+
 Position const
 Position::neighbor( Direction d ) const {
     switch( d ) {
