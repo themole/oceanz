@@ -24,7 +24,6 @@ HEADERS += building.hh \
            heightlayer.hh \
            layer.hh \
            mapgenerator.hh \
-           maprenderer.hh \
            perlin.hh \
            position.hh \
            regionlayer.hh \
@@ -42,7 +41,8 @@ HEADERS += building.hh \
            typelistloader.hpp \
            typeprovider.hh \
            worldmap.hh \
-           qt/mainwindow.hh 
+           qt/mainwindow.hh \ 
+    path.hh
 SOURCES += building.cc \
            city.cc \
            citycontrol.cc \
@@ -54,7 +54,6 @@ SOURCES += building.cc \
            heightlayer.cc \
            layer.cc \
            mapgenerator.cc \
-           maprenderer.cc \
            oceanz.cc \
            perlin.cc \
            position.cc \
@@ -69,4 +68,8 @@ SOURCES += building.cc \
            typeclass.cc \
            typeprovider.cc \
            worldmap.cc \
-           qt/mainwindow.cc 
+           qt/mainwindow.cc \ 
+    path.cc
+
+OTHER_FILES += \
+    mymakefile

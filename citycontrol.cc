@@ -41,7 +41,9 @@ CityControl::upgradeCity( City::city_id id ) {
     // level up city
     c->levelUp();
 
+#ifdef DEBUG
     std::cout << "making " << c->name() << " at ( " << c->position().x() << ", " << c->position().y() << " ) grow\t-> level " << c->level() << std::endl;
+#endif
 
     // get all neighbors of city
     auto inRange = c->position().allInRange( it->distanceToNull() + 1 );
