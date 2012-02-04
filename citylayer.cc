@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <cstdio>
 
 CityLayer::CityLayer( int sx, int sy )
     : _sx( sx ), _sy( sy ) {

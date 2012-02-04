@@ -1,5 +1,6 @@
 #include "citycontrol.hh"
 #include <vector>
+#include <cstdlib>
 
 CityControl::CityControl( WorldMap * wm )
     : _wm( wm ) {
