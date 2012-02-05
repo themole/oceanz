@@ -43,6 +43,7 @@ public:
     Position const neighbor( Direction d ) const;
 
     std::list< Position > allNeighbors() const;
+    std::list< Position > allNeighborsIn( int xmin, int xmax, int ymin, int ymax  ) const;
     std::list< Position > allInRange( int range ) const;
 
     unsigned distanceToNull() const;

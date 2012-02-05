@@ -20,6 +20,8 @@ public:
 
     QSize sizeHint();
 
+    Position mousePosition( int mx, int my );
+
     void setWorldMap( WorldMap * wm );
 
     void initializeGL();
@@ -28,6 +30,8 @@ public:
 
     void keyPressEvent( QKeyEvent *e );
     void mouseMoveEvent( QMouseEvent *e );
+    void mousePressEvent( QMouseEvent *e );
+    void mouseReleaseEvent( QMouseEvent *e );
 
     void updateHoveredTile( int mx, int my );
 
@@ -51,6 +55,9 @@ private:
 
     int xpan, ypan;
     Position _hovered;
+
+    Position _pressed;
+    Position _released;
 
     GLuint screen_texture;
 

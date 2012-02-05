@@ -107,6 +107,28 @@ Position::allNeighbors() const {
 }
 
 std::list< Position >
+Position::allNeighborsIn( int xmin, int xmax, int ymin, int ymax  ) const {
+    std::list< Position > plist;
+    if( _x < xmin || _y < ymin || _x >= xmax || _y >= ymax )
+        return plist;
+
+    if( _x+1 < xmax )
+        plist.push_back( neighbor(  E ) );
+    if( _y-1 >= ymin)
+        plist.push_back( neighbor( NE ) );
+    if( _x-1 >= xmin && _y-1 >= ymin )
+        plist.push_back( neighbor( NW ) );
+    if( _x-1 >= xmin )
+        plist.push_back( neighbor(  W ) );
+    if( _y+1 < ymax )
+        plist.push_back( neighbor( SW ) );
+    if( _x+1 < xmax && _y+1 < ymax )
+        plist.push_back( neighbor( SE ) );
+    return plist;
+}
+
+
+std::list< Position >
 Position::allInRange( int range ) const {
     std::list< Position > plist;
     for( int x = -range; x <= range; x++ ) {

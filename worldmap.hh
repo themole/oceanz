@@ -23,8 +23,13 @@ public:
     void setCityLayer( CityLayer * cl );
 
     HeightLayer::height_type height( int x, int y );
+    HeightLayer::height_type height( Position const & pos );
+
     TerrainRegion * region( int x, int y );
+    TerrainRegion * region( Position const & pos );
+
     City * city( int x, int y );
+    City * city( Position const & pos );
 
 private:
     int _sx, _sy;

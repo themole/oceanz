@@ -5,72 +5,56 @@
 #include "position.hh"
 #include "path.hh"
 
-#include <priority_queue>
+#include <queue>
+#include <vector>
+#include <set>
+#include <map>
 #include <list>
 
 class PathFinder {
 
 public:
 
-    // represent a node used by a*
-    struct node {
-        // f is distance to goal
-        // g is length of currently known shortest path to here
-        int f, g;
-        Position p;
-        node* prev;
-
-        node( int ff, int gg, Position pp ) {
-           f = ff, g = gg, p = pp;
-           prev = 0;
-        }
-
-        int cost() {
-            return f + g;
-        }
-
-        // comparison parameter is f ... distance to goal
-        bool operator<( node const & rhs ) {
-            return f < rhs.f;
-        }
-
-        bool operator>( node const & rhs ) {
-            return f > rhs.f; 
-        }
+    enum error_code {
+        PATH_FOUND = 0,
+        NO_PATH_FOUND = 1,
+        NOT_RUN_YET = 2
     };
 
-    // compares position a and b by distance to _from
-    // returns true if a.distanceTo( _from ) < b.distanceTo( _from )
-    // in any other case returns false
-    // used to provide comparison function for a priority_queue
-    static bool comp( Position const & a, Position const & b );
+    // a position and the cost to get there
+    typedef std::pair< Position, int > node;
 
-    // returns the shortest path from 'from' to 'to' on 'map'
-    // uses A*-algorithm
-    static Path findPath( Position const & from, Position const & to, WorldMap const & map );
+    // comparison class to use with priority_queue
+    struct Comp { bool operator()( node const & a, node const & b ); };
 
-    // to not write so much
-    typedef priority_queue< node > open_list;
-    typedef list< node > closed_list;
+    typedef std::priority_queue< node, std::vector< node >, Comp > open_list;
+    typedef std::set< Position > closed_list;
 
-private:
-    // checks all neighbors in the same region and
-    // puts them into the open list if either
-    // - it was found the first time or
-    // - a better way to that neighbor was found
-    static void expandNode( node const & n, WorldMap const & map );
+    static Path findPath( Position const & start,
+                          Position const & dest,
+                          WorldMap & map );
+
+    static error_code error();
 
 private:
 
-    static node _from;
-    static node _to;
+    static error_code _error;
 
-    static open_list    _olist;
-    static closed_list  _clist;
+    static Position _start;
+    static Position _dest;
 
-    // for reference
-    static Path _last;
+    static Path _path;
 
+    static open_list _olist;
+    static closed_list _clist;
+
+    // key = position, value = predeseccor
+    static std::map< Position, Position > _pres;
+
+    // puts all valid successors onto the open list
+    static void expandNode( node const & n, WorldMap & map );
+    // uses _pres to construc a Path object
+    static Path constructPath();
 };
 
 #endif // PATH_FINDER_HH

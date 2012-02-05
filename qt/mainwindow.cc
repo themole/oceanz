@@ -2,6 +2,7 @@
 
 #include "tgafile.hh"
 #include "citycontrol.hh"
+#include "pathfinder.hh"
 #include <string>
 
 #include <cmath>
@@ -14,6 +15,8 @@ MainWindow::MainWindow( QWidget *parent )
     _cc = 0;
 
     _hovered = Position( 0, 0 );
+    _pressed = Position( -1, -1 );
+    _released = Position( -1, -1 );
 
     _timer = new QTimer();
     QObject::connect( _timer, SIGNAL( timeout() ), this, SLOT( upgradeRandomCity() ) );
@@ -266,6 +269,17 @@ MainWindow::keyPressEvent( QKeyEvent *e ) {
             else
                 _timer->start(150);
             break;
+        case Qt::Key_F:
+            if( _pressed.x() >= 0 && _pressed.y() >= 0 &&
+                _pressed.x() < _wm->sizeX() && _pressed.y() < _wm->sizeY() &&
+                _released.x() >= 0 && _released.y() >= 0 &&
+                _released.x() < _wm->sizeX() && _released.y() < _wm->sizeY() ) {
+                Path p = PathFinder::findPath( _pressed, _released, *_wm );
+                std::cout << "path from " << _pressed << " to " << _released << ":\n";
+                p.print();
+            }
+            break;
+            
     }
 }
 
@@ -275,8 +289,20 @@ MainWindow::mouseMoveEvent( QMouseEvent *e ) {
 }
 
 void
-MainWindow::updateHoveredTile( int mx, int my ) {
-    // convert window coords into tile coords
+MainWindow::mousePressEvent( QMouseEvent *e ) {
+    _pressed = mousePosition( e->x(), e->y() );
+    std::cout << "pressed at " << _pressed << std::endl;
+}
+
+void
+MainWindow::mouseReleaseEvent( QMouseEvent *e ) {
+    _released = mousePosition( e->x(), e->y() );
+    std::cout << "released at " << _released << std::endl;
+}
+
+Position
+MainWindow::mousePosition( int mx, int my ) {
+    // convert mouse coords to tile coords
     int tiley = my - (this->height()/2 - 4 );
     if( tiley < 0 ) tiley -= 15;
     tiley /= 15; tiley +=ypan;
@@ -286,11 +312,18 @@ MainWindow::updateHoveredTile( int mx, int my ) {
     if( tilex < 0 ) tilex -= 16;
     tilex /= 16; tilex += xpan - ypan/2;
 
-    if( _hovered != Position( tilex, tiley ) )
-        setHoveredTile( tilex, tiley );
+    return Position( tilex, tiley );
+}
+void
+MainWindow::updateHoveredTile( int mx, int my ) {
+
+    Position p = mousePosition( mx, my );
+
+    if( _hovered != p )
+        setHoveredTile( p.x(), p.y());
 #ifdef DEBUG
-    std::cout << "tilex = " << tilex
-              << ", tiley = " << tiley << std::endl;
+    std::cout << "tilex = " << p.x() 
+              << ", tiley = " << p.y() << std::endl;
 #endif
 }
 

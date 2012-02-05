@@ -75,6 +75,11 @@ WorldMap::height( int x, int y ) {
     return _hl->height( x, y );
 }
 
+HeightLayer::height_type
+WorldMap::height( Position const & pos ) {
+    return height( pos.x(), pos.y() );
+}
+
 TerrainRegion *
 WorldMap::region( int x, int y ) {
     if( _rl != 0 )
@@ -83,7 +88,17 @@ WorldMap::region( int x, int y ) {
         return 0;
 }
 
+TerrainRegion *
+WorldMap::region( Position const & pos ) {
+    return region( pos.x(), pos.y() );
+}
+
 City*
 WorldMap::city( int x, int y ) {
     return _cl->city( x, y );
+}
+
+City*
+WorldMap::city( Position const & pos ) {
+    return city( pos.x(), pos.y() );
 }

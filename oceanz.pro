@@ -42,7 +42,8 @@ HEADERS += building.hh \
            typeprovider.hh \
            worldmap.hh \
            qt/mainwindow.hh \ 
-    path.hh
+    path.hh \
+    pathfinder.hh
 SOURCES += building.cc \
            city.cc \
            citycontrol.cc \
@@ -69,7 +70,8 @@ SOURCES += building.cc \
            typeprovider.cc \
            worldmap.cc \
            qt/mainwindow.cc \ 
-    path.cc
+    path.cc \
+    pathfinder.cc
 
 OTHER_FILES += \
     mymakefile
