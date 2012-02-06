@@ -20,6 +20,7 @@ MainWindow::MainWindow( QWidget *parent )
 
     _timer = new QTimer();
     QObject::connect( _timer, SIGNAL( timeout() ), this, SLOT( upgradeRandomCity() ) );
+    QObject::connect( _timer, SIGNAL( timeout() ), this, SLOT( updateShips() ) );
 
     this->setAttribute( Qt::WA_QuitOnClose, true );
     xpan = ypan = 0;
@@ -85,6 +86,7 @@ MainWindow::initializeGL() {
     around_city_sprite = new Surface( "tileframes/around_city.tga" );
     around_city_water_sprite = new Surface( "tileframes/around_city_water.tga" );
     hovered_sprite = new Surface( "tileframes/hovered_00.tga" );
+    ship_sprite = new Surface( "tileframes/ship.tga" );
 }
 
 #ifndef PI
@@ -153,6 +155,7 @@ MainWindow::drawWorldMap() {
                 screen_surface->paint( *hovered_sprite, xa, ya );
                 continue;
             }
+            
 
             if( _wm->region( x, y )->is( LAND ) ) {
                 if( _wm->cityLayer()->insideCity( x, y ) != 0 ) {
@@ -169,6 +172,10 @@ MainWindow::drawWorldMap() {
                 screen_surface->paint( *around_city_water_sprite, xa, ya );
             else
                 screen_surface->paint( *water_sprite, xa, ya );
+
+            // draw on top
+            if( _wm->shipLayer()->ship( x, y ) != 0 ) 
+                screen_surface->paint( *ship_sprite, xa, ya );
         }
     }            
 }
@@ -279,7 +286,11 @@ MainWindow::keyPressEvent( QKeyEvent *e ) {
                 p.print();
             }
             break;
-            
+        case Qt::Key_S:
+            if( _pressed.x() >= 0 && _pressed.y() >= 0 &&
+                _pressed.x() < _wm->sizeX() && _pressed.y() < _wm->sizeY() )
+                _wm->shipLayer()->ship( 1 )->setDestination( _pressed, *_wm );
+            break;
     }
 }
 
@@ -325,6 +336,13 @@ MainWindow::updateHoveredTile( int mx, int my ) {
     std::cout << "tilex = " << p.x() 
               << ", tiley = " << p.y() << std::endl;
 #endif
+}
+
+void
+MainWindow::updateShips() {
+    if( _wm->shipLayer() == 0 )
+        return;
+    _wm->shipLayer()->moveShips( 1 );
 }
 
 void

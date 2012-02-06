@@ -13,10 +13,15 @@ Path::add( Position const & pos ) {
         _path.push_back( pos );
 }
 
-void
+bool
 Path::step() {
-    if( _cur != _path.end() )
+    if( _cur != _path.end() ) {
         _cur++;
+        if( _cur == _path.end() )
+            return false;
+        return true;
+    }
+    return false;
 }
 
 void
@@ -38,6 +43,16 @@ Path::empty() const {
 int
 Path::length() const {
     return _path.size();
+}
+
+std::list< Position >::iterator const
+Path::current() const {
+    return _cur;
+}
+
+std::list< Position >::const_iterator
+Path::end() const {
+    return _path.end();
 }
 
 Path const

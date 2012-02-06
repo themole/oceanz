@@ -12,13 +12,16 @@ public:
 
     void add( Position const & pos );
 
-    void step();
+    bool step(); // returns whether step was valid
     void reset();
     void clear();
 
     bool empty() const;
 
     int length() const;
+
+    std::list< Position >::iterator const current() const;
+    std::list< Position >::const_iterator end() const;
 
     Path const operator+( Path const & rhs ) const;
 

@@ -25,9 +25,12 @@ HEADERS += building.hh \
            layer.hh \
            mapgenerator.hh \
            perlin.hh \
+           path.hh \
+           pathfinder.hh \
            position.hh \
            regionlayer.hh \
            ship.hh \
+           shiplayer.hh \
            shiptype.hh \
            shiptypelist.hh \
            shiptypelistloader.hh \
@@ -41,9 +44,7 @@ HEADERS += building.hh \
            typelistloader.hpp \
            typeprovider.hh \
            worldmap.hh \
-           qt/mainwindow.hh \ 
-    path.hh \
-    pathfinder.hh
+           qt/mainwindow.hh 
 SOURCES += building.cc \
            city.cc \
            citycontrol.cc \
@@ -56,10 +57,13 @@ SOURCES += building.cc \
            layer.cc \
            mapgenerator.cc \
            oceanz.cc \
+           path.cc \
+           pathfinder.cc \
            perlin.cc \
            position.cc \
            regionlayer.cc \
            ship.cc \
+           shiplayer.cc \
            shiptype.cc \
            shiptypelist.cc \
            shiptypelistloader.cc \
@@ -69,9 +73,7 @@ SOURCES += building.cc \
            typeclass.cc \
            typeprovider.cc \
            worldmap.cc \
-           qt/mainwindow.cc \ 
-    path.cc \
-    pathfinder.cc
+           qt/mainwindow.cc
 
 OTHER_FILES += \
     mymakefile

@@ -4,7 +4,8 @@ WorldMap::WorldMap( unsigned sx, unsigned sy )
     : _sx( sx ), _sy( sy ),
       _hl( 0 ),
       _rl( 0 ),
-      _cl( 0 ) {
+      _cl( 0 ),
+      _sl( 0 ) {
     if( sx == 0 || sy == 0 )
         _sx = 1, _sy = 1;
 }
@@ -16,7 +17,9 @@ WorldMap::~WorldMap() {
         delete _rl;
     if( _cl != 0 )
         delete _cl;
-    _hl = 0, _rl = 0, _cl = 0;
+    if( _sl != 0 )
+        delete _sl;
+    _hl = 0, _rl = 0, _cl = 0, _sl = 0;
 }
 
 int
@@ -44,6 +47,11 @@ WorldMap::cityLayer() {
     return _cl;
 }
 
+ShipLayer *
+WorldMap::shipLayer() {
+    return _sl;
+}
+
 void
 WorldMap::setHeightLayer( HeightLayer * hl ) {
     if( hl->sizeX() == _sx && hl->sizeY() == _sy ) {
@@ -61,12 +69,22 @@ WorldMap::setRegionLayer( RegionLayer * rl ) {
         _rl = rl;
     }
 }
+
 void
 WorldMap::setCityLayer( CityLayer * cl ) {
     if( cl->sizeX() == _sx && cl->sizeY() == _sy ) {
         if( _cl != 0 )
             delete _cl;
         _cl = cl;
+    }
+}
+
+void
+WorldMap::setShipLayer( ShipLayer * sl ) {
+    if( sl->sizeX() == _sx && sl->sizeY() == _sy ) {
+        if( _sl != 0 )
+            delete _sl;
+        _sl = sl;
     }
 }
 

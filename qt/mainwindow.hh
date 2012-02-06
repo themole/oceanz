@@ -44,6 +44,7 @@ public:
 
 
 public slots:
+    void updateShips();
     void upgradeRandomCity();
     void printMousePosition();
 
@@ -69,6 +70,7 @@ private:
     Surface* around_city_sprite;
     Surface* around_city_water_sprite;
     Surface* hovered_sprite;
+    Surface* ship_sprite;
 
     void setHoveredTile( int x, int y );
 };

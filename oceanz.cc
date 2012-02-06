@@ -44,6 +44,10 @@ int main( int argc, char** argv ) {
     }
     */
 
+    ShipLayer* sl = new ShipLayer( map->sizeX(), map->sizeY() );
+    sl->newShip( "testShip", 32, 32 );
+    map->setShipLayer( sl );
+
 // setting up the window
     MainWindow main( 0 );
 
