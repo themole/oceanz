@@ -23,6 +23,8 @@ public:
     std::list< Position >::iterator const current() const;
     std::list< Position >::const_iterator end() const;
 
+    Position destination() const;
+
     Path const operator+( Path const & rhs ) const;
 
     Path & operator=( Path const & rhs );

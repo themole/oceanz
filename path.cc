@@ -55,6 +55,11 @@ Path::end() const {
     return _path.end();
 }
 
+Position 
+Path::destination() const {
+    return _path.back();
+}
+
 Path const
 Path::operator+( Path const & rhs ) const {
     if( this->_path.back().distanceTo( rhs._path.front() ) > 1 )

@@ -34,6 +34,8 @@ public:
     void setDestination( Position const & dest, WorldMap & map );
     void unsetDestination();
 
+    Position destination() const;
+
     void move( int steps );
 
 protected:

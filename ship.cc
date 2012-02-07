@@ -43,6 +43,7 @@ Ship::hasDestination() const {
 void
 Ship::setDestination( Position const & dest, WorldMap & map ) {
     _path = PathFinder::findPath( position(), dest, map );
+    _path.reset();
     if( PathFinder::error() )
         std::cerr << "Ship " << _name << ": destination not reachable" << std::endl;
 }
@@ -52,11 +53,20 @@ Ship::unsetDestination() {
     _path.clear();
 }
 
+Position 
+Ship::destination() const {
+    if( hasDestination() )
+        return _path.destination();
+    else
+        return Position( -1, -1 );
+}
+
 void
 Ship::move( int steps ) {
     if( _path.empty() || _path.current() == _path.end() || steps < 0 )
         return;
 
+    std::cout << "ship " << _name << " moving" << std::endl;
     for( int i = 0; i < steps; i++ )
         if( !_path.step() )
             _path.clear();

@@ -290,6 +290,8 @@ MainWindow::keyPressEvent( QKeyEvent *e ) {
             if( _pressed.x() >= 0 && _pressed.y() >= 0 &&
                 _pressed.x() < _wm->sizeX() && _pressed.y() < _wm->sizeY() )
                 _wm->shipLayer()->ship( 1 )->setDestination( _pressed, *_wm );
+            std::cout << "Ship Destination set to: "
+                << _wm->shipLayer()->ship( 1 )->destination() << std::endl;
             break;
     }
 }

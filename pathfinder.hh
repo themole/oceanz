@@ -27,7 +27,7 @@ public:
     // comparison class to use with priority_queue
     struct Comp { bool operator()( node const & a, node const & b ); };
 
-    typedef std::priority_queue< node, std::vector< node >, Comp > open_list;
+    typedef std::list< node > open_list;
     typedef std::set< Position > closed_list;
 
     static Path findPath( Position const & start,
